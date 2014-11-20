@@ -1,7 +1,7 @@
 <?php
 /**
  * Deals with public-facing end.
- * @TODO make it work
+ * @TODO tune default front end filters
  *
  * @package   MJM_Clinic
  * @author    Matt Manning <spam2014@mjman.net>
