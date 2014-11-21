@@ -12,6 +12,16 @@
  * @TODO Sort out the permissions settings.
  * @TODO Clean and tidy
  *
+ * @TODO Set default features to:
+ *       - Services
+ *       - Service Categories
+ *       - Health Conditions
+ *       - Indications
+ *
+ * @TODO On Clinic Locations page, rename:
+ *       - Description => Address
+ *       - Name => Clinic Name
+ *
  */
 
 ?>

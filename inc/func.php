@@ -50,11 +50,14 @@ function mjm_clinic_true_false() {
  */
 function mjm_clinic_option_defaults() {
 	$defaults = array(
-		'mjm_clinic_related_product' => false,
-		'mjm_clinic_indication' => false,
-		'contraindications' => false,
-		'mjm_clinic_location' => false,
-		'price' => false,
+        'mjm_clinic_option_condition' => true,
+        'mjm_clinic_option_indication' => true,
+        'mjm_clinic_option_location' => true,
+		'mjm_clinic_option_related_product' => false,
+		'mjm_clinic_option_contraindication' => false,
+        'mjm_clinic_option_feedback' => false,
+        'mjm_clinic_option_casestudy' => false,
+		'mjm_clinic_option_price' => false,
 		'roles' => false,
 		'comments' => false
 	);
@@ -111,16 +114,16 @@ function mjm_clinic_sort_terms_hierarchically(Array &$terms, Array &$into, $pare
 }
 
 function mjm_clinic_get_sub_service_categories($parent_term_id){
-
     $args = array(
-        'term_args' => array(
-            'orderby'           => 'name',
-            'order'             => 'ASC',
-            'hide_empty'        => false,
-            'fields'            => 'all',
-            'parent'            => $parent_term_id,
-            'hierarchical'      => true
-        ),
+        'orderby'           => 'name',
+        'order'             => 'ASC',
+        'hide_empty'        => false,
+        'fields'            => 'all',
+        'parent'            => $parent_term_id,
+        'hierarchical'      => true);
+
+    $plugin_args = array(
+        'term_args' => $args,
         'taxonomy' => 'mjm_clinic_service_category',
         'having_images' => false
     );
@@ -128,28 +131,30 @@ function mjm_clinic_get_sub_service_categories($parent_term_id){
 
     $plugin = 'taxonomy-images/taxonomy-images.php';
     if(is_plugin_active($plugin)){
-    return apply_filters( 'taxonomy-images-get-terms', '', $args );
+    return apply_filters( 'taxonomy-images-get-terms', '', $plugin_args );
     }
     return get_terms(array('mjm_clinic_service_category'), $args);
 }
 
 function mjm_clinic_get_all_service_categories(){
 
-    $args = array(
-        'term_args' => array(
-            'orderby'           => 'name',
-            'order'             => 'ASC',
-            'hide_empty'        => false,
-            'fields'            => 'all',
-            'hierarchical'      => true
-        ),
+    $args =  array(
+        'orderby'           => 'name',
+        'order'             => 'ASC',
+        'hide_empty'        => false,
+        'fields'            => 'all',
+        'hierarchical'      => true
+    );
+
+    $plugin_args = array(
+        'term_args' => $args,
         'taxonomy' => 'mjm_clinic_service_category',
         'having_images' => false
     );
 
     $plugin = 'taxonomy-images/taxonomy-images.php';
     if(is_plugin_active($plugin)){
-        $categories = apply_filters( 'taxonomy-images-get-terms', '', $args );
+        $categories = apply_filters( 'taxonomy-images-get-terms', '', $plugin_args );
     } else {
         $categories = get_terms(array('mjm_clinic_service_category'), $args);
     }
@@ -368,4 +373,5 @@ function mjm_clinic_get_post_related_posts($post, $get_post_type, $taxonomy, $li
    return mjm_clinic_get_posts_related_to_terms($get_post_type, $taxonomy, $terms, $limit, array($post->id));
 
 }
+
 

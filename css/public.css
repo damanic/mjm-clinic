@@ -1,6 +1,6 @@
 .mjm_clinic_service_session_info_widget_booking-link{
     display:block;
-    background-color:#DB5A25;
+    background-color:transparent;
     border:1px solid #DB5A25;
     margin-top:5px;
     margin-bottom:5px;
@@ -21,7 +21,7 @@
 .mjm_clinic_service_locations_widget_output_tel-link:hover,
 .mjm_clinic_indication_tags_widget_output_link:hover{
     color:#FFF;
-    background-color:#036;
+    background-color:#5C5C5C;
 }
 
 .mjm_clinic_service_locations_widget_output_booking-link,
@@ -29,7 +29,7 @@
 .mjm_clinic_service_locations_widget_output_tel-link
 {
     display: block;
-    background-color:#5C5C5C;
+    background-color:transparent;
     border:1px solid #5C5C5C;
     margin-top:3px;
     margin-bottom:3px;
@@ -69,7 +69,7 @@
 }
 
 .mjm_clinic_indication_tags_widget_output_link{
-    background-color:#5C5C5C;
+    background-color:transparent;
     border:1px solid #5C5C5C;
     margin:2px;
     -moz-border-radius: 3px;

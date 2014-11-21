@@ -9,6 +9,121 @@
  * @copyright 2014 Matt Manning
  */
 
+
+
+/**
+ * Clinic Service Location Map Widget
+ *
+ * @since 	1.0.1
+ */
+class MJM_Clinic_Location_Map extends WP_Widget {
+    public function __construct() {
+        $widget_options = array( 'classname' => 'mjm_clinic_location_map_widget', 'description' => __('Displays a map on a location taxonomy page', 'mjm-clinic') );
+
+        $control_options = array( 'id_base' => 'mjm_clinic_location_map_widget' );
+
+        $this->WP_Widget( 'mjm_clinic_location_map_widget', 'MJM Clinic: Location Map', $widget_options, $control_options );
+    }
+
+    public function widget( $args, $instance ) {
+        global $wp_query;
+
+
+        extract($args);
+        // count is the number of items to show
+
+        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Map', 'mjm-clinic'); }
+
+
+
+        if (  is_tax('mjm_clinic_location') ) {
+            $location = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
+
+
+            if($location) {
+                $location_meta = get_option( "taxonomy_$location->term_id" );
+                if(empty($location_meta['map_link']) || !strstr($location_meta['map_link'],',')){
+                    return false;
+                }
+                $latlng = explode(',',$location_meta['map_link']);
+                $lat = trim($latlng[0]);
+                $lng = trim($latlng[1]);
+
+                if(!is_numeric($lat) || !is_numeric($lng)){
+                    return false;
+                }
+
+                wp_enqueue_script( 'mjm-clinic-map-script', 'https://maps.googleapis.com/maps/api/js' );
+                wp_enqueue_script( 'mjm-clinic-map-init-script', plugins_url( 'mjm-clinic/js/map.js'));
+
+
+                echo $args['before_widget'];
+                if(!empty($title)) {
+                    echo $args['before_title'] . esc_html($title) . $args['after_title'];
+                }
+                ?>
+                <div class="mjm_clinic_location_map_widget_output_container">
+                    <div id="mjm_clinic_location_map_widget_output_map-canvas"></div>
+                    <script type="text/javascript">
+                        function mjm_clinic_location_map_widget_init() {
+                            var mapCanvas = document.getElementById('mjm_clinic_location_map_widget_output_map-canvas');
+                            var myLatlng = new google.maps.LatLng(<?=$lat?>, <?=$lng?>);
+                            var mapOptions = {
+                                center: myLatlng,
+                                zoom: 15,
+                                mapTypeId: google.maps.MapTypeId.ROADMAP
+                            }
+                            var map = new google.maps.Map(mapCanvas, mapOptions)
+
+                            var marker = new google.maps.Marker({
+                                position: myLatlng,
+                                map: map,
+                                title: '<?=$location->name?>'
+                            });
+                        }
+                    </script>
+                    <style>
+                        #mjm_clinic_location_map_widget_output_map-canvas {
+                            width: 100%;
+                            height: 250px;
+                        }
+                    </style>
+                </div>
+
+                <? echo $args['after_widget'];
+            }
+        }
+    }
+
+    public function form( $instance ) {
+        $defaults = array( 'title' => __('Map', 'mjm-clinic'), 'count' => -1 );
+        $instance = wp_parse_args((array) $instance, $defaults);
+
+        $values = array(
+            array('id' => false, 'text' => __('No', 'mjm-clinic')),
+            array('id' => true, 'text' => __('Yes', 'mjm-clinic')));
+
+        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = $defaults['title']; }
+
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_name('title'); ?>"><?php _e( 'Title:', 'mjm-clinic' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+            <span class="description"><?php _e('The title that displays above the widget.', 'mjm-clinic'); ?></span>
+        </p>
+
+    <?php
+    }
+
+    public function update( $new_instance, $old_instance ) {
+        $instance = $old_instance;
+        $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+
+        return $instance;
+    }
+}
+
+
 /**
  * Clinic Service Indication Tag Widget
  *
@@ -31,7 +146,7 @@ class MJM_Clinic_Indication_Tags extends WP_Widget {
         extract($args);
         // count is the number of items to show
        
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('#', 'mjm-clinic'); }
+        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Indications', 'mjm-clinic'); }
         if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
 
 
@@ -65,7 +180,7 @@ class MJM_Clinic_Indication_Tags extends WP_Widget {
     }
 
     public function form( $instance ) {
-        $defaults = array( 'title' => __('#', 'mjm-clinic'), 'count' => -1 );
+        $defaults = array( 'title' => __('Related Indications', 'mjm-clinic'), 'count' => -1 );
         $instance = wp_parse_args((array) $instance, $defaults);
 
         $values = array(
@@ -110,7 +225,7 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
 
         $control_options = array( 'id_base' => 'mjm_clinic_service_locations_widget' );
 
-        $this->WP_Widget( 'mjm_clinic_service_locations_widget', 'MJM Clinic: Service Locations', $widget_options, $control_options );
+        $this->WP_Widget( 'mjm_clinic_service_locations_widget', 'MJM Clinic: Clinic Location(s)', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
@@ -251,15 +366,15 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
                         $link = str_replace('{service_id}',$this_post->ID, wp_strip_all_tags($location_meta['contact_link']));
                         $link = str_replace('{service_name}',urlencode($this_post->post_title), $link);
                         ?>
-                        <a href="<?=$link?>"
-                           class="mjm_clinic_service_session_info_widget_booking-link">
-                            BOOK APPOINTMENT
-                        </a>
+<!--                        <a href="--><?//=$link?><!--"-->
+<!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
+<!--                            BOOK APPOINTMENT-->
+<!--                        </a>-->
                     <? } else if(!empty($location_meta['email'])){?>
-                        <a href="mailto:<?=antispambot(wp_strip_all_tags($location_meta['email']))?>"
-                           class="mjm_clinic_service_session_info_widget_booking-link">
-                            BOOK APPOINTMENT
-                        </a>
+<!--                        <a href="mailto:--><?//=antispambot(wp_strip_all_tags($location_meta['email']))?><!--"-->
+<!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
+<!--                            BOOK APPOINTMENT-->
+<!--                        </a>-->
                     <? }
                 }
             }
@@ -862,7 +977,7 @@ class MJM_Clinic_Related_Services extends WP_Widget {
 
 
 /**
- * Clinic Related Conditions (by indication tags)
+ * Clinic Related Health Conditions (by indication tags)
  *
  * @since 	1.0.1
  */
@@ -872,7 +987,7 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
 
         $control_options = array( 'id_base' => 'mjm_clinic_related_conditions_widget' );
 
-        $this->WP_Widget( 'mjm_clinic_related_conditions_widget', 'MJM Clinic: Related Conditions', $widget_options, $control_options );
+        $this->WP_Widget( 'mjm_clinic_related_conditions_widget', 'MJM Clinic: Related Health Conditions', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
@@ -883,7 +998,7 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
         extract($args);
         // count is the number of items to show
 
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Conditions', 'mjm-clinic'); }
+        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Health Conditions', 'mjm-clinic'); }
         if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
 
 
@@ -927,7 +1042,7 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
     }
 
     public function form( $instance ) {
-        $defaults = array( 'title' => __('Related Conditions', 'mjm-clinic'), 'count' => -1 );
+        $defaults = array( 'title' => __('Related Health Conditions', 'mjm-clinic'), 'count' => -1 );
         $instance = wp_parse_args((array) $instance, $defaults);
 
 
@@ -1145,4 +1260,272 @@ class MJM_Clinic_Related_Casestudy extends WP_Widget {
 
         return $instance;
     }
+}
+
+/**
+ * Service Categories widget
+ *
+ * @since 1.0.1
+ */
+
+class MJM_Clinic_Service_Categories extends WP_Widget {
+
+    public function __construct() {
+
+        $widget_options = array( 'classname' => 'mjm_clinic_service_categories_widget', 'description' => __('A list or dropdown of clinic service categories.', 'mjm-clinic') );
+
+        $control_options = array( 'id_base' => 'mjm_clinic_service_categories_widget' );
+
+        $this->WP_Widget( 'mjm_clinic_service_categories_widget', 'MJM Clinic: Service Categories', $widget_options, $control_options );
+
+    }
+
+    public function widget( $args, $instance ) {
+
+        /** This filter is documented in wp-includes/default-widgets.php */
+        $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Service Categories' ) : $instance['title'], $instance, $this->id_base );
+
+        $c = ! empty( $instance['count'] ) ? '1' : '0';
+        $h = ! empty( $instance['hierarchical'] ) ? '1' : '0';
+        $d = ! empty( $instance['dropdown'] ) ? '1' : '0';
+
+        echo $args['before_widget'];
+        if ( $title ) {
+            echo $args['before_title'] . $title . $args['after_title'];
+        }
+
+        $selected = null;
+        if(is_tax('mjm_clinic_service_category')) {
+            $selected   = get_query_var('mjm_clinic_service_category');
+        }
+
+        if(is_single()){
+            $selected = wp_get_post_terms( get_the_ID(), 'mjm_clinic_service_category');
+
+            //if a service has multiple categories how do you choose? Only if one.
+            if(count($selected) == 1) {
+                $selected = $selected[0]->slug;
+            }
+
+        }
+
+        $dropdown_args = array(
+            'taxonomy'      => 'mjm_clinic_service_category',
+            'name'          => 'mjm_csc_dropdown_widget',
+            'show_option_none'  => 'Select category',
+            'show_count'        => $c,
+            'orderby'       => 'name',
+            'hierarchical'      => $h,
+            'echo'          => 1,
+            'selected'      => $selected,
+            'walker'            => new MJM_Walker_SlugValueCategoryDropdown);
+
+
+        if ( $d ) {
+            $dropdown_args['show_option_none'] = __('Select Category');
+            wp_dropdown_categories( apply_filters( 'widget_categories_dropdown_args', $dropdown_args ) );
+            ?>
+
+            <script type='text/javascript'>
+                /* <![CDATA[ */
+                var dropdown = document.getElementById("mjm_csc_dropdown_widget");
+                function onCatChange() {
+                    if ( dropdown.options[dropdown.selectedIndex].value != -1 ) {
+                        location.href = "<?php echo home_url(); ?>/?mjm_clinic_service_category="+dropdown.options[dropdown.selectedIndex].value;
+                    }
+                }
+                dropdown.onchange = onCatChange;
+                /* ]]> */
+            </script>
+
+        <?php
+        } else {
+            ?>
+            <ul>
+                <?php
+                $dropdown_args['title_li'] = '';
+
+                /**
+                 * Filter the arguments for the Categories widget.
+                 *
+                 * @since 2.8.0
+                 *
+                 * @param array $dropdown_args An array of Categories widget options.
+                 */
+                wp_list_categories( apply_filters( 'widget_categories_args', $dropdown_args ) );
+                ?>
+            </ul>
+        <?php
+        }
+
+        echo $args['after_widget'];
+    }
+
+    public function update( $new_instance, $old_instance ) {
+        $instance = $old_instance;
+        $instance['title'] = strip_tags($new_instance['title']);
+        $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
+        $instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
+        $instance['dropdown'] = !empty($new_instance['dropdown']) ? 1 : 0;
+
+        return $instance;
+    }
+
+    public function form( $instance ) {
+        //Defaults
+        $instance = wp_parse_args( (array) $instance, array( 'title' => '') );
+        $title = esc_attr( $instance['title'] );
+        $count = isset($instance['count']) ? (bool) $instance['count'] :false;
+        $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
+        $dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
+        ?>
+        <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
+
+        <p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>"<?php checked( $dropdown ); ?> />
+            <label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e( 'Display as dropdown' ); ?></label><br />
+
+            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $count ); ?> />
+            <label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
+
+            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
+            <label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
+    <?php
+    }
+
+}
+
+
+
+/**
+ * Booking Form Widget
+ *
+ * @since 1.0.1
+ */
+
+class MJM_Clinic_Booking_Form extends WP_Widget {
+
+    public function __construct() {
+
+        $widget_options = array( 'classname' => 'mjm_clinic_service_categories_widget', 'description' => __('A list or dropdown of clinic service categories.', 'mjm-clinic') );
+
+        $control_options = array( 'id_base' => 'mjm_clinic_service_categories_widget' );
+
+        $this->WP_Widget( 'mjm_clinic_service_categories_widget', 'MJM Clinic: Service Categories', $widget_options, $control_options );
+
+    }
+
+    public function widget( $args, $instance ) {
+
+        /** This filter is documented in wp-includes/default-widgets.php */
+        $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Service Categories' ) : $instance['title'], $instance, $this->id_base );
+
+        $c = ! empty( $instance['count'] ) ? '1' : '0';
+        $h = ! empty( $instance['hierarchical'] ) ? '1' : '0';
+        $d = ! empty( $instance['dropdown'] ) ? '1' : '0';
+
+        echo $args['before_widget'];
+        if ( $title ) {
+            echo $args['before_title'] . $title . $args['after_title'];
+        }
+
+        $selected = null;
+        if(is_tax('mjm_clinic_service_category')) {
+            $selected   = get_query_var('mjm_clinic_service_category');
+        }
+
+        if(is_single()){
+            $selected = wp_get_post_terms( get_the_ID(), 'mjm_clinic_service_category');
+
+            //if a service has multiple categories how do you choose? Only if one.
+            if(count($selected) == 1) {
+                $selected = $selected[0]->slug;
+            }
+
+        }
+
+        $dropdown_args = array(
+            'taxonomy'      => 'mjm_clinic_service_category',
+            'name'          => 'mjm_csc_dropdown_widget',
+            'show_option_none'  => 'Select category',
+            'show_count'        => $c,
+            'orderby'       => 'name',
+            'hierarchical'      => $h,
+            'echo'          => 1,
+            'selected'      => $selected,
+            'walker'            => new MJM_Walker_SlugValueCategoryDropdown);
+
+
+        if ( $d ) {
+            $dropdown_args['show_option_none'] = __('Select Category');
+            wp_dropdown_categories( apply_filters( 'widget_categories_dropdown_args', $dropdown_args ) );
+            ?>
+
+            <script type='text/javascript'>
+                /* <![CDATA[ */
+                var dropdown = document.getElementById("mjm_csc_dropdown_widget");
+                function onCatChange() {
+                    if ( dropdown.options[dropdown.selectedIndex].value != -1 ) {
+                        location.href = "<?php echo home_url(); ?>/?mjm_clinic_service_category="+dropdown.options[dropdown.selectedIndex].value;
+                    }
+                }
+                dropdown.onchange = onCatChange;
+                /* ]]> */
+            </script>
+
+        <?php
+        } else {
+            ?>
+            <ul>
+                <?php
+                $dropdown_args['title_li'] = '';
+
+                /**
+                 * Filter the arguments for the Categories widget.
+                 *
+                 * @since 2.8.0
+                 *
+                 * @param array $dropdown_args An array of Categories widget options.
+                 */
+                wp_list_categories( apply_filters( 'widget_categories_args', $dropdown_args ) );
+                ?>
+            </ul>
+        <?php
+        }
+
+        echo $args['after_widget'];
+    }
+
+    public function update( $new_instance, $old_instance ) {
+        $instance = $old_instance;
+        $instance['title'] = strip_tags($new_instance['title']);
+        $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
+        $instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
+        $instance['dropdown'] = !empty($new_instance['dropdown']) ? 1 : 0;
+
+        return $instance;
+    }
+
+    public function form( $instance ) {
+        //Defaults
+        $instance = wp_parse_args( (array) $instance, array( 'title' => '') );
+        $title = esc_attr( $instance['title'] );
+        $count = isset($instance['count']) ? (bool) $instance['count'] :false;
+        $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
+        $dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
+        ?>
+        <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:' ); ?></label>
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
+
+        <p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>"<?php checked( $dropdown ); ?> />
+            <label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e( 'Display as dropdown' ); ?></label><br />
+
+            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $count ); ?> />
+            <label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
+
+            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
+            <label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
+    <?php
+    }
+
 }

@@ -230,13 +230,19 @@ class MJM_Clinic {
 	 * @since    1.0.0
      * @TODO default front end CSS should be user switchable
 	 */
-	public function enqueue_styles() {
+	public function enqueue_scripts() {
 		global $post;
 
 		if (!is_admin() && (in_array(get_post_type(),$this->available_post_types) || (is_page() && has_shortcode($post->post_content, 'mjm-clinic')))) {
 			wp_enqueue_style( $this->plugin_slug . '-public', plugins_url( 'css/public.css', __FILE__ ), array(), $this->version );
+            wp_enqueue_style( $this->plugin_slug . '-fontawesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
 		}
+
+//        if(!is_admin() && is_tax('mjm_clinic_location')){
+//            wp_enqueue_script( $this->plugin_slug . '-map-script', 'https://maps.googleapis.com/maps/api/js' );
+//        }
 	}
+
 
 	/**
 	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
@@ -315,7 +321,7 @@ class MJM_Clinic {
 			'public' => true,
 			'show_ui' => true,
             'show_in_menu' => true,
-			'menu_position' => 20,
+			'menu_position' => 25,
 			'show_in_nav_menus' => true,
 			'publicly_queryable' => true,
 			'exclude_from_search' => false,
@@ -778,9 +784,9 @@ class MJM_Clinic {
      */
     public function register_taxonomy_mjm_clinic_location() {
         register_taxonomy('mjm_clinic_location', array('mjm-clinic-service'), array(
-            'label' => __('Service Locations', 'mjm-clinic'),
+            'label' => __('Clinic Locations', 'mjm-clinic'),
             'labels' => array(
-                'name' => __( 'Service Locations', 'mjm-clinic' ),
+                'name' => __( 'Clinic Locations', 'mjm-clinic' ),
                 'singular_name' => __( 'Location', 'mjm-clinic' ),
                 'search_items' =>  __( 'Search Location', 'mjm-clinic' ),
                 'popular_items' => __( 'Popular Location', 'mjm-clinic' ),
@@ -789,12 +795,12 @@ class MJM_Clinic {
                 'parent_item_colon' => null,
                 'edit_item' => __( 'Edit Location', 'mjm-clinic' ),
                 'update_item' => __( 'Update Location', 'mjm-clinic' ),
-                'add_new_item' => __( 'Add New Location', 'mjm-clinic' ),
+                'add_new_item' => __( 'Add New Clinic Location', 'mjm-clinic' ),
                 'new_item_name' => __( 'New Location Name', 'mjm-clinic' ),
                 'separate_items_with_commas' => __( 'Separate Location with commas', 'mjm-clinic' ),
                 'add_or_remove_items' => __( 'Add or remove Location', 'mjm-clinic' ),
                 'choose_from_most_used' => __( 'Choose from the most used Location', 'mjm-clinic' ),
-                'menu_name' => __( 'Service Locations', 'mjm-clinic' ),
+                'menu_name' => __( 'Locations', 'mjm-clinic' ),
             ),
             'public' => true,
             'show_in_nav_menus' => true,
@@ -852,9 +858,11 @@ class MJM_Clinic {
 		</div>
 
         <div class="form-field">
-            <label for="term_meta[map_link]"><?php _e( 'Map Link','mjm-clinic')?></label>
+            <label for="term_meta[map_link]"><?php _e( 'Map Location','mjm-clinic')?></label>
             <input type="text" name="term_meta[map_link]" id="term_meta[map_link]" value="">
-            <p class="description"><?php _e( 'A URL link to a location map','mjm-clinic')?></p>
+            <p class="description"><?php _e( 'Enter the Latitude and Longitude values for this location separated with a comma. Eg. 38.897676, -77.036530','mjm-clinic')?></p>
+            <p class="description"><?php _e( 'You can find these values @ http://www.latlong.net/convert-address-to-lat-long.html','mjm-clinic')?></p>
+
         </div>
 
 		<script type="text/javascript">
@@ -909,10 +917,12 @@ class MJM_Clinic {
             </td>
         </tr>
         <tr class="form-field">
-            <th scope="row" valign="top"><label for="term_meta[map_link]"><?php _e( 'Map Link','mjm-clinic' ); ?></label></th>
+            <th scope="row" valign="top"><label for="term_meta[map_link]"><?php _e( 'Map Location','mjm-clinic' ); ?></label></th>
             <td>
                 <input type="text" name="term_meta[map_link]" id="term_meta[map_link]" value="<?php echo esc_attr( $term_meta['map_link'] ) ? esc_attr( $term_meta['map_link'] ) : ''; ?>">
-                <p class="description"><?php _e( 'Enter a link to location map','mjm-clinic' ); ?></p>
+                <p class="description"><?php _e( 'Enter the Latitude and Longitude values for this location separated with a comma. Eg. 38.897676, -77.036530','mjm-clinic')?></p>
+                <p class="description"><?php _e( 'You can find these values @ http://www.latlong.net/convert-address-to-lat-long.html','mjm-clinic')?></p>
+
             </td>
         </tr>
         <script type="text/javascript">
@@ -1034,13 +1044,13 @@ class MJM_Clinic {
 
 
 
-			if ( isset($options['mjm_clinic_location']) && ($options['mjm_clinic_location']  == true) ) {
+			if ( isset($options['mjm_clinic_option_location']) && ($options['mjm_clinic_option_location']  == true) ) {
 				//unset( $wp_meta_boxes['mjm-clinic-service']['side']['core']['clinic-locationdiv'] );
 				//remove_meta_box('tagsdiv-clinic-location', 'mjm-clinic-service', 'side' );
 				//add_meta_box( 'clinic-locationdiv', __( 'Location', 'mjm-clinic' ), 'post_categories_meta_box', 'mjm-clinic-service', 'normal', 'core', array( 'taxonomy' => 'mjm_clinic_location' ) );
 			}
 
-			if ( isset($options['mjm_clinic_related_product']) && ($options['mjm_clinic_related_product']  == true) ) {
+			if ( isset($options['mjm_clinic_option_related_product']) && ($options['mjm_clinic_option_related_product']  == true) ) {
 //				unset( $wp_meta_boxes['mjm-clinic-service']['side']['core']['tagsdiv-mjm_clinic_related_product'] );
 //				add_meta_box( 'tagsdiv-mjm_clinic_related_product', __( 'Related Products', 'mjm-clinic' ), 'post_tags_meta_box', 'mjm-clinic-service', 'normal', 'core', array( 'taxonomy' => 'mjm_clinic_related_product' ) );
 			}
@@ -1087,7 +1097,7 @@ class MJM_Clinic {
         echo '</div>';
 
 
-        if ( isset($options['price']) && ($options['price'] == true) ) {
+        if ( isset($options['mjm_clinic_option_price']) && ($options['mjm_clinic_option_price'] == true) ) {
             echo '<div class="price-box">';
             echo '<label for="price"><strong>' . __( 'Session Price:', 'mjm-clinic' ) . '</strong></label><br />';
             echo '<input class="widefat" id="price" name="price" value="' . wp_strip_all_tags( get_post_meta( $post->ID, 'price', true ), true ) . '" type="number" step="any" />';
@@ -1523,6 +1533,8 @@ class MJM_Clinic {
         register_widget( 'MJM_Clinic_Related_Conditions' );
         register_widget( 'MJM_Clinic_Related_Feedback' );
         register_widget( 'MJM_Clinic_Related_Casestudy' );
+        register_widget( 'MJM_Clinic_Service_Categories' );
+        register_widget( 'MJM_Clinic_Location_Map' );
 
 	}
 
@@ -1537,6 +1549,122 @@ class MJM_Clinic {
 			add_image_size( 'mjm-clinic-service-feature', 280, 241, false );
 		}
 	}
+
+
+    /**
+     * Process Booking Form
+     *
+     *
+     */
+    public function process_booking_form(){
+        if(!class_exists('MJM_Clinic\Akismet')) {
+            include_once(CLINIC_SERVICES_AKISMET);
+        }
+
+            $wp_key = get_option( 'wordpress_api_key' );
+            echo $wp_key;
+            $our_url = get_bloginfo( 'url' );
+
+            $msg = array();
+            $msg['from_name'] = $_POST['name'];
+            $msg['from_email'] = $_POST['email'];
+            $msg['website'] = $_POST['website'];
+            $msg['content'] = $_POST['message'];
+            $msg['subject'] = 'New Booking';
+            $msg['form_action_url'] = '/';
+            $msg = $this->akismet_check($msg);
+
+
+            if($msg){
+                $headers[] = 'Reply-To: '.$msg['from_name'].' <'.$msg['from_email'].'>';
+                wp_mail( 'm@mjman.net', $msg['subject'], $msg['content'] , $headers);
+            }
+
+
+        print_r($_POST);
+    }
+
+
+    /**
+     * Check for form submissions
+     *
+     *
+     */
+    function check_for_form_submissions(){
+        if(isset($_POST['mjm-clinic']))
+        {
+            // process your data here, you'll use wp_insert_post() I assume
+
+                $this->process_booking_form();
+                //wp_redirect('/coc/'); //$_POST['redirect_url']
+                die();
+
+        }
+
+    }
+
+    static function akismet_check($msg, $test=NULL) {
+
+        // Check with Akismet, but only if Akismet is installed, activated, and has a KEY. (Recommended for spam control).
+
+            // check if akismet is activated, version 2.x or 3.x
+            if ( ( is_callable( array( 'Akismet', 'http_post' ) ) || function_exists( 'akismet_http_post' ) ) && get_option( 'wordpress_api_key' ) ) {
+                global $akismet_api_host, $akismet_api_port;
+                $c['user_ip'] = preg_replace( '/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'] );
+                $c['user_agent'] = (isset( $_SERVER['HTTP_USER_AGENT'] )) ? $_SERVER['HTTP_USER_AGENT'] : '';
+                $c['referrer'] = (isset( $_SERVER['HTTP_REFERER'] )) ? $_SERVER['HTTP_REFERER'] : '';
+                $c['blog'] = get_option( 'home' );
+                $c['blog_lang'] = get_locale(); // default 'en_US'
+                $c['blog_charset'] = get_option( 'blog_charset' );
+                $c['permalink'] = $msg['form_action_url']; //@TODO sort out all the self biz
+                $c['comment_type'] = 'contact-form';
+                if ( ! empty($msg['from_name']) )
+                    $c['comment_author'] = $msg['from_name'];
+                if ( ! empty($msg['from_email']) )
+                    $c['comment_author_email'] = $msg['from_email'];
+                $c['comment_content'] = $msg['content'];
+                $ignore = array( 'HTTP_COOKIE', 'HTTP_COOKIE2', 'PHP_AUTH_PW' );
+                foreach ( $_SERVER as $key => $value ) {
+                    if ( !in_array( $key, $ignore ) && is_string( $value ) )
+                        $c["$key"] = $value;
+                    else
+                        $c["$key"] = '';
+                }
+                $query_string = '';
+                foreach ( $c as $key => $data ) {
+                    if ( is_string( $data ) )
+                        $query_string .= $key . '=' . urlencode( stripslashes( $data ) ) . '&';
+                }
+
+                if ( is_callable( array( 'Akismet', 'http_post' ) ) ) { // Akismet v3.0+
+                    $response = Akismet::http_post( $query_string, 'comment-check' );
+                } else {  // Akismet v2.xx
+                    $response = akismet_http_post( $query_string, $akismet_api_host, '/1.1/comment-check', $akismet_api_port );
+                }
+
+                if ( 'true' == $response[1] ) {
+                    //is spam
+                    if($test){
+                        echo 'AKISMET SAYS SPAM';
+                    }
+                    return false;
+                } else {
+                    //is not spam
+                    if($test){
+                        echo 'AKISMET SAYS OK';
+                    }
+                    return $msg;
+                }
+            }
+
+        if($test){
+            echo 'AKISMET NOT WORKING';
+        }
+        $msg['content'] = $msg['content']." \r\n\r\nMJM CLINIC ADVICE \r\n------------------\r\nYour WordPress AKISMET plugin is not active! \r\nTo reduce spam submissions you should activate AKISMET in the WordPress Admin Panel: ".get_site_url()."/wp-admin/plugins.php]";
+        return $msg; //we dont know if its spam, could not get an answer from askimet. Let it through.
+
+    }
+
 
 	/**
 	 * Creates the shortcode

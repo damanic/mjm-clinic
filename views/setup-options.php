@@ -10,33 +10,8 @@
  */
 
 
-/**
- * Related product option
- * The HTML for Related product
- *
- * @since 	1.0.0
- */
-function mjm_clinic_related_product() {
-	include_once(CLINIC_SERVICES_FUNC);
-	$defaults = mjm_clinic_option_defaults();
-	$options = get_option( 'mjm_clinic_settings', $defaults );
-	?>
-	<tr valign="top"><th scope="row"><?php _e( 'Related Product', 'mjm-clinic' ); ?></th>
-		<td>
-			<select name="mjm_clinic_settings[mjm_clinic_related_product]" id="mjm_clinic_related_product">
-			<?php
-				$selected = $options['mjm_clinic_related_product'];
-				foreach ( mjm_clinic_true_false() as $option ) {
-					$label = $option['label'];
-					$value = $option['value'];
-					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
-				} ?>
-			</select><br />
-			<label class="description" for="mjm_clinic_settings[mjm_clinic_related_product]"><?php _e( 'Enable this to display the related product for the service.', 'mjm-clinic' ); ?></label>
-		</td>
-	</tr>
-	<?php
-}
+
+
 
 /**
  * indication option
@@ -49,18 +24,18 @@ function mjm_clinic_indication() {
 	$defaults = mjm_clinic_option_defaults();
 	$options = get_option( 'mjm_clinic_settings', $defaults );
 	?>
-	<tr valign="top"><th scope="row"><?php _e( 'Indication', 'mjm-clinic' ); ?></th>
+	<tr valign="top"><th scope="row"><?php _e( 'Indications', 'mjm-clinic' ); ?></th>
 		<td>
-			<select name="mjm_clinic_settings[mjm_clinic_indication]" id="mjm_clinic_indication">
+			<select name="mjm_clinic_settings[mjm_clinic_option_indication]" id="mjm_clinic_option_indication">
 			<?php
-				$selected = $options['mjm_clinic_indication'];
+				$selected = $options['mjm_clinic_option_indication'];
 				foreach ( mjm_clinic_true_false() as $option ) {
 					$label = $option['label'];
 					$value = $option['value'];
 					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
 				} ?>
 			</select><br />
-			<label class="description" for="mjm_clinic_settings[mjm_clinic_indication]"><?php _e( 'Enable this to tag the service with different indications (unique from categories).', 'mjm-clinic' ); ?></label>
+			<label class="description" for="mjm_clinic_settings[mjm_clinic_option_indication]"><?php _e( 'Enable this to link content with health symptom/indication tags.', 'mjm-clinic' ); ?></label>
 		</td>
 	</tr>
 	<?php
@@ -73,54 +48,57 @@ function mjm_clinic_indication() {
  *
  * @since 	1.0.0
  */
-function mjm_clinic_contraindications() {
-	include_once(CLINIC_SERVICES_FUNC);
-	$defaults = mjm_clinic_option_defaults();
-	$options = get_option( 'mjm_clinic_settings', $defaults );
-	?>
-	<tr valign="top"><th scope="row"><?php _e( 'Contraindications', 'mjm-clinic' ); ?></th>
-		<td>
-			<select name="mjm_clinic_settings[mjm_clinic_contraindication]" id="mjm_clinic_contraindication">
-			<?php
-				$selected = $options['mjm_clinic_contraindication'];
-				foreach ( mjm_clinic_true_false() as $option ) {
-					$label = $option['label'];
-					$value = $option['value'];
-					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
-				} ?>
-			</select><br />
-			<label class="description" for="mjm_clinic_settings[mjm_clinic_contraindication]"><?php _e( 'Enable this to add contraindications the service has received.', 'mjm-clinic' ); ?></label>
-		</td>
-	</tr>
-	<?php
+function mjm_clinic_contraindications()
+{
+    include_once(CLINIC_SERVICES_FUNC);
+    $defaults = mjm_clinic_option_defaults();
+    $options = get_option('mjm_clinic_settings', $defaults);
+    ?>
+    <tr valign="top">
+        <th scope="row"><?php _e('Contraindications', 'mjm-clinic'); ?></th>
+        <td>
+            <select name="mjm_clinic_settings[mjm_clinic_contraindication]" id="mjm_clinic_contraindication">
+                <?php
+                $selected = $options['mjm_clinic_contraindication'];
+                foreach (mjm_clinic_true_false() as $option) {
+                    $label = $option['label'];
+                    $value = $option['value'];
+                    echo '<option value="' . $value . '" ' . selected($selected, $value) . '>' . $label . '</option>';
+                } ?>
+            </select><br/>
+            <label class="description"
+                   for="mjm_clinic_settings[mjm_clinic_contraindication]"><?php _e('Enable this to flag/link content with contraindication tags.', 'mjm-clinic'); ?></label>
+        </td>
+    </tr>
+<?
 }
 
-/**
- * Location option
- * The HTML for Location
- *
- * @since 	1.0.0
- */
-function mjm_clinic_clinic_location() {
-	include_once(CLINIC_SERVICES_FUNC);
-	$defaults = mjm_clinic_option_defaults();
-	$options = get_option( 'mjm_clinic_settings', $defaults );
-	?>
-	<tr valign="top"><th scope="row"><?php _e( 'Location', 'mjm-clinic' ); ?></th>
-		<td>
-			<select name="mjm_clinic_settings[mjm_clinic_location]" id="mjm_clinic_location">
-			<?php
-				$selected = $options['mjm_clinic_location'];
-				foreach ( mjm_clinic_true_false() as $option ) {
-					$label = $option['label'];
-					$value = $option['value'];
-					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
-				} ?>
-			</select><br />
-			<label class="description" for="mjm_clinic_settings[mjm_clinic_location]"><?php _e( 'Enable this to group services by clinic location.', 'mjm-clinic' ); ?></label>
-		</td>
-	</tr>
-	<?php
+    /**
+    * Related product option
+    * The HTML for Related product
+    *
+    * @since 	1.0.0
+    */
+    function mjm_clinic_related_product() {
+    include_once(CLINIC_SERVICES_FUNC);
+    $defaults = mjm_clinic_option_defaults();
+    $options = get_option( 'mjm_clinic_settings', $defaults );
+    ?>
+    <tr valign="top"><th scope="row"><?php _e( 'Related Products', 'mjm-clinic' ); ?></th>
+        <td>
+            <select name="mjm_clinic_settings[mjm_clinic_option_related_product]" id="mjm_clinic_option_related_product">
+                <?php
+                $selected = $options['mjm_clinic_option_related_product'];
+                foreach ( mjm_clinic_true_false() as $option ) {
+                    $label = $option['label'];
+                    $value = $option['value'];
+                    echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+                } ?>
+            </select><br />
+            <label class="description" for="mjm_clinic_settings[mjm_clinic_option_related_product]"><?php _e( 'Enables you to create links to products.', 'mjm-clinic' ); ?></label>
+        </td>
+    </tr>
+<?php
 }
 
 /**
@@ -134,18 +112,18 @@ function mjm_clinic_price() {
 	$defaults = mjm_clinic_option_defaults();
 	$options = get_option( 'mjm_clinic_settings', $defaults );
 	?>
-	<tr valign="top"><th scope="row"><?php _e( 'Price', 'mjm-clinic' ); ?></th>
+	<tr valign="top"><th scope="row"><?php _e( 'Service Price', 'mjm-clinic' ); ?></th>
 		<td>
-			<select name="mjm_clinic_settings[mjm_clinic_price]" id="mjm_clinic_price">
+			<select name="mjm_clinic_settings[mjm_clinic_option_price]" id="mjm_clinic_option_price">
 			<?php
-				$selected = $options['mjm_clinic_price'];
+				$selected = $options['mjm_clinic_option_price'];
 				foreach ( mjm_clinic_true_false() as $option ) {
 					$label = $option['label'];
 					$value = $option['value'];
 					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
 				} ?>
 			</select><br />
-			<label class="description" for="mjm_clinic_settings[mjm_clinic_price]"><?php _e( 'Enable this to display prices on service listings.', 'mjm-clinic' ); ?></label>
+			<label class="description" for="mjm_clinic_settings[mjm_clinic_option_price]"><?php _e( 'If you want a seperate field for price - enable this.', 'mjm-clinic' ); ?></label>
 		</td>
 	</tr>
 	<?php
@@ -195,7 +173,7 @@ function mjm_clinic_disclaimer() {
    // if($selected){$style='style="background-color: #00acee; padding:5px;"';}
     ?>
 
-    <tr valign="top" <?=$style?>><th scope="row"><?php _e( 'Show Service Disclaimer', 'mjm-clinic' ); ?></th>
+    <tr valign="top" <?=$style?>><th scope="row"><?php _e( 'Service Disclaimer', 'mjm-clinic' ); ?></th>
         <td>
             <select name="mjm_clinic_settings[mjm_clinic_disclaimer_toggle]" id="mjm_clinic_disclaimer_toggle">
                 <?php
@@ -205,7 +183,7 @@ function mjm_clinic_disclaimer() {
                     echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
                 } ?>
             </select><br />
-            <label class="description" for="mjm_clinic_settings[mjm_clinic_disclaimer_toggle]"><?php _e( 'Enable this to set a disclaimer for service and health advice pages.', 'mjm-clinic' ); ?></label>
+            <label class="description" for="mjm_clinic_settings[mjm_clinic_disclaimer_toggle]"><?php _e( 'Enable this to show a disclaimer on service and health advice pages.', 'mjm-clinic' ); ?></label>
         </td>
     </tr>
 
@@ -217,6 +195,63 @@ function mjm_clinic_disclaimer() {
     </tr>
 
         <?}?>
+<?php
+}
+
+/**
+ * Case Study Option
+ * enables/disables feedback content
+ *
+ * @since 1.0.1
+ */
+function mjm_clinic_feedback() {
+    include_once(CLINIC_SERVICES_FUNC);
+    $defaults = mjm_clinic_option_defaults();
+    $options = get_option( 'mjm_clinic_settings', $defaults );
+    ?>
+    <tr valign="top"><th scope="row"><?php _e( 'Customer Feedback', 'mjm-clinic' ); ?></th>
+        <td>
+            <select name="mjm_clinic_settings[mjm_clinic_option_feedback]" id="mjm_clinic_option_feedback">
+                <?php
+                $selected = $options['mjm_clinic_option_feedback'];
+                foreach ( mjm_clinic_true_false() as $option ) {
+                    $label = $option['label'];
+                    $value = $option['value'];
+                    echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+                } ?>
+            </select><br />
+            <label class="description" for="mjm_clinic_settings[mjm_clinic_option_feedback]"><?php _e( 'Allows you to add customer feedback and link it to services or conditions.', 'mjm-clinic' ); ?></label>
+        </td>
+    </tr>
+<?php
+}
+
+
+/**
+ * Case Study Option
+ * enables/disables case study content
+ *
+ * @since 1.0.1
+ */
+function mjm_clinic_casestudy() {
+    include_once(CLINIC_SERVICES_FUNC);
+    $defaults = mjm_clinic_option_defaults();
+    $options = get_option( 'mjm_clinic_settings', $defaults );
+    ?>
+    <tr valign="top"><th scope="row"><?php _e( 'Case Studies', 'mjm-clinic' ); ?></th>
+        <td>
+            <select name="mjm_clinic_settings[mjm_clinic_option_casestudy]" id="mjm_clinic_option_casestudy">
+                <?php
+                $selected = $options['mjm_clinic_option_casestudy'];
+                foreach ( mjm_clinic_true_false() as $option ) {
+                    $label = $option['label'];
+                    $value = $option['value'];
+                    echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+                } ?>
+            </select><br />
+            <label class="description" for="mjm_clinic_settings[mjm_clinic_option_casestudy]"><?php _e( 'Allows you to add case studies.', 'mjm-clinic' ); ?></label>
+        </td>
+    </tr>
 <?php
 }
 
@@ -232,12 +267,14 @@ function mjm_clinic_do_options() {
 
 	// do stuff
 	echo $options_before;
-	mjm_clinic_related_product();
-	mjm_clinic_indication();
+
+    mjm_clinic_indication();
 	mjm_clinic_contraindications();
-	mjm_clinic_clinic_location();
-	mjm_clinic_price();
-	mjm_clinic_comments();
+    mjm_clinic_price();
     mjm_clinic_disclaimer();
+    mjm_clinic_related_product();
+    mjm_clinic_feedback();
+    mjm_clinic_casestudy();
+    mjm_clinic_comments();
 	echo $options_after;
 }

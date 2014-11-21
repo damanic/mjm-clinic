@@ -10,10 +10,11 @@
  * @copyright 2014 Matt Manning
  */
 
-add_action( 'init', 'clinic_service_archive_check' );
+add_action( 'init', 'clinic_service_category_template_check' );
 add_action( 'init', 'clinic_service_single_check' );
 add_action( 'init', 'clinic_service_taxonomy_check' );
-//add_filter('single_template', 'clinic_service_single_template');
+add_filter('single_template', 'mjm_clinic_load_default_single_templates');
+add_filter('taxonomy_template', 'load_default_taxonomy_templates');
 
 
 /**
@@ -22,14 +23,45 @@ add_action( 'init', 'clinic_service_taxonomy_check' );
  *
  * @since 	1.0.0
  */
-function clinic_service_single_template($template)
+function mjm_clinic_load_default_single_templates($template)
 {
-//	if ('mjm-clinic-service' == get_post_type(get_queried_object_id()) && !$template) {
-//		// type and WP did NOT locate a template, use default.
+	if ('mjm-clinic-service' == get_post_type(get_queried_object_id()) && !strstr($template,'single-mjm-clinic-service.php')) {
+		// type and WP did NOT locate a template, use default.
 //		$template = dirname(__FILE__) . '/templates/single-clinic-service.php';
 //		return $template;
-//	}
+	}
 }
+
+/**
+ * Post Type Default Template
+ * if there's an single template for the clinic-service post type, don't do this
+ *
+ * @since 	1.0.0
+ */
+function load_default_taxonomy_templates($template)
+{
+    global $wp_query;
+    $taxonomy = get_query_var('taxonomy');
+    if ($taxonomy == 'mjm_clinic_service_category' && !strstr($template,'taxonomy-mjm-clinic_service_category.php')) {
+        // type and WP did NOT locate a template, use default.
+        $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_service_category.php';
+        return $template;
+    }
+
+    if ($taxonomy == 'mjm_clinic_location' && !strstr($template,'taxonomy-mjm-clinic_location.php')) {
+        // type and WP did NOT locate a template, use default.
+        $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_service_location.php';
+        return $template;
+    }
+
+    if ($taxonomy == 'mjm_clinic_indication' && !strstr($template,'taxonomy-mjm-clinic_indication.php')) {
+        // type and WP did NOT locate a template, use default.
+        $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_indication.php';
+        return $template;
+    }
+}
+
+
 
 /**
  * Post Type Archive check
@@ -37,9 +69,9 @@ function clinic_service_single_template($template)
  *
  * @since 	1.0.0
  */
-function clinic_service_archive_check() {;
+function clinic_service_category_template_check() {;
 
-	$archive = locate_template( 'archive-clinic-service.php' );
+	$archive = locate_template( 'taxonomy-mjm_clinic_service_category' );
 	if ( empty($archive) ) {
 		include_once(CLINIC_SERVICES_FUNC);
 		$defaults = mjm_clinic_option_defaults();
@@ -48,11 +80,11 @@ function clinic_service_archive_check() {;
 		if ( isset($options['title-filter']) ) {
 			switch ( $options['title-filter'] ) {
 				case 'title' :
-					add_filter( 'the_title', 'filter_clinic_service_title', 20 );
+					add_filter( 'the_title', 'filter_mjm_clinic_service_category_title', 20 );
 					break;
 
 				case 'newline' :
-					add_filter( 'the_title', 'filter_clinic_service_title_newline', 20 );
+					add_filter( 'the_title', 'filter_mjm_clinic_service_category_title_newline', 20 );
 					break;
 
 				case 'disabled' :
@@ -73,7 +105,7 @@ function clinic_service_archive_check() {;
  */
 function clinic_service_single_check() {;
 
-	$single = locate_template( 'single-clinic-service.php' );
+	$single = locate_template( 'single-mjm-clinic-service.php' );
 	if ( empty($single) ) {
 		include_once(CLINIC_SERVICES_FUNC);
 		$defaults = mjm_clinic_option_defaults();
@@ -82,11 +114,11 @@ function clinic_service_single_check() {;
 		if ( isset($options['title-filter']) ) {
 			switch ( $options['title-filter'] ) {
 				case 'title' :
-					add_filter( 'the_title', 'filter_clinic_service_title', 20 );
+					add_filter( 'the_title', 'filter_mjm_clinic_service_category_title', 20 );
 					break;
 
 				case 'newline' :
-					add_filter( 'the_title', 'filter_clinic_service_title_newline', 20 );
+					add_filter( 'the_title', 'filter_mjm_clinic_service_category_title_newline', 20 );
 					break;
 
 				case 'disabled' :
@@ -116,11 +148,11 @@ function clinic_service_taxonomy_check() {;
 		if ( isset($options['title-filter']) ) {
 			switch ( $options['title-filter'] ) {
 				case 'title' :
-					add_filter( 'the_title', 'filter_clinic_service_title', 20 );
+					add_filter( 'the_title', 'filter_mjm_clinic_service_category_title', 20 );
 					break;
 
 				case 'newline' :
-					add_filter( 'the_title', 'filter_clinic_service_title_newline', 20 );
+					add_filter( 'the_title', 'filter_mjm_clinic_service_category_title_newline', 20 );
 					break;
 
 				case 'disabled' :
@@ -261,10 +293,10 @@ function filter_clinic_service_excerpt( $content ) {
  *
  * @since 	1.0.0
  */
-function filter_clinic_service_title( $title ) {
+function filter_mjm_clinic_service_category_title( $title ) {
 	global $post;
 
-		return $title;
+		return 'sjag';
 
 }
 
@@ -273,7 +305,7 @@ function filter_clinic_service_title( $title ) {
  *
  * @since 	1.0.0
  */
-function filter_clinic_service_title_newline( $title ) {
+function filter_mjm_clinic_service_category_title_newline( $title ) {
 	global $post;
 
 	return $title;

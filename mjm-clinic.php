@@ -25,10 +25,12 @@ if ( ! defined( 'WPINC' ) ) {
 }
 define( 'CLINIC_SERVICES_FUNC', plugin_dir_path( __FILE__ ) . 'inc/func.php' );
 define( 'CLINIC_SERVICES_WIDGETS', plugin_dir_path( __FILE__ ) . 'inc/widgets.php' );
+define( 'CLINIC_SERVICES_AKISMET', plugin_dir_path( __FILE__ ) . 'vendor/akismet.class.php' );
 
 $is_clinic_service_shortcode = false;
 
 require_once( plugin_dir_path( __FILE__ ) . 'class-mjm-clinic.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'class-misc.php' );
 
 // Register hooks that are fired when the plugin is activated, deactivated, and uninstalled, respectively.
 register_activation_hook( __FILE__, array( 'MJM_Clinic', 'activate' ) );

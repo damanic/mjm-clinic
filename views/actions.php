@@ -7,18 +7,25 @@
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
+        //Check for form submissions
+        add_action('template_redirect', array( $this,'check_for_form_submissions'));
+
 		// Load admin style sheet and JavaScript.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// Register post types
 		add_action( 'init', array( $this, 'register_post_type_mjm_clinic_service' ),5 );
         add_action( 'init', array( $this, 'register_post_type_mjm_clinic_condition' ),5 );
-        add_action( 'init', array( $this, 'register_post_type_mjm_clinic_patient_feedback', ),5 );
-        add_action( 'init', array( $this, 'register_post_type_mjm_clinic_case_study' ),5 );
+
+        if ( isset($options['mjm_clinic_option_feedback']) && ($options['mjm_clinic_option_feedback']  == true) )
+            add_action( 'init', array( $this, 'register_post_type_mjm_clinic_patient_feedback', ),5 );
+
+        if ( isset($options['mjm_clinic_option_casestudy']) && ($options['mjm_clinic_option_casestudy']  == true) )
+            add_action( 'init', array( $this, 'register_post_type_mjm_clinic_case_study' ),5 );
 
 		// Register taxonomies
         add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_service_category' ) );
@@ -28,20 +35,20 @@
 		add_action( 'created_mjm_clinic_service_category', array($this, 'save_taxonomy_custom_meta'));
         add_action( 'manage_edit-mjm_clinic_service_category_columns', array($this,'edit_service_category_columns'));
 
-        if ( isset($options['mjm_clinic_location']) && ($options['mjm_clinic_location']  == true) )
+        if ( isset($options['mjm_clinic_option_location']) && ($options['mjm_clinic_option_location']  == true) )
             add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_location' ) );
             add_action( 'cjc_clinic_location_add_form_fields', array( $this, 'add_taxonomy_form_fields_mjm_clinic_location' ) );
             add_action( 'mjm_clinic_location_edit_form_fields', array($this, 'add_taxonomy_edit_form_fields_mjm_clinic_location'));
             add_action( 'edited_mjm_clinic_location',array($this, 'save_taxonomy_custom_meta'));
             add_action( 'created_mjm_clinic_location', array($this, 'save_taxonomy_custom_meta'));
 
-        if ( isset($options['mjm_clinic_indication']) && ($options['mjm_clinic_indication']  == true) )
+        if ( isset($options['mjm_clinic_option_indication']) && ($options['mjm_clinic_option_indication']  == true) )
             add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_indication' ) );
 
-        if ( isset($options['mjm_clinic_contraindication']) && ($options['mjm_clinic_contraindication']  == true) )
+        if ( isset($options['mjm_clinic_option_contraindication']) && ($options['mjm_clinic_option_contraindication']  == true) )
             add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_contraindication' ) );
 
-		if ( isset($options['mjm_clinic_related_product']) && ($options['mjm_clinic_related_product']  == true) )
+		if ( isset($options['mjm_clinic_option_related_product']) && ($options['mjm_clinic_option_related_product']  == true) )
 			add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_related_product' ) );
             add_action( 'mjm_clinic_related_product_add_form_fields', array( $this, 'add_taxonomy_form_fields_mjm_clinic_related_product' ) );
 	        add_action( 'mjm_clinic_related_product_edit_form_fields', array($this, 'add_taxonomy_edit_form_fields_mjm_clinic_related_product'));
