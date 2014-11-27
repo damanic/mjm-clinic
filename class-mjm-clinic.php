@@ -238,9 +238,9 @@ class MJM_Clinic {
             wp_enqueue_style( $this->plugin_slug . '-fontawesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
 		}
 
-//        if(!is_admin() && is_tax('mjm_clinic_location')){
-//            wp_enqueue_script( $this->plugin_slug . '-map-script', 'https://maps.googleapis.com/maps/api/js' );
-//        }
+        //register scripts only used in shortcodes
+        wp_register_script( 'mjm-clinic-script-booking_form', plugins_url( 'js/booking_form.js' , __FILE__ ), array(), $this->version, true );
+        wp_register_style('mjm-clinic-script-datepicker-css', plugins_url( 'css/jquery-ui.min.css' , __FILE__ ), array(), $this->version );
 	}
 
 
@@ -1667,164 +1667,26 @@ class MJM_Clinic {
 
 
 	/**
-	 * Creates the shortcode
+	 * Booking Form Shortcode
 	 *
-	 * @since 	1.0.0
+	 * @since 	1.0.1
 	 */
-	public function create_shortcode( $atts )
-    {
-//        global $is_clinic_service_shortcode;
-//
-//        $is_clinic_service_shortcode = true;
-//
-//        include_once(CLINIC_SERVICES_FUNC);
-//        $defaults = mjm_clinic_option_defaults();
-//        $options = get_option('mjm_clinic_settings', $defaults);
-//
-//        extract(shortcode_atts(array(
-//            'count' => '',
-//            'covers' => true,
-//            'order_by' => 'date_added', // title, date added (default)
-//            'format' => 'none', // 0 = none, 1 = excerpt, 2 = full
-//            'mjm_clinic_service_category' => '' // any mjm_clinic_service_category
-//        ), $atts));
-//
-//        $covers = null;
-//        $mjm_clinic_service_category = null;
-//
-//        if (isset($atts['count'])) {
-//            $count = $atts['count'];
-//        } else {
-//            $count = -1;
-//        }
-//        if (isset($atts['covers']) && 'true' == $atts['covers']) {
-//            $covers = true;
-//        } else {
-//            $covers = false;
-//        }
-//        if (isset($atts['order_by'])) {
-//            $order_by = $atts['order_by'];
-//            switch ($order_by) {
-//                case 'date_added' :
-//                    $orderby = 'date';
-//                    $order = 'DESC';
-//                    break;
-//                case 'title' :
-//                    $orderby = 'title';
-//                    $order = 'ASC';
-//                    break;
-//                default :
-//                    $orderby = 'date';
-//                    $order = 'DESC';
-//                    break;
-//            }
-//        } else {
-//            $orderby = 'date';
-//            $order = 'DESC';
-//        }
-//        if (isset($atts['format'])) {
-//            $format = 0;
-//            if ('excerpt' == $atts['format']) {
-//                $format = 1;
-//            }
-//            if ('full' == $atts['format']) {
-//                $format = 2;
-//            }
-//        }
-//
-//        if (isset($atts['mjm_clinic_service_category'])) {
-//            $mjm_clinic_service_category = sanitize_title($atts['mjm_clinic_service_category']); // sanitize the mjm_clinic_service_category in case someone didn't remember to do that
-//        }
-//
-//        if (!$mjm_clinic_service_category) { // we are not listing services
-//            $args = array(
-//                'post_type' => 'mjm-clinic-service',
-//                'posts_per_page' => $count,
-//                'orderby' => $orderby,
-//                'order' => $order
-//            );
-//        } else {
-//            $args = array(
-//                'post_type' => 'mjm-clinic-service',
-//                'posts_per_page' => $count,
-//                'orderby' => $orderby,
-//                'order' => $order,
-//                'mjm_clinic_service_category' => $mjm_clinic_service_category
-//            );
-//        }
-//
-//        $query = new WP_Query($args);
-//        ob_start();
-//        if ($query->have_posts()) {
-//            while ($query->have_posts()) {
-//                $query->the_post(); ?>
-<!--                <div class="mjm-clinic-service-wrapper orderedby---><?php //echo esc_attr($orderby); ?><!--"-->
-<!--                     id="mjm-clinic-service---><?php //echo get_the_ID(); ?><!--">-->
-<!--                    --><?php
-//                        echo '<h3><a href="' . get_permalink() . '">' . get_the_title() . '</a></h3>';
-//                    ?>
-<!---->
-<!--                    <div --><?php //post_class('mjm-clinic-service-sc'); ?><!-->-->
-<!--                        --><?php //if (($covers == true) && has_post_thumbnail()) { ?>
-<!--                            <a href="--><?php //the_permalink(); ?><!--" title="--><?php //the_title_attribute(); ?><!--"-->
-<!--                               class="alignleft pull-left thumbnail">-->
-<!--                                --><?php //if (isset($options['thumbnail']) && 'service-cover' == $options['thumbnail']) {
-//                                    the_post_thumbnail('service-cover');
-//                                } else {
-//                                    the_post_thumbnail('thumbnail');
-//                                } ?>
-<!--                            </a>-->
-<!--                        --><?php //} ?>
-<!---->
-<!--                        --><?php //if ($format) {
-//                            if ($format == 1) {
-//                                ?>
-<!--                                --><?php //the_excerpt(); ?>
-<!--                            --><?php //} elseif ($format == 2) { ?>
-<!--                                --><?php //the_content(); ?>
-<!--                            --><?php
-//                            }
-//                        } ?>
-<!--                    </div>-->
-<!---->
-<!--                    <div class="post-meta">-->
-<!--                        --><?php
-//                        if (has_term('', 'mjm_clinic_related_product')) {
-//                            echo '<span class="mjm_clinic_related_product">';
-//                            echo sprintf(__('Related Product: %s', 'mjm-clinic'), get_related_product());
-//                            echo '<span><br />';
-//                        }
-//                        if (isset($options['price']) && $options['price']) {
-//                            $price = get_post_meta(get_the_ID(), 'price', true);
-//
-//                            echo '<span class="price">';
-//                            _e('This service is <strong>' . $price . '</strong>', 'mjm-clinic');
-//                            echo '</span>';
-//
-//                        } ?>
-<!--                    </div>-->
-<!--                    <div class="post-data">-->
-<!--                        --><?php //if (has_term('', 'mjm_clinic_service_category')) { ?>
-<!--                            <span-->
-<!--                                class="mjm_clinic_service_category">--><?php //echo sprintf(__('<strong>Category:</strong> %s', 'mjm-clinic'), get_service_categories()); ?><!--</span>-->
-<!--                            <br/>-->
-<!--                        --><?php //} ?>
-<!--                        --><?php //if (has_term('', 'mjm_clinic_location')) { ?>
-<!--                            <span-->
-<!--                                class="clinic-location">--><?php //echo sprintf(__('<strong>Location:</strong> %s | ', 'mjm-clinic'), get_clinic_location()); ?><!--</span>-->
-<!--                        --><?php //} ?>
-<!--                        --><?php //if (has_term('', 'mjm_clinic_indication')) { ?>
-<!--                            <span-->
-<!--                                class="indications">--><?php //echo sprintf(__('<strong>Indications:</strong> %s', 'mjm-clinic'), get_indications()); ?><!--</span>-->
-<!--                            <br/>-->
-<!--                        --><?php //} ?>
-<!---->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            --><?php
-//            }
-//        }
-//        wp_reset_query();
-//        return ob_get_clean();
+	public function shortcode_booking_form( $atts ) {
+        $service_id = null;
+
+        if(isset($atts['service'])){
+
+        }
+
+        if(isset($atts['location'])){
+
+        }
+
+        //render recommended services multiselect list
+
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+        wp_enqueue_style( 'mjm-clinic-script-datepicker-css' );
+        wp_enqueue_script( 'mjm-clinic-script-booking_form' );
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/form-booking.php');
     }
 }

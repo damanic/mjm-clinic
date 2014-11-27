@@ -1407,93 +1407,76 @@ class MJM_Clinic_Booking_Form extends WP_Widget {
 
     public function __construct() {
 
-        $widget_options = array( 'classname' => 'mjm_clinic_service_categories_widget', 'description' => __('A list or dropdown of clinic service categories.', 'mjm-clinic') );
+        $widget_options = array( 'classname' => 'mjm_clinic_booking_form_widget', 'description' => __('A Booking Form, detects relevent therapy and clinic where possible, otherwise displays with select options', 'mjm-clinic') );
 
-        $control_options = array( 'id_base' => 'mjm_clinic_service_categories_widget' );
+        $control_options = array( 'id_base' => 'mjm_clinic_booking_form_widget' );
 
-        $this->WP_Widget( 'mjm_clinic_service_categories_widget', 'MJM Clinic: Service Categories', $widget_options, $control_options );
+        $this->WP_Widget( 'mjm_clinic_booking_form_widget', 'MJM Clinic: Booking Form', $widget_options, $control_options );
 
     }
 
     public function widget( $args, $instance ) {
 
-        /** This filter is documented in wp-includes/default-widgets.php */
-        $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Service Categories' ) : $instance['title'], $instance, $this->id_base );
+        global $wp_query;
 
-        $c = ! empty( $instance['count'] ) ? '1' : '0';
-        $h = ! empty( $instance['hierarchical'] ) ? '1' : '0';
-        $d = ! empty( $instance['dropdown'] ) ? '1' : '0';
+        extract($args);
 
-        echo $args['before_widget'];
-        if ( $title ) {
-            echo $args['before_title'] . $title . $args['after_title'];
-        }
+        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Casestudy', 'mjm-clinic'); }
 
-        $selected = null;
-        if(is_tax('mjm_clinic_service_category')) {
-            $selected   = get_query_var('mjm_clinic_service_category');
-        }
 
-        if(is_single()){
-            $selected = wp_get_post_terms( get_the_ID(), 'mjm_clinic_service_category');
+            /**  @TODO
+             *   ONLY SHOW
+             *   IF Widget
+             *      - do not show on location taxonomy page (because it uses shortcode)
+             *      - IF service page
+             *          - detect service.
+             *          - if more than one location, create dropdown select for locations.
+             *      - IF no detectable service or locations
+             *          - show form with location and service dropdowns.
+             *
+             *   IF Shortcode
+             *      - set selected service and location in args
+             *
+             *
+             */
 
-            //if a service has multiple categories how do you choose? Only if one.
-            if(count($selected) == 1) {
-                $selected = $selected[0]->slug;
+        if (  is_singular() || is_tax('mjm_clinic_indication')) {
+
+            $taxonomy = 'mjm_clinic_indication';
+            $ignore_ids = array();
+
+            if(is_tax('mjm_clinic_indication')){
+                $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
+                $terms = array($term);
+
+            } else {
+                $this_post = $wp_query->post;
+                $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
+                $ignore_ids = array($this_post->ID);
             }
 
-        }
+            $related_casestudy = mjm_clinic_get_posts_related_to_terms('mjm-clinic-casestudy', $taxonomy, $terms, $count, $ignore_ids);
 
-        $dropdown_args = array(
-            'taxonomy'      => 'mjm_clinic_service_category',
-            'name'          => 'mjm_csc_dropdown_widget',
-            'show_option_none'  => 'Select category',
-            'show_count'        => $c,
-            'orderby'       => 'name',
-            'hierarchical'      => $h,
-            'echo'          => 1,
-            'selected'      => $selected,
-            'walker'            => new MJM_Walker_SlugValueCategoryDropdown);
-
-
-        if ( $d ) {
-            $dropdown_args['show_option_none'] = __('Select Category');
-            wp_dropdown_categories( apply_filters( 'widget_categories_dropdown_args', $dropdown_args ) );
-            ?>
-
-            <script type='text/javascript'>
-                /* <![CDATA[ */
-                var dropdown = document.getElementById("mjm_csc_dropdown_widget");
-                function onCatChange() {
-                    if ( dropdown.options[dropdown.selectedIndex].value != -1 ) {
-                        location.href = "<?php echo home_url(); ?>/?mjm_clinic_service_category="+dropdown.options[dropdown.selectedIndex].value;
-                    }
+            if(count($related_casestudy) > 0) {
+                echo $args['before_widget'];
+                if(!empty($title)) {
+                    echo $args['before_title'] . esc_html($title) . $args['after_title'];
                 }
-                dropdown.onchange = onCatChange;
-                /* ]]> */
-            </script>
 
-        <?php
-        } else {
-            ?>
-            <ul>
-                <?php
-                $dropdown_args['title_li'] = '';
+                foreach($related_casestudy as $related_casestudy ) { ?>
+                    <div class="mjm_clinic_related_casestudy_widget_output_entry-container">
 
-                /**
-                 * Filter the arguments for the Categories widget.
-                 *
-                 * @since 2.8.0
-                 *
-                 * @param array $dropdown_args An array of Categories widget options.
-                 */
-                wp_list_categories( apply_filters( 'widget_categories_args', $dropdown_args ) );
-                ?>
-            </ul>
-        <?php
+                        <i class="fa fa-plus-square"></i>
+                        <a class="mjm_clinic_related_casestudy_widget_output_title-link"
+                           href="<?=get_post_permalink($related_casestudy->ID)?>">
+                            <?=$related_casestudy->post_title?>
+                        </a>
+
+                    </div>
+                <?}
+                echo $args['after_widget'];
+            }
         }
-
-        echo $args['after_widget'];
     }
 
     public function update( $new_instance, $old_instance ) {

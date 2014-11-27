@@ -87,7 +87,7 @@
 		add_action( 'widgets_init', array( $this, 'register_clinic_service_widget' ) );
 
 		// add a shortcode
-		add_shortcode( 'mjm-clinic', array( $this, 'create_shortcode' ) );
+		add_shortcode( 'mjm-clinic-booking-form', array( $this, 'shortcode_booking_form' ) );
 
 		// do i18n stuff
 		add_action( 'plugins_loaded', array( $this, 'setup_i18n' ) );
