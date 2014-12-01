@@ -8,28 +8,69 @@ Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A tool for clinic health care websites to present their services with relations
-to common health conditions, health indications/symptoms and related products.
+A tool for hosting clinic and health care related websites. Enables presentation of services with relations
+to common health conditions, health indications/symptoms and related products. Fully integrated booking forms.
 
 == Description ==
+Built to add functionality to any theme, the MJM Clinic plugin makes use of widgets and shortcodes for quick integration.
 
 The MJM Clinic plugin allows you to
 
-* Create numerous Clinic/Service locations, with contact details, address and map info.
-* Create hierarchical service categories
+* Create numerous Clinic/Service locations, with contact details/forms, address, maps.
+* Create hierarchical health service categories
 * Create Service/Therapy listings, assign them to one or more locations, one or more categories and one or more indication/symptom tags.
 * Create Patient feedback entries and assign them to a service and/or health condition.
 * Create Case Studies and assign them to a health condition and/or service.
-* Create related products that can be displayed on various pages through tag or direct relation. These products can be set up to link to an online shop.
 * Create Indication and Contraindication tags to link services, conditions, patient feedback, case studies, products etc.
 * Set up a service/advice disclaimer.
 * Enable/Disable combinations of the above features.
-* Enable/Disable comments on your listings.
+* Enable/Disable comments on your service listings.
 
+= In the pipeline =
+
+* Create related products that can be displayed on various pages through tags or direct relation. These products can be set up to link to an online shop.
+
+
+= Widgets =
 
 Numerous sidebar widgets have been included to help show off your services, health conditions info, clinic locations etc.
+* Assigned Case Studies - can be assigned to feature on a specific service or a health condition page
+* Assigned Condition - Health conditions can be assigned to feature on any number of specified service listings
+* Assigned Patient Feedback - can be assigned to feature on a specific service or a health condition page
+* Assigned Services - Displays a list of services that were specifically assigned to a health condition, patient feedback or case study
+* Clinic Locations - Displays clinic locations where a service/therapy is available
+* Indication Tags - Displays a list of indication tags for service, condition, feedback and case study single posts
+* Location Map - Displays a map on a location taxonomy page
+* Related Casestudy - Displays casestudy on single tax and post pages that share indications
+* Related Feedback - Displays feedback on single tax and post pages that share indications
+* Related Health Conditions - Displays conditions on single tax and post pages that share indications
+* Related Services - Displays services on single tax and post pages that share indications
+* Service Categories - A list or dropdown menu of clinic service categories.
+* Service Session Info - Displays a services session info, price
+* Shared Symptoms - Displays other conditions that share symptoms (indication tags)
 
-There are a number of helper functions that can be used in your theme, which are found in `inc/func.php` and Theme developers can customize the way the listings display, by creating the following files in their theme:
+
+= Shortcodes =
+
+`[mjm-clinic-booking-form]`
+Output an ajax form, can have more than one per page without conflicts.
+Optional attributes = ['service', 'location', 'no_service_select', 'no_location_select']
+
+Example Usage:
+[mjm-clinic-booking-form service='cold-flu' location='my-clinic' no_service_select=1 no_location_select=1]
+The above will generate a form for the given service and location (slugs), and hide/disable the options for the user to select/change the service or location.
+
+Without any attributes the form will show drop downs for location and services, and detects the most relevent
+form state for the page.
+
+
+= Helper Functions =
+There are a number of helper functions that can be used in your theme, which are found in `inc/func.php`.
+
+
+= Theme Integration =
+All plugin generated output includes an abundance of css classes and id's all of which use mjm-clinic prefixes to prevent conflicts with any other plugins or themes.
+MJM Clinic works out of the box, but theme developers can easily over-ride all the default presentation styles and templates.
 
 * `single-mjm-clinic-condition.php`
 * `single-mjm-clinic-casestudy.php`
@@ -39,20 +80,13 @@ There are a number of helper functions that can be used in your theme, which are
 * `taxonomy-mjm_clinic_indication.php`
 * `taxonomy-mjm_clinic_contraindication.php`
 
-All widget generated output includes an abundance of css classes and id's all of which use plug-in prefixes to prevent conflicts with any theme.
-
-The front end widgets include markers for the [fontawesome icon font](http://fontawesome.com). To enable these icons add fontawesome to your theme, or enable the demo CSS in the plugin settings.
-
-The helper functions and widgets will also make use of taxonomy images if you have the taxonomy-images plugin installed.
-
+If you have the taxonomy-images plugin installed, this plugin will detect and make use of it. This is handy if you want to display all your service categories with images/thumbs.
 
 = About this plugin =
 
 This plugin was created for clinics to promote services and products in a way that inter-relates with information on health conditions and symptoms.
 
-== Shortcodes & Shortcode Parameters ==
 
-Work in progress `[mjm-clinic-service]`
 
 == Installation ==
 

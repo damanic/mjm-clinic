@@ -1731,6 +1731,11 @@ class MJM_Clinic {
 	 * Booking Form Shortcode
 	 *
 	 * @since 	1.0.1
+     * @param array $atts (no_service_select, no_location_select, service, location)
+     * @return mixed form html output
+     *
+     * You can provide a service or location ID/Slug to preset the form.
+     * You can set ['no_*_select'] = true|false to disable changing of location or service type.
 	 */
 	public function shortcode_booking_form( $atts ) {
         $selected_service_id = null;
