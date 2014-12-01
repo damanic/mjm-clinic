@@ -3,7 +3,7 @@ Contributors: damanic
 Donate link: http://mjman.net
 Tags: clinic, therapy, services, listings, health, conditions
 Requires at least: 4.0
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -70,20 +70,33 @@ There are a number of helper functions that can be used in your theme, which are
 
 = Theme Integration =
 All plugin generated output includes an abundance of css classes and id's all of which use mjm-clinic prefixes to prevent conflicts with any other plugins or themes.
-MJM Clinic works out of the box, but theme developers can easily over-ride all the default presentation styles and templates.
+MJM Clinic works out of the box, but theme developers can easily over-ride the default presentation styles and templates.
 
-* `single-mjm-clinic-condition.php`
-* `single-mjm-clinic-casestudy.php`
-* `single-mjm-clinic-feedback.php`
-* `single-mjm-clinic-service.php`
+
+TO OVERIDE THE DEFAULT CSS
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+* `public.css`
+
+TO OVERIDE THE BOOKING FORM JS
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+* `booking_form.js`
+
+TO CUSTOMIZE THE CATEGORY PAGES
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
 * `taxonomy-mjm_clinic_service_category.php`
+* `taxonomy-mjm_clinic_service_location.php`
 * `taxonomy-mjm_clinic_indication.php`
-* `taxonomy-mjm_clinic_contraindication.php`
 
-If you have the taxonomy-images plugin installed, this plugin will detect and make use of it. This is handy if you want to display all your service categories with images/thumbs.
+TO CREATE YOUR OWN SERVICE, CONDITION, FEEDBACK AND CASE STUDY TEMPLATES
+Create the following files in your themes root directory. Use your themes single.php as reference for setting up a single post template.
+* `single-mjm_clinic_service.php`
+* `single-mjm_clinic_condition.php`
+* `single-mjm_clinic_feedback.php`
+* `single-mjm_clinic_casestudy.php`
+
+
 
 = About this plugin =
-
 This plugin was created for clinics to promote services and products in a way that inter-relates with information on health conditions and symptoms.
 
 

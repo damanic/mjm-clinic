@@ -1,9 +1,9 @@
 <?php // Silence is golden
 
 /**
- * List of things to do before first release.
+ * List of things to do
  *
- * @TODO Add Shortcodes
+ * @TODO Add Shortcodes to widgets
  * @TODO Allow CSS Overides
  * @TODO Allow JS Overides
  * @TODO Add Related Product Options
