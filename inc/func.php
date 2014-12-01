@@ -216,6 +216,28 @@ function mjm_clinic_get_service_list(){
 }
 
 
+function mjm_clinic_get_location_list(){
+    $location_list = array();
+
+    $args =  array(
+        'orderby'           => 'name',
+        'order'             => 'ASC',
+        'hide_empty'        => false,
+        'fields'            => 'all',
+        'hierarchical'      => false
+    );
+
+    $locations = get_terms(array('mjm_clinic_location'), $args);
+        if($locations){
+            foreach($locations as $location){
+                $location_list[$location->term_id] = $location->name;
+            }
+
+        }
+    return $location_list;
+}
+
+
 /**
  * Get feedback that was manually assigned to a given service or condition post
  * returns posts

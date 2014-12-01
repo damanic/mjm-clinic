@@ -228,7 +228,7 @@ class MJM_Clinic {
 	 * Register and enqueue fontend style sheet.
 	 *
 	 * @since    1.0.0
-     * @TODO default front end CSS should be user switchable
+     * @TODO allow for front end CSS overides!
 	 */
 	public function enqueue_scripts() {
 		global $post;
@@ -239,6 +239,8 @@ class MJM_Clinic {
 		}
 
         //register scripts only used in shortcodes
+
+        wp_register_script( 'mjm-clinic-script-validate_form', plugins_url( 'js/jquery.validate.js' , __FILE__ ), array('jquery'), $this->version, true );
         wp_register_script( 'mjm-clinic-script-booking_form', plugins_url( 'js/booking_form.js' , __FILE__ ), array(), $this->version, true );
         wp_register_style('mjm-clinic-script-datepicker-css', plugins_url( 'css/jquery-ui.min.css' , __FILE__ ), array(), $this->version );
 	}
@@ -848,7 +850,7 @@ class MJM_Clinic {
             <p class="description"><?php _e( 'URL Link to a booking/contact form.
                                               You can use {service_id} and or {service_name} placeholders in your URL
                                               if you want to pass this information to your contact form.
-                                              An entry in this field will over-ride email display in widgets.','mjm-clinic')?></p>
+                                              An entry in this field will over-ride the built in form handlers.','mjm-clinic')?></p>
         </div>
 
 		<div class="form-field">
@@ -906,7 +908,7 @@ class MJM_Clinic {
                 <p class="description"><?php _e( 'URL Link to a booking/contact form.
                                               You can use {service_id} and or {service_name} placeholders in your URL
                                               if you want to pass this information to your contact form.
-                                              An entry in this field will over-ride email display in widgets.','mjm-clinic' ); ?></p>
+                                              An entry in this field will over-ride the built in form handlers.','mjm-clinic' ); ?></p>
             </td>
         </tr>
         <tr class="form-field">
@@ -1561,27 +1563,91 @@ class MJM_Clinic {
             include_once(CLINIC_SERVICES_AKISMET);
         }
 
-            $wp_key = get_option( 'wordpress_api_key' );
-            echo $wp_key;
-            $our_url = get_bloginfo( 'url' );
+        $allowed_contact_types = array('phone', 'email');
+        $allowed_preferred_times = array('morning','afternoon');
+        $allowed_services = mjm_clinic_get_service_list();
+        $allowed_locations = mjm_clinic_get_location_list();
 
-            $msg = array();
-            $msg['from_name'] = $_POST['name'];
-            $msg['from_email'] = $_POST['email'];
-            $msg['website'] = $_POST['website'];
-            $msg['content'] = $_POST['message'];
-            $msg['subject'] = 'New Booking';
-            $msg['form_action_url'] = '/';
-            $msg = $this->akismet_check($msg);
+        $service_id = $_POST['mjm_clinic_bf_service_select'];
+        $location_id = $_POST['mjm_clinic_bf_location_select'];
+        $name = $_POST['mjm_clinic_bf_name'];
+        $contact_via = $_POST['mjm_clinic_bf_contact_via_select'];
+        $email = $_POST['mjm_clinic_bf_email'];
+        $phone = $_POST['mjm_clinic_bf_phone'];
+        $date = trim($_POST['mjm_clinic_bf_date_picker']);
+        $extra_msg = trim($_POST['mjm_clinic_bf_message']);
+        $pref_time = trim($_POST['mjm_clinic_bf_preferred_time_select']);
 
 
-            if($msg){
-                $headers[] = 'Reply-To: '.$msg['from_name'].' <'.$msg['from_email'].'>';
-                wp_mail( 'm@mjman.net', $msg['subject'], $msg['content'] , $headers);
+            if(!isset($allowed_services[$service_id])){
+                $this->bf_ajax_header_error_response(__( 'Please select a valid service', 'mjm-clinic' ));
+            }
+
+            if(!isset($allowed_locations[$location_id])){
+                $this->bf_ajax_header_error_response(__( 'Please select a valid location', 'mjm-clinic' ));
+            }
+
+            if(empty($name)){
+                $this->bf_ajax_header_error_response(__( 'Please enter your name', 'mjm-clinic' ));
+            }
+
+            if(empty($date) || (substr_count($date, '/') != 2 ) || strlen($date) != 10){
+                $this->bf_ajax_header_error_response(__( 'Please enter a valid date', 'mjm-clinic' ));
+            }
+
+            if(!in_array($pref_time,$allowed_preferred_times)){
+                $this->bf_ajax_header_error_response(__( 'Please select a preferred appointment time', 'mjm-clinic' ));
+            }
+
+            if(!in_array($contact_via,$allowed_contact_types)){
+                $this->bf_ajax_header_error_response(__( 'Please select a preferred contact method', 'mjm-clinic' ));
+            }
+
+            if($contact_via == 'phone'){
+                $contact_msg = __( 'Please call to confirm', 'mjm-clinic' ).': '.$phone;
+            }
+
+            if($contact_via == 'email'){
+                //validate email
+                if(!is_email($email)){
+                    $this->bf_ajax_header_error_response(__( 'Please enter a valid email address', 'mjm-clinic' ));
+                }
+                $contact_msg = __( 'Please email to confirm', 'mjm-clinic' ).': '.$email;
             }
 
 
-        print_r($_POST);
+        $noreply_email = "noreply@".preg_replace('/^www\./','',$_SERVER['SERVER_NAME']);
+        $msg = array();
+        $msg['from_name'] = $name;
+        $msg['from_email'] = empty($email) ? $noreply_email : $email ;
+        $msg['content'] =
+            "
+            ".__("Booking For",'mjm-clinic').": ".$name."\r\n
+            ".__("Service",'mjm-clinic').": ".$allowed_services[$service_id]."\r\n
+            ".__("Location",'mjm-clinic').": ".$allowed_locations[$location_id]."\r\n
+            ".__("Booking Date",'mjm-clinic').": ".$date."\r\n
+            ".__("Booking Time",'mjm-clinic').": ".$pref_time."\r\n
+            $contact_msg \r\n
+            $extra_msg
+            ";
+        $msg['subject'] = __("New Booking Request",'mjm-clinic').': '.$allowed_services[$service_id];
+        $msg['form_action_url'] = '/';
+        $msg = $this->akismet_check($msg);
+
+
+        if($msg){
+            $headers[] = 'From: '.get_bloginfo('name').' <'.$noreply_email.'>';
+            $headers[] = 'Reply-To: '.$msg['from_name'].' <'.$msg['from_email'].'>';
+            wp_mail( 'm@mjman.net', $msg['subject'], $msg['content'] , $headers);
+            return;
+        }
+
+        $this->bf_ajax_header_error_response(__( 'Sorry your booking could not be sent.', 'mjm-clinic' ));
+    }
+
+    public function bf_ajax_header_error_response($msg){ //
+        header($_SERVER['SERVER_PROTOCOL'] . ' 400 '.$msg, true, 400);
+        die();
     }
 
 
@@ -1591,14 +1657,9 @@ class MJM_Clinic {
      *
      */
     function check_for_form_submissions(){
-        if(isset($_POST['mjm-clinic']))
-        {
-            // process your data here, you'll use wp_insert_post() I assume
-
+        if(isset($_POST['mjm-clinic-bf']))  {
                 $this->process_booking_form();
-                //wp_redirect('/coc/'); //$_POST['redirect_url']
                 die();
-
         }
 
     }
@@ -1616,7 +1677,7 @@ class MJM_Clinic {
                 $c['blog'] = get_option( 'home' );
                 $c['blog_lang'] = get_locale(); // default 'en_US'
                 $c['blog_charset'] = get_option( 'blog_charset' );
-                $c['permalink'] = $msg['form_action_url']; //@TODO sort out all the self biz
+                $c['permalink'] = $msg['form_action_url'];
                 $c['comment_type'] = 'contact-form';
                 if ( ! empty($msg['from_name']) )
                     $c['comment_author'] = $msg['from_name'];
@@ -1672,20 +1733,67 @@ class MJM_Clinic {
 	 * @since 	1.0.1
 	 */
 	public function shortcode_booking_form( $atts ) {
-        $service_id = null;
+        $selected_service_id = null;
+        $selected_location_id = null;
+        $block_service_select = isset($atts['no_service_select']) ? true : false;
+        $block_location_select = isset($atts['no_location_select']) ? true : false;
 
-        if(isset($atts['service'])){
 
+        //Load selected service from Args
+        if(isset($atts['service']) && !empty($atts['service'])){
+            if(is_numeric($atts['service'])){
+                $selected_service_id = $atts['service'];
+            } else {
+                $the_slug = $atts['service'];
+                $args=array(
+                    'name' => $the_slug,
+                    'post_type' => 'mjm-clinic-service',
+                    'post_status' => 'publish',
+                    'numberposts' => 1
+                );
+                $service = get_posts($args);
+                if( $service ) {
+                    $selected_service_id = $service[0]->ID;
+                }
+            }
         }
 
+        if(!is_numeric($selected_service_id)) {
+            //attempt detection
+            if (is_singular('mjm-clinic-service')) {
+                $selected_service_id = get_the_ID();
+            }
+        }
+
+        //Load selected location from args
         if(isset($atts['location'])){
-
+            if(is_numeric($atts['location'])){
+                $selected_location_id = $atts['location'];
+            } else {
+                $the_slug = $atts['location'];
+                $location = get_term_by( 'slug', $the_slug, 'mjm_clinic_location' );
+                if( $location ) {
+                    $selected_location_id = $location->term_id;
+                }
+            }
         }
+
+        if(!is_numeric($selected_location_id)) {
+            //attempt detection
+            if(is_tax('mjm_clinic_location') ) {
+                $location = get_term_by( 'slug', get_query_var( 'term' ), 'mjm_clinic_location' );
+                if( $location ) {
+                    $selected_location_id = $location->term_id;
+                }
+            }
+        }
+
 
         //render recommended services multiselect list
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_style( 'mjm-clinic-script-datepicker-css' );
+        wp_enqueue_script( 'mjm-clinic-script-validate_form' );
         wp_enqueue_script( 'mjm-clinic-script-booking_form' );
         include(plugin_dir_path( __FILE__ ) . 'views/templates/form-booking.php');
     }

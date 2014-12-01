@@ -42,6 +42,7 @@
     color:#FFF;
     font-weight:bold;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
 .mjm_clinic_service_locations_widget_output_booking-link i,
@@ -164,4 +165,40 @@
         display:block;
     }
 
+
+/**
+* Booking Form
+*/
+.mjm_clinic_booking_form label{
+    display: block;
+    margin-top: 10px;
+}
+
+.mjm_clinic_booking_form label.error{
+    background-color: red;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.mjm_clinic_input_text.error, .mjm_clinic_input_select.error{
+    border:1px solid red;
+}
+
+.mjm_clinic_bf_submit_button{
+    margin-top: 10px;
+}
+
+.mjm_clinic_bf_location_title, .mjm_clinic_bf_service_title{
+    display: inline;
+}
+
+.mjm_clinic_service_locations_widget_output_booking-form{
+    padding: 5px;
+}
+
+.mjm_clinic_bf_success_msg_contain{
+    padding: 5px;
+    background-color: lightgreen ;
+    cursor: pointer;
+}
 

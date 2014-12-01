@@ -287,10 +287,13 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
                                 <i class="fa fa-calendar"></i> Book Appointment
                             </a>
                         <? } else if(!empty($location_meta['email'])){?>
-                            <a href="mailto:<?=antispambot(wp_strip_all_tags($location_meta['email']))?>"
-                               class="mjm_clinic_service_locations_widget_output_booking-link">
+                            <a class="mjm_clinic_service_locations_widget_output_booking-link">
                                 <i class="fa fa-envelope"></i> Book Appointment
                             </a>
+
+                            <div class="mjm_clinic_service_locations_widget_output_booking-form" style="display: none">
+                                <?=  do_shortcode( '[mjm-clinic-booking-form location="'.$location->term_id.'" no_location_select="true" service="'.$this_post->ID.'" no_service_select="true"]' ); ?>
+                            </div>
                         <? } ?>
 
                         <? if(!empty($location_meta['map_link'])){?>

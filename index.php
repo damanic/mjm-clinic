@@ -4,7 +4,8 @@
  * List of things to do before first release.
  *
  * @TODO Add Shortcodes
- * @TODO Add CSS Switcher
+ * @TODO Allow CSS Overides
+ * @TODO Allow JS Overides
  * @TODO Add Related Product Options
  * @TODO Add a booking form
  * @TODO Contraindication integration
