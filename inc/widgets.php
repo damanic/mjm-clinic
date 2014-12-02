@@ -19,80 +19,29 @@
 class MJM_Clinic_Location_Map extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_location_map_widget', 'description' => __('Displays a map on a location taxonomy page', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_location_map_widget' );
-
         $this->WP_Widget( 'mjm_clinic_location_map_widget', 'MJM Clinic: Location Map', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!is_tax('mjm_clinic_location') ) {
+            return;
+        }
         global $wp_query;
-
-
         extract($args);
-        // count is the number of items to show
-
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Map', 'mjm-clinic'); }
-
-
-
-        if (  is_tax('mjm_clinic_location') ) {
-            $location = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
-
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $location = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
 
             if($location) {
-                $location_meta = get_option( "taxonomy_$location->term_id" );
-                if(empty($location_meta['map_link']) || !strstr($location_meta['map_link'],',')){
-                    return false;
-                }
-                $latlng = explode(',',$location_meta['map_link']);
-                $lat = trim($latlng[0]);
-                $lng = trim($latlng[1]);
-
-                if(!is_numeric($lat) || !is_numeric($lng)){
-                    return false;
-                }
-
-                wp_enqueue_script( 'mjm-clinic-map-script', 'https://maps.googleapis.com/maps/api/js' );
-                wp_enqueue_script( 'mjm-clinic-map-init-script', plugins_url( 'mjm-clinic/js/map.js'));
-
 
                 echo $args['before_widget'];
                 if(!empty($title)) {
                     echo $args['before_title'] . esc_html($title) . $args['after_title'];
                 }
-                ?>
-                <div class="mjm_clinic_location_map_widget_output_container">
-                    <div id="mjm_clinic_location_map_widget_output_map-canvas"></div>
-                    <script type="text/javascript">
-                        function mjm_clinic_location_map_widget_init() {
-                            var mapCanvas = document.getElementById('mjm_clinic_location_map_widget_output_map-canvas');
-                            var myLatlng = new google.maps.LatLng(<?=$lat?>, <?=$lng?>);
-                            var mapOptions = {
-                                center: myLatlng,
-                                zoom: 15,
-                                mapTypeId: google.maps.MapTypeId.ROADMAP
-                            }
-                            var map = new google.maps.Map(mapCanvas, mapOptions)
 
-                            var marker = new google.maps.Marker({
-                                position: myLatlng,
-                                map: map,
-                                title: '<?=$location->name?>'
-                            });
-                        }
-                    </script>
-                    <style>
-                        #mjm_clinic_location_map_widget_output_map-canvas {
-                            width: 100%;
-                            height: 250px;
-                        }
-                    </style>
-                </div>
-
-                <? echo $args['after_widget'];
+                echo do_shortcode('[mjm-clinic-location-map id="location_map_widget" location="'.get_query_var( 'term' ).'"]');
+                echo $args['after_widget'];
             }
-        }
     }
 
     public function form( $instance ) {
@@ -131,30 +80,29 @@ class MJM_Clinic_Location_Map extends WP_Widget {
  */
 class MJM_Clinic_Indication_Tags extends WP_Widget {
     public function __construct() {
+
         $widget_options = array( 'classname' => 'mjm_clinic_indication_tags_widget', 'description' => __('Displays a list of indication tags for service, condition, feedback and case study single posts', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_indication_tags_widget' );
-
         $this->WP_Widget( 'mjm_clinic_indication_tags_widget', 'MJM Clinic: Indication Tags', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if( (!is_singular( 'mjm-clinic-service' ) &&
+            !is_singular( 'mjm-clinic-condition' ) &&
+            !is_singular( 'mjm-clinic-feedback' ) &&
+            !is_singular( 'mjm-clinic-casestudy' )) ||
+            !taxonomy_exists('mjm_clinic_indication')) {
+            return;
+        }
+
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
-       
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Indications', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
+        $indications = get_the_terms($this_post->ID, 'mjm_clinic_indication');
 
-
-        if (  is_singular( 'mjm-clinic-service' ) || is_singular( 'mjm-clinic-condition' ) || is_singular( 'mjm-clinic-feedback' ) || is_singular( 'mjm-clinic-casestudy' ) ) {
-
-            $indications = get_the_terms($this_post->ID, 'mjm_clinic_indication');
-
-            if($indications) {
+            if($indications && count($indications) > 0) {
                 echo $args['before_widget'];
                 if(!empty($title)) {
                     echo $args['before_title'] . esc_html($title) . $args['after_title'];
@@ -176,7 +124,6 @@ class MJM_Clinic_Indication_Tags extends WP_Widget {
 
                 <? echo $args['after_widget'];
             }
-       }
     }
 
     public function form( $instance ) {
@@ -222,29 +169,22 @@ class MJM_Clinic_Indication_Tags extends WP_Widget {
 class MJM_Clinic_Service_Locations extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_service_locations_widget', 'description' => __('Displays clinic locations for a service post', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_service_locations_widget' );
 
         $this->WP_Widget( 'mjm_clinic_service_locations_widget', 'MJM Clinic: Clinic Location(s)', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!taxonomy_exists('mjm_clinic_location') || !is_singular( 'mjm-clinic-service' )){
+            return;
+        }
+
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
-       
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Location', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (  is_singular( 'mjm-clinic-service' )) {
-
-
-
-            $service_locations = get_the_terms( $this_post->ID, 'mjm_clinic_location' );
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
+        $service_locations = get_the_terms( $this_post->ID, 'mjm_clinic_location' );
 
             if($service_locations){
                 echo $args['before_widget'];
@@ -257,7 +197,7 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
                     <div class="mjm_clinic_service_locations_widget_output_entry-container">
 
                         <span class="mjm_clinic_service_locations_widget_output_location-name">
-                            <i class="fa fa-hospital-o"></i> <?= wp_strip_all_tags($location->name) ?>
+                            <i class="fa fa-hospital-o"></i> <a href="<?= get_term_link($location)?>"> <?= wp_strip_all_tags($location->name) ?> </a>
                         </span>
 
                         <span class="mjm_clinic_service_locations_widget_output_location-description">
@@ -297,17 +237,19 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
                         <? } ?>
 
                         <? if(!empty($location_meta['map_link'])){?>
-                            <a class="mjm_clinic_service_locations_widget_output_map-link" href="<?= wp_strip_all_tags($location_meta['map_link']) ?>">
+                            <a class="mjm_clinic_service_locations_widget_output_map-link">
                                 <i class="fa fa-map-marker"></i> Map
                             </a>
+                            <div class="mjm_clinic_service_locations_widget_output_map-contain" style="display: none;">
+                                <?= do_shortcode('[mjm-clinic-location-map id="service_locations_widget" location="'.$location->term_id.'"]')?>
+
+                            </div>
                         <? } ?>
                     </div>
                 <?
                 }
                 echo $args['after_widget'];
             }
-
-        }
     }
 
     public function form( $instance ) {
@@ -348,14 +290,17 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
+        if (!is_singular( 'mjm-clinic-service' )) {
+            return;
+        }
         global $wp_query;
         $this_post = $wp_query->post;
         extract($args);
         // count is the number of items to show
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Session Info', 'mjm-clinic'); }
-        if (  is_singular( 'mjm-clinic-service' )) {
-            echo $args['before_widget'];
-            ?>
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) :  __('Session Info', 'mjm-clinic');
+
+        echo $args['before_widget'];
+        ?>
             <div class="mjm_clinic_service_session_info_widget_output_entry-container">
             <?
             //if only one location for this session, show big booking button
@@ -369,15 +314,15 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
                         $link = str_replace('{service_id}',$this_post->ID, wp_strip_all_tags($location_meta['contact_link']));
                         $link = str_replace('{service_name}',urlencode($this_post->post_title), $link);
                         ?>
-<!--                        <a href="--><?//=$link?><!--"-->
-<!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
-<!--                            BOOK APPOINTMENT-->
-<!--                        </a>-->
+    <!--                        <a href="--><?//=$link?><!--"-->
+    <!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
+    <!--                            BOOK APPOINTMENT-->
+    <!--                        </a>-->
                     <? } else if(!empty($location_meta['email'])){?>
-<!--                        <a href="mailto:--><?//=antispambot(wp_strip_all_tags($location_meta['email']))?><!--"-->
-<!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
-<!--                            BOOK APPOINTMENT-->
-<!--                        </a>-->
+    <!--                        <a href="mailto:--><?//=antispambot(wp_strip_all_tags($location_meta['email']))?><!--"-->
+    <!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
+    <!--                            BOOK APPOINTMENT-->
+    <!--                        </a>-->
                     <? }
                 }
             }
@@ -399,9 +344,8 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
 
             ?>
             </div>
-            <?
-            echo $args['after_widget'];
-        }
+        <?
+        echo $args['after_widget'];
     }
 
     public function form( $instance ) {
@@ -440,36 +384,34 @@ class MJM_Clinic_Assigned_Services extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
+        if( !is_singular( 'mjm-clinic-condition' ) &&
+            !is_singular( 'mjm-clinic-feedback' ) &&
+            !is_singular( 'mjm-clinic-casestudy')) {
+            return;
+        }
+
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
 
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Assigned Services', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (is_singular( 'mjm-clinic-condition' ) || is_singular( 'mjm-clinic-feedback' ) || is_singular( 'mjm-clinic-casestudy' ) ) {
-
-            $services = mjm_clinic_get_assigned_services($this_post, $count);
-            if($services){
-                echo $args['before_widget'];
-                if(!empty($title)) {
-                    echo $args['before_title'] . esc_html($title) . $args['after_title'];
-                }
-                ?>
-
-                    <?
-                    foreach($services as $service) { ?>
-                        <div class="mjm_clinic_assigned_services_widget_output_entry-container">
-                            <i class="fa fa-plus-square"></i> <a class="mjm_clinic_assigned_services_widget_output_title-link" href="<?=get_post_permalink($service->ID)?>"><?=$service->post_title?></a>
-                        </div>
-                    <?}?>
-
-                <? echo $args['after_widget'];
+        $services = mjm_clinic_get_assigned_services($this_post, $count);
+        if($services){
+            echo $args['before_widget'];
+            if(!empty($title)) {
+                echo $args['before_title'] . esc_html($title) . $args['after_title'];
             }
+            ?>
+
+                <?
+                foreach($services as $service) { ?>
+                    <div class="mjm_clinic_assigned_services_widget_output_entry-container">
+                        <i class="fa fa-plus-square"></i> <a class="mjm_clinic_assigned_services_widget_output_title-link" href="<?=get_post_permalink($service->ID)?>"><?=$service->post_title?></a>
+                    </div>
+                <?}?>
+
+            <? echo $args['after_widget'];
         }
     }
 
@@ -514,27 +456,22 @@ class MJM_Clinic_Assigned_Services extends WP_Widget {
 class MJM_Clinic_Assigned_Patient_Feedback extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_assigned_patient_feedback_widget', 'description' => __('Displays a related feedback for condition and service single posts', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_assigned_patient_feedback_widget' );
-
         $this->WP_Widget( 'mjm_clinic_assigned_patient_feedback_widget', 'MJM Clinic: Assigned Patient Feedback', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!post_type_exists('mjm-clinic-feedback') || (!is_singular( 'mjm-clinic-service' ) && !is_singular( 'mjm-clinic-condition' ))){
+            return;
+        }
+
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Locations', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
+        $feedback = mjm_clinic_get_assigned_feedback($this_post, $count);
 
-
-        if (  is_singular( 'mjm-clinic-service' ) || is_singular( 'mjm-clinic-condition' ) ) {
-
-
-            $feedback = mjm_clinic_get_assigned_feedback($this_post, $count);
             if($feedback){
                 echo $args['before_widget'];
                 if(!empty($title)) {
@@ -561,16 +498,11 @@ class MJM_Clinic_Assigned_Patient_Feedback extends WP_Widget {
                 }
                 echo $args['after_widget'];
             }
-
-
-        }
     }
 
     public function form( $instance ) {
         $defaults = array( 'title' => __('Patient Feedback', 'mjm-clinic'), 'count' => -1 );
         $instance = wp_parse_args((array) $instance, $defaults);
-
-
         if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = $defaults['title']; }
         if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = $defaults['count']; }
         ?>
@@ -606,28 +538,22 @@ class MJM_Clinic_Assigned_Patient_Feedback extends WP_Widget {
 class MJM_Clinic_Assigned_Case_Studies extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_assigned_case_studies_widget', 'description' => __('Displays a related case studies for condition and service single posts', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_assigned_case_studies_widget' );
-
         $this->WP_Widget( 'mjm_clinic_assigned_case_studies_widget', 'MJM Clinic: Assigned Case Studies', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!post_type_exists('mjm-clinic-casestudy') || (!is_singular( 'mjm-clinic-service' ) && !is_singular( 'mjm-clinic-condition' ))){
+            return;
+        }
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
 
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Case Studies', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (  is_singular( 'mjm-clinic-service' ) || is_singular( 'mjm-clinic-condition' ) ) {
-
-            //related casestudies
-            $studies = mjm_clinic_get_assigned_case_studies($this_post,$count);
+        //related casestudies
+        $studies = mjm_clinic_get_assigned_case_studies($this_post,$count);
             if($studies){
                 echo $args['before_widget'];
                 if(!empty($title)) {
@@ -656,9 +582,6 @@ class MJM_Clinic_Assigned_Case_Studies extends WP_Widget {
                 }
                 echo $args['after_widget'];
             }
-
-
-        }
     }
 
     public function form( $instance ) {
@@ -700,26 +623,19 @@ class MJM_Clinic_Assigned_Case_Studies extends WP_Widget {
 class MJM_Clinic_Assigned_Conditions extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_assigned_conditions_widget', 'description' => __('Displays the related condition for feedback and case study single posts', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_assigned_conditions_widget' );
-
         $this->WP_Widget( 'mjm_clinic_assigned_conditions_widget', 'MJM Clinic: Assigned Conditions', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!post_type_exists('mjm-clinic-condition') || (!is_singular( 'mjm-clinic-feedback' ) && !is_singular( 'mjm-clinic-casestudy' ))){
+            return;
+        }
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
-
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Assigned Condition', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (  is_singular( 'mjm-clinic-feedback' ) || is_singular( 'mjm-clinic-casestudy' ) ) {
-
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
 
             $conditions = mjm_clinic_get_assigned_conditions($this_post,$count);
             if($conditions){
@@ -750,9 +666,6 @@ class MJM_Clinic_Assigned_Conditions extends WP_Widget {
                 }
                 echo $args['after_widget'];
             }
-
-
-        }
     }
 
     public function form( $instance ) {
@@ -795,26 +708,19 @@ class MJM_Clinic_Assigned_Conditions extends WP_Widget {
 class MJM_Clinic_Shared_Symptoms extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_shared_symptoms_widget', 'description' => __('Displays other conditions that share symptoms (indication tags)', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_shared_symptoms_widget' );
-
         $this->WP_Widget( 'mjm_clinic_shared_symptoms_widget', 'MJM Clinic: Shared Symptoms', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!taxonomy_exists('mjm_clinic_indication') || (!is_singular( 'mjm-clinic-condition' ))){
+            return;
+        }
         global $wp_query;
-
         $this_post = $wp_query->post;
-
         extract($args);
-        // count is the number of items to show
-
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Case Studies', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (  is_singular( 'mjm-clinic-condition' ) ) {
-
+        $title =  isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Assigned Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ? $instance['count'] : -1;
 
             $taxonomy = 'mjm_clinic_indication';
             $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
@@ -847,14 +753,11 @@ class MJM_Clinic_Shared_Symptoms extends WP_Widget {
                 <?}
                 echo $args['after_widget'];
             }
-        }
     }
 
     public function form( $instance ) {
         $defaults = array( 'title' => __('Shared Symptoms', 'mjm-clinic'), 'count' => -1 );
         $instance = wp_parse_args((array) $instance, $defaults);
-
-
         if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = $defaults['title']; }
         if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = $defaults['count']; }
         ?>
@@ -875,7 +778,6 @@ class MJM_Clinic_Shared_Symptoms extends WP_Widget {
         $instance = $old_instance;
         $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
         $instance['count'] = ( !empty( $new_instance['count'] ) ) ? strip_tags( $new_instance['count'] ) : '';
-
         return $instance;
     }
 }
@@ -883,6 +785,7 @@ class MJM_Clinic_Shared_Symptoms extends WP_Widget {
 
 
 /**
+ *
  * Clinic Related Services (by indication tags)
  *
  * @since 	1.0.1
@@ -890,68 +793,59 @@ class MJM_Clinic_Shared_Symptoms extends WP_Widget {
 class MJM_Clinic_Related_Services extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_related_services_widget', 'description' => __('Displays services on single tax and post pages that share indications', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_related_services_widget' );
-
         $this->WP_Widget( 'mjm_clinic_related_services_widget', 'MJM Clinic: Related Services', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if( !is_singular( 'mjm-clinic-condition' ) &&
+            !is_singular('mjm-clinic-casestudy') &&
+            !is_singular('mjm-clinic-feedback') &&
+            !is_tax('mjm_clinic_indication')){
+            return;
+        }
+
         global $wp_query;
-
-
-
         extract($args);
-        // count is the number of items to show
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Related Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ?  $instance['count'] : -1;
+        $taxonomy = 'mjm_clinic_indication';
+        $ignore_ids = array();
 
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Services', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
+        if(is_tax('mjm_clinic_indication')){
+            $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
+            $terms = array($term);
+        } else {
+            $this_post = $wp_query->post;
+            $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
+            $ignore_ids = array($this_post->ID);
+        }
 
+        $related_services = mjm_clinic_get_posts_related_to_terms('mjm-clinic-service', $taxonomy, $terms, $count, $ignore_ids);
 
-        if (  is_singular( 'mjm-clinic-condition' ) || is_singular('mjm-clinic-casestudy') || is_singular('mjm-clinic-feedback')
-              || is_tax('mjm_clinic_indication')) {
-
-            $taxonomy = 'mjm_clinic_indication';
-            $ignore_ids = array();
-
-            if(is_tax('mjm_clinic_indication')){
-                $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
-                $terms = array($term);
-
-            } else {
-                $this_post = $wp_query->post;
-                $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
-                $ignore_ids = array($this_post->ID);
+        if(count($related_services) > 0) {
+            echo $args['before_widget'];
+            if(!empty($title)) {
+                echo $args['before_title'] . esc_html($title) . $args['after_title'];
             }
 
-            $related_services = mjm_clinic_get_posts_related_to_terms('mjm-clinic-service', $taxonomy, $terms, $count, $ignore_ids);
-
-            if(count($related_services) > 0) {
-                echo $args['before_widget'];
-                if(!empty($title)) {
-                    echo $args['before_title'] . esc_html($title) . $args['after_title'];
-                }
-
-                foreach($related_services as $related_service ) { ?>
-                    <div class="mjm_clinic_related_services_widget_output_entry-container">
-
-                        <i class="fa fa-plus-square"></i>
-                        <a class="mjm_clinic_related_services_widget_output_title-link"
-                           href="<?=get_post_permalink($related_service->ID)?>">
-                            <?=$related_service->post_title?>
-                        </a>
-
-                    </div>
-                <?}
-                echo $args['after_widget'];
+            foreach($related_services as $related_service ) { ?>
+                <div class="mjm_clinic_related_services_widget_output_entry-container">
+                    <i class="fa fa-plus-square"></i>
+                    <a class="mjm_clinic_related_services_widget_output_title-link"
+                       href="<?=get_post_permalink($related_service->ID)?>">
+                        <?=$related_service->post_title?>
+                    </a>
+                </div>
+            <?
             }
+            echo $args['after_widget'];
         }
     }
 
     public function form( $instance ) {
         $defaults = array( 'title' => __('Related Services', 'mjm-clinic'), 'count' => -1 );
         $instance = wp_parse_args((array) $instance, $defaults);
-
 
         if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = $defaults['title']; }
         if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = $defaults['count']; }
@@ -973,7 +867,6 @@ class MJM_Clinic_Related_Services extends WP_Widget {
         $instance = $old_instance;
         $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
         $instance['count'] = ( !empty( $new_instance['count'] ) ) ? strip_tags( $new_instance['count'] ) : '';
-
         return $instance;
     }
 }
@@ -987,28 +880,20 @@ class MJM_Clinic_Related_Services extends WP_Widget {
 class MJM_Clinic_Related_Conditions extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_related_conditions_widget', 'description' => __('Displays conditions on single tax and post pages that share indications', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_related_conditions_widget' );
-
         $this->WP_Widget( 'mjm_clinic_related_conditions_widget', 'MJM Clinic: Related Health Conditions', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!is_singular() || (is_singular() && (!taxonomy_exists('mjm_clinic_indication') || !post_type_exists('mjm-clinic-condition')))) {
+            return;
+        }
         global $wp_query;
-
-
-
         extract($args);
-        // count is the number of items to show
-
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Health Conditions', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (  is_singular() || is_tax('mjm_clinic_indication')) {
-
-            $taxonomy = 'mjm_clinic_indication';
-            $ignore_ids = array();
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Related Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ?  $instance['count'] : -1;
+        $taxonomy = 'mjm_clinic_indication';
+        $ignore_ids = array();
 
             if(is_tax('mjm_clinic_indication')){
                 $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
@@ -1041,7 +926,6 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
                 <?}
                 echo $args['after_widget'];
             }
-        }
     }
 
     public function form( $instance ) {
@@ -1083,61 +967,53 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
 class MJM_Clinic_Related_Feedback extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_related_feedback_widget', 'description' => __('Displays feedback on single tax and post pages that share indications', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_related_feedback_widget' );
-
         $this->WP_Widget( 'mjm_clinic_related_feedback_widget', 'MJM Clinic: Related Feedback', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
-        global $wp_query;
-
-
-
-        extract($args);
-        // count is the number of items to show
-
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Feedback', 'mjm-clinic'); }
-        if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
-
-
-        if (  is_singular() || is_tax('mjm_clinic_indication')) {
-
-            $taxonomy = 'mjm_clinic_indication';
-            $ignore_ids = array();
-
-            if(is_tax('mjm_clinic_indication')){
-                $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
-                $terms = array($term);
-
-            } else {
-                $this_post = $wp_query->post;
-                $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
-                $ignore_ids = array($this_post->ID);
-            }
-
-            $related_feedback = mjm_clinic_get_posts_related_to_terms('mjm-clinic-feedback', $taxonomy, $terms, $count, $ignore_ids);
-
-            if(count($related_feedback) > 0) {
-                echo $args['before_widget'];
-                if(!empty($title)) {
-                    echo $args['before_title'] . esc_html($title) . $args['after_title'];
-                }
-
-                foreach($related_feedback as $related_feedback ) { ?>
-                    <div class="mjm_clinic_related_feedback_widget_output_entry-container">
-
-                        <i class="fa fa-plus-square"></i>
-                        <a class="mjm_clinic_related_feedback_widget_output_title-link"
-                           href="<?=get_post_permalink($related_feedback->ID)?>">
-                            <?=$related_feedback->post_title?>
-                        </a>
-
-                    </div>
-                <?}
-                echo $args['after_widget'];
-            }
+        if(!is_singular() || (is_singular() && (!taxonomy_exists('mjm_clinic_indication') || !post_type_exists('mjm-clinic-feedback')))) {
+            return;
         }
+        global $wp_query;
+        extract($args);
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Related Services', 'mjm-clinic');
+        $count = isset( $instance['count'] ) ?  $instance['count'] : -1;
+        $taxonomy = 'mjm_clinic_indication';
+        $ignore_ids = array();
+
+        if(is_tax('mjm_clinic_indication')){
+            $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
+            $terms = array($term);
+
+        } else {
+            $this_post = $wp_query->post;
+            $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
+            $ignore_ids = array($this_post->ID);
+        }
+
+        $related_feedback = mjm_clinic_get_posts_related_to_terms('mjm-clinic-feedback', $taxonomy, $terms, $count, $ignore_ids);
+
+        if(count($related_feedback) > 0) {
+            echo $args['before_widget'];
+            if(!empty($title)) {
+                echo $args['before_title'] . esc_html($title) . $args['after_title'];
+            }
+
+            foreach($related_feedback as $related_feedback ) { ?>
+                <div class="mjm_clinic_related_feedback_widget_output_entry-container">
+
+                    <i class="fa fa-plus-square"></i>
+                    <a class="mjm_clinic_related_feedback_widget_output_title-link"
+                       href="<?=get_post_permalink($related_feedback->ID)?>">
+                        <?=$related_feedback->post_title?>
+                    </a>
+
+                </div>
+            <?}
+            echo $args['after_widget'];
+        }
+
     }
 
     public function form( $instance ) {
@@ -1165,7 +1041,6 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
         $instance = $old_instance;
         $instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
         $instance['count'] = ( !empty( $new_instance['count'] ) ) ? strip_tags( $new_instance['count'] ) : '';
-
         return $instance;
     }
 }
@@ -1178,25 +1053,22 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
 class MJM_Clinic_Related_Casestudy extends WP_Widget {
     public function __construct() {
         $widget_options = array( 'classname' => 'mjm_clinic_related_casestudy_widget', 'description' => __('Displays casestudy on single tax and post pages that share indications', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_related_casestudy_widget' );
-
         $this->WP_Widget( 'mjm_clinic_related_casestudy_widget', 'MJM Clinic: Related Casestudy', $widget_options, $control_options );
     }
 
     public function widget( $args, $instance ) {
+        if(!is_singular() || (is_singular() && (!taxonomy_exists('mjm_clinic_indication') || !post_type_exists('mjm-clinic-casestudy')))) {
+            return;
+        }
+
         global $wp_query;
-
-
-
         extract($args);
         // count is the number of items to show
 
         if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Casestudy', 'mjm-clinic'); }
         if ( isset( $instance['count'] ) ) { $count = $instance['count']; } else { $count = -1; }
 
-
-        if (  is_singular() || is_tax('mjm_clinic_indication')) {
 
             $taxonomy = 'mjm_clinic_indication';
             $ignore_ids = array();
@@ -1215,24 +1087,25 @@ class MJM_Clinic_Related_Casestudy extends WP_Widget {
 
             if(count($related_casestudy) > 0) {
                 echo $args['before_widget'];
-                if(!empty($title)) {
+                if (!empty($title)) {
                     echo $args['before_title'] . esc_html($title) . $args['after_title'];
                 }
 
-                foreach($related_casestudy as $related_casestudy ) { ?>
+                foreach ($related_casestudy as $related_casestudy) {
+                    ?>
                     <div class="mjm_clinic_related_casestudy_widget_output_entry-container">
 
                         <i class="fa fa-plus-square"></i>
                         <a class="mjm_clinic_related_casestudy_widget_output_title-link"
-                           href="<?=get_post_permalink($related_casestudy->ID)?>">
-                            <?=$related_casestudy->post_title?>
+                           href="<?= get_post_permalink($related_casestudy->ID) ?>">
+                            <?= $related_casestudy->post_title ?>
                         </a>
 
                     </div>
-                <?}
+                <?
+                }
                 echo $args['after_widget'];
             }
-        }
     }
 
     public function form( $instance ) {
@@ -1276,16 +1149,16 @@ class MJM_Clinic_Service_Categories extends WP_Widget {
     public function __construct() {
 
         $widget_options = array( 'classname' => 'mjm_clinic_service_categories_widget', 'description' => __('A list or dropdown of clinic service categories.', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_service_categories_widget' );
-
         $this->WP_Widget( 'mjm_clinic_service_categories_widget', 'MJM Clinic: Service Categories', $widget_options, $control_options );
 
     }
 
     public function widget( $args, $instance ) {
+        if(!taxonomy_exists('mjm_clinic_service_category')){
+            return;
+        }
 
-        /** This filter is documented in wp-includes/default-widgets.php */
         $title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Service Categories' ) : $instance['title'], $instance, $this->id_base );
 
         $c = ! empty( $instance['count'] ) ? '1' : '0';
@@ -1312,20 +1185,21 @@ class MJM_Clinic_Service_Categories extends WP_Widget {
 
         }
 
-        $dropdown_args = array(
-            'taxonomy'      => 'mjm_clinic_service_category',
-            'name'          => 'mjm_csc_dropdown_widget',
-            'show_option_none'  => 'Select category',
-            'show_count'        => $c,
-            'orderby'       => 'name',
-            'hierarchical'      => $h,
-            'echo'          => 1,
-            'selected'      => $selected,
-            'walker'            => new MJM_Walker_SlugValueCategoryDropdown);
+
 
 
         if ( $d ) {
-            $dropdown_args['show_option_none'] = __('Select Category');
+            $dropdown_args = array(
+                'taxonomy'      => 'mjm_clinic_service_category',
+                'name'          => 'mjm_csc_dropdown_widget',
+                'show_count'        => $c,
+                'orderby'       => 'name',
+                'hierarchical'      => $h,
+                'echo'          => 1,
+                'selected'      => $selected,
+                'show_option_none' => __('Select Category'),
+                'walker'            => new MJM_Walker_SlugValueCategoryDropdown);
+
             wp_dropdown_categories( apply_filters( 'widget_categories_dropdown_args', $dropdown_args ) );
             ?>
 
@@ -1346,16 +1220,33 @@ class MJM_Clinic_Service_Categories extends WP_Widget {
             ?>
             <ul>
                 <?php
-                $dropdown_args['title_li'] = '';
-
-                /**
-                 * Filter the arguments for the Categories widget.
-                 *
-                 * @since 2.8.0
-                 *
-                 * @param array $dropdown_args An array of Categories widget options.
-                 */
-                wp_list_categories( apply_filters( 'widget_categories_args', $dropdown_args ) );
+                $list_args = array(
+                    'show_option_all'    => '',
+                    'orderby'            => 'name',
+                    'order'              => 'ASC',
+                    'style'              => 'list',
+                    'show_count'         => 0,
+                    'hide_empty'         => 0,
+                    'use_desc_for_title' => 1,
+                    'child_of'           => null,
+                    'feed'               => '',
+                    'feed_type'          => '',
+                    'feed_image'         => '',
+                    'exclude'            => '',
+                    'exclude_tree'       => '',
+                    'include'            => '',
+                    'hierarchical'       => 1,
+                    'title_li'           => __( 'Categories' ),
+                    'show_option_none'   => __( 'No categories' ),
+                    'number'             => null,
+                    'echo'               => 1,
+                    'depth'              => 0,
+                    'current_category'   => 0,
+                    'pad_counts'         => 0,
+                    'taxonomy'           => 'mjm_clinic_service_category',
+                    'walker'             => null
+                );
+                wp_list_categories( $list_args  );
                 ?>
             </ul>
         <?php
@@ -1409,86 +1300,31 @@ class MJM_Clinic_Service_Categories extends WP_Widget {
 class MJM_Clinic_Booking_Form extends WP_Widget {
 
     public function __construct() {
-
         $widget_options = array( 'classname' => 'mjm_clinic_booking_form_widget', 'description' => __('A Booking Form, detects relevent therapy and clinic where possible, otherwise displays with select options', 'mjm-clinic') );
-
         $control_options = array( 'id_base' => 'mjm_clinic_booking_form_widget' );
-
         $this->WP_Widget( 'mjm_clinic_booking_form_widget', 'MJM Clinic: Booking Form', $widget_options, $control_options );
-
     }
 
     public function widget( $args, $instance ) {
-
-        global $wp_query;
-
-        extract($args);
-
-        if ( isset( $instance['title'] ) ) { $title = apply_filters( 'widget_title', $instance['title'] ); } else { $title = __('Related Casestudy', 'mjm-clinic'); }
-
-
-            /**  @TODO
-             *   ONLY SHOW
-             *   IF Widget
-             *      - do not show on location taxonomy page (because it uses shortcode)
-             *      - IF service page
-             *          - detect service.
-             *          - if more than one location, create dropdown select for locations.
-             *      - IF no detectable service or locations
-             *          - show form with location and service dropdowns.
-             *
-             *   IF Shortcode
-             *      - set selected service and location in args
-             *
-             *
-             */
-
-        if (  is_singular() || is_tax('mjm_clinic_indication')) {
-
-            $taxonomy = 'mjm_clinic_indication';
-            $ignore_ids = array();
-
-            if(is_tax('mjm_clinic_indication')){
-                $term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
-                $terms = array($term);
-
-            } else {
-                $this_post = $wp_query->post;
-                $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
-                $ignore_ids = array($this_post->ID);
-            }
-
-            $related_casestudy = mjm_clinic_get_posts_related_to_terms('mjm-clinic-casestudy', $taxonomy, $terms, $count, $ignore_ids);
-
-            if(count($related_casestudy) > 0) {
-                echo $args['before_widget'];
-                if(!empty($title)) {
-                    echo $args['before_title'] . esc_html($title) . $args['after_title'];
-                }
-
-                foreach($related_casestudy as $related_casestudy ) { ?>
-                    <div class="mjm_clinic_related_casestudy_widget_output_entry-container">
-
-                        <i class="fa fa-plus-square"></i>
-                        <a class="mjm_clinic_related_casestudy_widget_output_title-link"
-                           href="<?=get_post_permalink($related_casestudy->ID)?>">
-                            <?=$related_casestudy->post_title?>
-                        </a>
-
-                    </div>
-                <?}
-                echo $args['after_widget'];
-            }
+        if(!taxonomy_exists('mjm_clinic_location')){
+            return;
         }
+        global $wp_query;
+        extract($args);
+        $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __('Related Casestudy', 'mjm-clinic');
+
+        /**  @TODO
+         *   Booking form has been set up as a shortcode.
+         *   Could wrap the shortcode form as a widget if requested.
+         */
+        echo $args['before_widget'];
+        echo $args['after_widget'];
     }
 
     public function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
         $instance['title'] = strip_tags($new_instance['title']);
         $instance['count'] = !empty($new_instance['count']) ? 1 : 0;
-        $instance['hierarchical'] = !empty($new_instance['hierarchical']) ? 1 : 0;
-        $instance['dropdown'] = !empty($new_instance['dropdown']) ? 1 : 0;
-
         return $instance;
     }
 
@@ -1497,20 +1333,14 @@ class MJM_Clinic_Booking_Form extends WP_Widget {
         $instance = wp_parse_args( (array) $instance, array( 'title' => '') );
         $title = esc_attr( $instance['title'] );
         $count = isset($instance['count']) ? (bool) $instance['count'] :false;
-        $hierarchical = isset( $instance['hierarchical'] ) ? (bool) $instance['hierarchical'] : false;
-        $dropdown = isset( $instance['dropdown'] ) ? (bool) $instance['dropdown'] : false;
         ?>
         <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e( 'Title:' ); ?></label>
-            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
+        </p>
 
-        <p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('dropdown'); ?>" name="<?php echo $this->get_field_name('dropdown'); ?>"<?php checked( $dropdown ); ?> />
-            <label for="<?php echo $this->get_field_id('dropdown'); ?>"><?php _e( 'Display as dropdown' ); ?></label><br />
-
-            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $count ); ?> />
+        <p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>"<?php checked( $count ); ?> />
             <label for="<?php echo $this->get_field_id('count'); ?>"><?php _e( 'Show post counts' ); ?></label><br />
-
-            <input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id('hierarchical'); ?>" name="<?php echo $this->get_field_name('hierarchical'); ?>"<?php checked( $hierarchical ); ?> />
-            <label for="<?php echo $this->get_field_id('hierarchical'); ?>"><?php _e( 'Show hierarchy' ); ?></label></p>
+        </p>
     <?php
     }
 

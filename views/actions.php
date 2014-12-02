@@ -35,7 +35,7 @@
 		add_action( 'created_mjm_clinic_service_category', array($this, 'save_taxonomy_custom_meta'));
         add_action( 'manage_edit-mjm_clinic_service_category_columns', array($this,'edit_service_category_columns'));
 
-        if ( isset($options['mjm_clinic_option_location']) && ($options['mjm_clinic_option_location']  == true) )
+
             add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_location' ) );
             add_action( 'cjc_clinic_location_add_form_fields', array( $this, 'add_taxonomy_form_fields_mjm_clinic_location' ) );
             add_action( 'mjm_clinic_location_edit_form_fields', array($this, 'add_taxonomy_edit_form_fields_mjm_clinic_location'));
@@ -61,6 +61,7 @@
 
 		// set new thumbnail size
 		add_action( 'init', array( $this, 'create_thumb_sizes' ) );
+        add_filter( 'image_size_names_choose', array( $this, 'mjman_thumb_sizes' ));
 
 		// Move metaboxes around
 		add_action( 'add_meta_boxes', array( $this, 'move_meta_boxes' ) );
@@ -88,6 +89,7 @@
 
 		// add a shortcode
 		add_shortcode( 'mjm-clinic-booking-form', array( $this, 'shortcode_booking_form' ) );
+        add_shortcode( 'mjm-clinic-location-map', array( $this, 'shortcode_location_map' ) );
 
 		// do i18n stuff
 		add_action( 'plugins_loaded', array( $this, 'setup_i18n' ) );

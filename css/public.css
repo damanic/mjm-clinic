@@ -202,3 +202,36 @@
     cursor: pointer;
 }
 
+
+/**
+* Boxlink service output
+**/
+
+.mjm_clinic_service_boxlink_a{
+    padding:10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: block;
+}
+
+.mjm_clinic_service_boxlink_a:hover{
+ border: 1px solid darkgray;
+}
+
+.mjm_clinic_service_boxlink_category_container, .mjm_clinic_service_boxlink_container{
+    width:33%;
+    float:left;
+}
+
+.mjm_clinic_service_boxlink_image_contain, .mjm_clinic_service_boxlink_image{
+    width:172px;
+    height:138px;
+    margin:auto;
+    text-align: center;
+    max-width: 100%;
+    background-color: darkgray;
+}
+
+.fa.mjm_clinic_service_boxlink_icon{
+    line-height: 138px;
+}

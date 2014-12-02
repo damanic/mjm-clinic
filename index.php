@@ -3,11 +3,9 @@
 /**
  * List of things to do
  *
- * @TODO Add Shortcodes to widgets
- * @TODO Allow CSS Overides
- * @TODO Allow JS Overides
+ * @TODO MJM_Clinic_Service_Categories Widget , List output broken
+ * @TODO Add Shortcode access to widgets
  * @TODO Add Related Product Options
- * @TODO Add a booking form
  * @TODO Contraindication integration
  * @TODO Sort out the options/settings page
  * @TODO Sort out the permissions settings.

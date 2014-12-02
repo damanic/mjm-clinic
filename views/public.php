@@ -93,8 +93,8 @@ function clinic_service_category_template_check() {;
 
 		}
 
-			add_filter( 'the_content', 'filter_clinic_service_single', 20 );
-		add_filter( 'get_the_excerpt', 'filter_clinic_service_excerpt', 20 );
+//			add_filter( 'the_content', 'filter_clinic_service_single', 20 );
+//		add_filter( 'get_the_excerpt', 'filter_clinic_service_excerpt', 20 );
 	}
 }
 /**
@@ -161,8 +161,8 @@ function clinic_service_taxonomy_check() {;
 
 		}
 
-			add_filter( 'the_content', 'filter_clinic_service_single', 20 );
-		add_filter( 'get_the_excerpt', 'filter_clinic_service_excerpt', 20 );
+//			add_filter( 'the_content', 'filter_clinic_service_single', 20 );
+//		add_filter( 'get_the_excerpt', 'filter_clinic_service_excerpt', 20 );
 	}
 }
 

@@ -233,16 +233,26 @@ class MJM_Clinic {
 	public function enqueue_scripts() {
 		global $post;
 
-		if (!is_admin() && (in_array(get_post_type(),$this->available_post_types) || (is_page() && has_shortcode($post->post_content, 'mjm-clinic')))) {
-			wp_enqueue_style( $this->plugin_slug . '-public', plugins_url( 'css/public.css', __FILE__ ), array(), $this->version );
-            wp_enqueue_style( $this->plugin_slug . '-fontawesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
-		}
+		if (!is_admin() && (in_array(get_post_type(),$this->available_post_types) || (is_page() && has_shortcode($post->post_content, 'mjm-clinic-booking-form')))) {
 
-        //register scripts only used in shortcodes
+            if(locate_template('/mjm-clinic/public.css') == '') {
+                wp_enqueue_style($this->plugin_slug . '-public', plugins_url('css/public.css', __FILE__), array(), $this->version);
+                wp_enqueue_style($this->plugin_slug . '-fontawesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css');
+            } else {
+                wp_enqueue_style($this->plugin_slug . '-public', get_stylesheet_directory_uri().'/mjm-clinic/public.css', array(), $this->version);
+            }
+        }
 
+        //register scripts used in shortcodes
+        $booking_js = (locate_template('/mjm-clinic/booking_form.js') == '') ? plugins_url('js/booking_form.js', __FILE__) : get_stylesheet_directory_uri().'/mjm-clinic/booking_form.js';
+        $datepicker_css = (locate_template('/mjm-clinic/jquery-ui.min.css') == '') ? plugins_url('css/jquery-ui.min.css', __FILE__) : get_stylesheet_directory_uri().'/mjm-clinic/jquery-ui.min.css';
+        $map_js = (locate_template('/mjm-clinic/map.js') == '') ? plugins_url('js/map.js', __FILE__) : get_stylesheet_directory_uri().'/mjm-clinic/map.js';
+
+        wp_register_script( 'mjm-clinic-map-script', 'https://maps.googleapis.com/maps/api/js', array(), $this->version, true );
+        wp_register_script( 'mjm-clinic-map-init-script', $map_js, array('mjm-clinic-map-script','jquery'), $this->version, true );
         wp_register_script( 'mjm-clinic-script-validate_form', plugins_url( 'js/jquery.validate.js' , __FILE__ ), array('jquery'), $this->version, true );
-        wp_register_script( 'mjm-clinic-script-booking_form', plugins_url( 'js/booking_form.js' , __FILE__ ), array(), $this->version, true );
-        wp_register_style('mjm-clinic-script-datepicker-css', plugins_url( 'css/jquery-ui.min.css' , __FILE__ ), array(), $this->version );
+        wp_register_script('mjm-clinic-script-booking_form', $booking_js, array('jquery'), $this->version, true);
+        wp_register_style( 'mjm-clinic-script-datepicker-css', $datepicker_css, array(), $this->version );
 	}
 
 
@@ -1523,20 +1533,37 @@ class MJM_Clinic {
 	 */
 	public function register_clinic_service_widget() {
 		include_once(CLINIC_SERVICES_WIDGETS);
-		register_widget( 'MJM_Clinic_Indication_Tags' );
-        register_widget( 'MJM_Clinic_Service_Locations' );
+
         register_widget( 'MJM_Clinic_Service_Session_Info' );
         register_widget( 'MJM_Clinic_Assigned_Services' );
-        register_widget( 'MJM_Clinic_Assigned_Case_Studies' );
-        register_widget( 'MJM_Clinic_Assigned_Patient_Feedback' );
-        register_widget( 'MJM_Clinic_Assigned_Conditions' );
-        register_widget( 'MJM_Clinic_Shared_Symptoms' );
-        register_widget( 'MJM_Clinic_Related_Services' );
-        register_widget( 'MJM_Clinic_Related_Conditions' );
-        register_widget( 'MJM_Clinic_Related_Feedback' );
-        register_widget( 'MJM_Clinic_Related_Casestudy' );
         register_widget( 'MJM_Clinic_Service_Categories' );
-        register_widget( 'MJM_Clinic_Location_Map' );
+        register_widget( 'MJM_Clinic_Related_Services' );
+
+
+            register_widget( 'MJM_Clinic_Indication_Tags' );
+            register_widget('MJM_Clinic_Shared_Symptoms');
+
+
+
+            register_widget('MJM_Clinic_Service_Locations');
+            register_widget( 'MJM_Clinic_Location_Map' );
+
+
+
+            register_widget('MJM_Clinic_Assigned_Case_Studies');
+            register_widget( 'MJM_Clinic_Related_Casestudy' );
+
+
+
+            register_widget('MJM_Clinic_Assigned_Patient_Feedback');
+            register_widget( 'MJM_Clinic_Related_Feedback' );
+
+
+
+            register_widget('MJM_Clinic_Assigned_Conditions');
+            register_widget( 'MJM_Clinic_Related_Conditions' );
+
+
 
 	}
 
@@ -1551,6 +1578,13 @@ class MJM_Clinic {
 			add_image_size( 'mjm-clinic-service-feature', 280, 241, false );
 		}
 	}
+
+    public function mjman_thumb_sizes($sizes){
+        return array_merge( $sizes, array(
+            'mjm-clinic-service-thumb' => __( 'Service Thumbnails' ),
+            'mjm-clinic-service-feature' => __( 'Service Feature Image' ),
+        ) );
+    }
 
 
     /**
@@ -1799,7 +1833,88 @@ class MJM_Clinic {
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_style( 'mjm-clinic-script-datepicker-css' );
         wp_enqueue_script( 'mjm-clinic-script-validate_form' );
-        wp_enqueue_script( 'mjm-clinic-script-booking_form' );
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/form-booking.php');
+        wp_enqueue_script('mjm-clinic-script-booking_form');
+
+        ob_start();
+        if(locate_template('/mjm-clinic/form-booking.php') == '') {
+            include(plugin_dir_path(__FILE__) . 'views/templates/form-booking.php');
+        } else {
+            include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/form-booking.php');
+        }
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        return $output;
+    }
+
+
+    /**
+     * Map Shortcode
+     *
+     * @since 	1.0.1
+     * @param array $atts (location, width, height)
+     * @return mixed html output
+     *
+     * Provide a location ID/Slug .
+     * optional id (if multiple on one page)
+     * optional width and height
+     */
+    public function shortcode_location_map( $atts ) {
+        $map_id = isset($atts['id']) ? $atts['id'] : 'shortcode';
+        $width = isset($atts['width']) ? $atts['width'] : '100%';
+        $height = isset($atts['height']) ? $atts['height'] : '200px';
+
+        if(!isset($atts['location'])){
+            if(is_tax('mjm_clinic_location') ) {
+                $location = get_term_by('slug', get_query_var('term'), 'mjm_clinic_location');
+                if ($location) {
+                    $location_id = $location->term_id;
+                }
+            }
+        } else {
+                if(is_numeric($atts['location'])){
+                    $location_id = $atts['location'];
+                } else {
+                    $the_slug = $atts['location'];
+                    $location = get_term_by( 'slug', $the_slug, 'mjm_clinic_location' );
+                    if( $location ) {
+                        $location_id = $location->term_id;
+                    }
+                }
+        }
+
+        if(!isset( $location_id )){
+        return;
+        }
+        $location = isset($location) ? $location : get_term_by( 'id', $location_id, 'mjm_clinic_location');
+
+
+        $location_meta = get_option( "taxonomy_$location_id" );
+        if(empty($location_meta['map_link']) || !strstr($location_meta['map_link'],',')){
+            return;
+        }
+        $latlng = explode(',',$location_meta['map_link']);
+        $lat = trim($latlng[0]);
+        $lng = trim($latlng[1]);
+
+        if(!is_numeric($lat) || !is_numeric($lng)){
+            return false;
+        }
+
+        $map_id = $map_id.$location_id;
+
+        //render recommended services multiselect list
+        wp_enqueue_script( 'mjm-clinic-map-script' );
+        wp_enqueue_script( 'mjm-clinic-map-init-script' );
+
+        ob_start();
+        if(locate_template('/mjm-clinic/widget-map.php') == '') {
+            include(plugin_dir_path(__FILE__) . 'views/templates/widget-map.php');
+        } else {
+            include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/widget-map.php');
+        }
+        $output = ob_get_contents();
+        ob_end_clean();
+        return $output;
     }
 }

@@ -63,6 +63,15 @@ The above will generate a form for the given service and location (slugs), and h
 Without any attributes the form will show drop downs for location and services, and detects the most relevent
 form state for the page.
 
+`[mjm-clinic-location-map]`
+Outputs a google map for a given location.
+Optional attributes = ['location', 'id', 'height', 'width']
+- 'location' can be a clinic location id or slug.
+- 'id' can be set to a unique value if you ever find conflicts with other maps on the same page.
+- 'height' for map display, eg. 200px or 50%
+- 'width' for map display, eg. 200px or 50%
+
+
 
 = Helper Functions =
 There are a number of helper functions that can be used in your theme, which are found in `inc/func.php`.
@@ -74,12 +83,16 @@ MJM Clinic works out of the box, but theme developers can easily over-ride the d
 
 
 TO OVERIDE THE DEFAULT CSS
-Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 * `public.css`
 
 TO OVERIDE THE BOOKING FORM JS
-Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/js/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 * `booking_form.js`
+
+TO OVERIDE THE BOOKING FORM HTML
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+* `form-booking.php`
 
 TO CUSTOMIZE THE CATEGORY PAGES
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
