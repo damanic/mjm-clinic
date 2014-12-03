@@ -8,7 +8,7 @@ Stable tag: 1.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A tool for hosting clinic and health care related websites. Enables presentation of services with relations
+A plugin to build clinic and health care related websites. Enables presentation of services with relations
 to common health conditions, health indications/symptoms and related products. Fully integrated booking forms.
 
 == Description ==
