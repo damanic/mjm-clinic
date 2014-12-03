@@ -191,7 +191,9 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
                 if(!empty($title)) {
                     echo $args['before_title'] . esc_html($title) . $args['after_title'];
                 }
+                $count = 0;
                 foreach ($service_locations as $location) {
+                    $count++;
                     $location_meta = get_option( "taxonomy_$location->term_id" );
                     ?>
                     <div class="mjm_clinic_service_locations_widget_output_entry-container">
@@ -628,7 +630,7 @@ class MJM_Clinic_Assigned_Conditions extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        if(!post_type_exists('mjm-clinic-condition') || (!is_singular( 'mjm-clinic-feedback' ) && !is_singular( 'mjm-clinic-casestudy' ))){
+        if(!post_type_exists('mjm-clinic-condition') || (!is_singular( 'mjm-clinic-feedback' ) && !is_singular( 'mjm-clinic-casestudy' ) && !is_singular( 'mjm-clinic-service' ))){
             return;
         }
         global $wp_query;
@@ -798,10 +800,11 @@ class MJM_Clinic_Related_Services extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        if( !is_singular( 'mjm-clinic-condition' ) &&
+        if( (!is_singular( 'mjm-clinic-condition' ) &&
             !is_singular('mjm-clinic-casestudy') &&
             !is_singular('mjm-clinic-feedback') &&
-            !is_tax('mjm_clinic_indication')){
+            !is_tax('mjm_clinic_indication')) ||
+            !taxonomy_exists('mjm_clinic_indication')){
             return;
         }
 
@@ -820,6 +823,12 @@ class MJM_Clinic_Related_Services extends WP_Widget {
             $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
             $ignore_ids = array($this_post->ID);
         }
+
+
+        if(!is_array($terms) || count($terms) < 1){
+            return;
+        }
+
 
         $related_services = mjm_clinic_get_posts_related_to_terms('mjm-clinic-service', $taxonomy, $terms, $count, $ignore_ids);
 
@@ -885,7 +894,11 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        if(!is_singular() || (is_singular() && (!taxonomy_exists('mjm_clinic_indication') || !post_type_exists('mjm-clinic-condition')))) {
+        if( (!is_singular( 'mjm-clinic-service' ) &&
+                !is_singular('mjm-clinic-casestudy') &&
+                !is_singular('mjm-clinic-feedback') &&
+                !is_tax('mjm_clinic_indication')) ||
+            !taxonomy_exists('mjm_clinic_indication')){
             return;
         }
         global $wp_query;
@@ -904,6 +917,11 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
                 $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
                 $ignore_ids = array($this_post->ID);
             }
+
+            if(!is_array($terms) || count($terms) < 1){
+                return;
+            }
+
 
             $related_conditions = mjm_clinic_get_posts_related_to_terms('mjm-clinic-condition', $taxonomy, $terms, $count, $ignore_ids);
 
@@ -972,7 +990,11 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        if(!is_singular() || (is_singular() && (!taxonomy_exists('mjm_clinic_indication') || !post_type_exists('mjm-clinic-feedback')))) {
+        if( (!is_singular( 'mjm-clinic-service' ) &&
+                !is_singular('mjm-clinic-casestudy') &&
+                !is_singular('mjm-clinic-condition') &&
+                !is_tax('mjm_clinic_indication')) ||
+            !taxonomy_exists('mjm_clinic_indication')){
             return;
         }
         global $wp_query;
@@ -991,6 +1013,12 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
             $terms = wp_get_post_terms( $this_post->ID, $taxonomy);
             $ignore_ids = array($this_post->ID);
         }
+
+
+        if(!is_array($terms) || count($terms) < 1){
+            return;
+        }
+
 
         $related_feedback = mjm_clinic_get_posts_related_to_terms('mjm-clinic-feedback', $taxonomy, $terms, $count, $ignore_ids);
 
@@ -1058,7 +1086,12 @@ class MJM_Clinic_Related_Casestudy extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        if(!is_singular() || (is_singular() && (!taxonomy_exists('mjm_clinic_indication') || !post_type_exists('mjm-clinic-casestudy')))) {
+
+        if( (!is_singular( 'mjm-clinic-service' ) &&
+                !is_singular('mjm-clinic-feedback') &&
+                !is_singular('mjm-clinic-condition') &&
+                !is_tax('mjm_clinic_indication')) ||
+            !taxonomy_exists('mjm_clinic_indication')){
             return;
         }
 
@@ -1083,7 +1116,13 @@ class MJM_Clinic_Related_Casestudy extends WP_Widget {
                 $ignore_ids = array($this_post->ID);
             }
 
-            $related_casestudy = mjm_clinic_get_posts_related_to_terms('mjm-clinic-casestudy', $taxonomy, $terms, $count, $ignore_ids);
+
+        if(!is_array($terms) || count($terms) < 1){
+            return;
+        }
+
+
+        $related_casestudy = mjm_clinic_get_posts_related_to_terms('mjm-clinic-casestudy', $taxonomy, $terms, $count, $ignore_ids);
 
             if(count($related_casestudy) > 0) {
                 echo $args['before_widget'];

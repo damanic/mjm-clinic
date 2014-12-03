@@ -3,7 +3,7 @@
 /**
  * List of things to do
  *
- * @TODO MJM_Clinic_Service_Categories Widget , List output broken
+ * @TODO Taxonomy excerpt meta saves and outputs escaped \'
  * @TODO Add Shortcode access to widgets
  * @TODO Add Related Product Options
  * @TODO Contraindication integration

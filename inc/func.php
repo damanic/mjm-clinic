@@ -53,27 +53,26 @@ function mjm_clinic_option_defaults() {
         'mjm_clinic_option_condition' => true,
         'mjm_clinic_option_indication' => true,
         'mjm_clinic_option_location' => true,
-		'mjm_clinic_option_related_product' => false,
-		'mjm_clinic_option_contraindication' => false,
         'mjm_clinic_option_feedback' => false,
         'mjm_clinic_option_casestudy' => false,
 		'mjm_clinic_option_price' => false,
-		'roles' => false,
+        'mjm_clinic_option_related_product' => false,
+        'mjm_clinic_option_contraindication' => false,
+        'mjm_clinic_disclaimer_text ' => '',
 		'comments' => false
 	);
 	return $defaults;
 }
 
 
-
-
 function mjm_clinic_get_conditions(){
     $posts = get_posts(
         array(
             'post_type' => 'mjm-clinic-condition',
-            'order_by' => 'title',
+            'orderby' => 'title',
             'order' => 'ASC',
             'post_status'  => 'publish',
+            'posts_per_page' => -1
         )
     );
     return $posts;
@@ -309,7 +308,7 @@ function mjm_clinic_get_assigned_conditions($post, $limit = -1){
  * @return 	        array	    posts array
  */
 function mjm_clinic_get_assigned_($search_for_post_type,$post, $limit=-1){
-
+    global $wpdb;
     $this_post_type = get_post_type($post);
     $key = false;
 
@@ -341,7 +340,28 @@ function mjm_clinic_get_assigned_($search_for_post_type,$post, $limit=-1){
             $condition_id = $post->mjm_clinic_related_condition_id;
             return array(get_post($condition_id));
         } else if ($this_post_type == 'mjm-clinic-service'){
-            return false; //@TODO allow fetch assigned conditions from service post
+            $query = "SELECT $wpdb->postmeta.post_id
+                      FROM $wpdb->postmeta
+                      WHERE $wpdb->postmeta.meta_key = 'mjm_clinic_recommended_service_selected_ids'
+                      AND FIND_IN_SET('$post->ID', wp_postmeta.meta_value)";
+
+
+
+            $posts = $wpdb->get_results($query, ARRAY_A);
+                if($posts) {
+                    $post_ids = array();
+                    foreach($posts as $result){
+                        $post_ids[] = $result['post_id'];
+                    }
+
+                    $args = array('post__in' => $post_ids,
+                        'post_type' => $search_for_post_type,
+                        'posts_per_page' => $limit,
+                        'post_status' => 'publish');
+                    return get_posts($args);
+                }
+
+            return false;
         }
     }
 

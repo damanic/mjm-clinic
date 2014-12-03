@@ -59,7 +59,7 @@ function mjm_clinic_contraindications()
         <td>
             <select name="mjm_clinic_settings[mjm_clinic_contraindication]" id="mjm_clinic_contraindication">
                 <?php
-                $selected = $options['mjm_clinic_contraindication'];
+                $selected = $options['mjm_clinic_option_contraindication'];
                 foreach (mjm_clinic_true_false() as $option) {
                     $label = $option['label'];
                     $value = $option['value'];
@@ -67,7 +67,7 @@ function mjm_clinic_contraindications()
                 } ?>
             </select><br/>
             <label class="description"
-                   for="mjm_clinic_settings[mjm_clinic_contraindication]"><?php _e('Enable this to flag/link content with contraindication tags.', 'mjm-clinic'); ?></label>
+                   for="mjm_clinic_settings[mjm_clinic_option_contraindication]"><?php _e('Enable this to flag/link content with contraindication tags.', 'mjm-clinic'); ?></label>
         </td>
     </tr>
 <?
@@ -269,9 +269,9 @@ function mjm_clinic_do_options() {
 	echo $options_before;
 
     mjm_clinic_indication();
-	mjm_clinic_contraindications();
-    mjm_clinic_price();
-    mjm_clinic_disclaimer();
+	//mjm_clinic_contraindications();
+    //mjm_clinic_price();
+    //mjm_clinic_disclaimer();
     //mjm_clinic_related_product();
     mjm_clinic_feedback();
     mjm_clinic_casestudy();

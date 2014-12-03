@@ -233,7 +233,7 @@ class MJM_Clinic {
 	public function enqueue_scripts() {
 		global $post;
 
-		if (!is_admin() && (in_array(get_post_type(),$this->available_post_types) || (is_page() && has_shortcode($post->post_content, 'mjm-clinic-booking-form')))) {
+		if (!is_admin() && (in_array(get_post_type(),$this->available_post_types) || (is_page() && (has_shortcode($post->post_content, 'mjm-clinic-booking-form') || has_shortcode($post->post_content, 'mjm-clinic-service-box-links') || has_shortcode($post->post_content, 'mjm-clinic-condition-list'))))) {
 
             if(locate_template('/mjm-clinic/public.css') == '') {
                 wp_enqueue_style($this->plugin_slug . '-public', plugins_url('css/public.css', __FILE__), array(), $this->version);
@@ -1913,6 +1913,179 @@ class MJM_Clinic {
         } else {
             include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/widget-map.php');
         }
+        $output = ob_get_contents();
+        ob_end_clean();
+        return $output;
+    }
+
+    /**
+     * Service Box Links
+     *
+     * @since 	1.0.1
+     * @param array $atts [category]
+     * @return mixed html output
+     *
+     * optional provide parent category ID/Slug.
+     */
+    public function shortcode_service_box_links( $atts ) {
+        $cat_id = 0;
+        if(isset($atts['service'])){
+            if(!is_numeric($atts['service'])) {
+                $category = get_term_by('slug', $atts['service'], 'mjm_clinic_service_category');
+                if ($category) {
+                    $cat_id = $category->term_id;
+                }
+            } else {
+                $cat_id = $atts['service'];
+            }
+        } else if(is_tax('mjm_clinic_service_category') ) {
+            $category = get_term_by('slug', get_query_var('term'), 'mjm_clinic_service_category');
+            if ($category) {
+                $cat_id = $category->term_id;
+            }
+        }
+
+        $child_terms = mjm_clinic_get_sub_service_categories($cat_id);
+
+        if($cat_id > 0) {
+            $child_posts = mjm_clinic_get_services_in_category($cat_id);
+        }
+
+        if(!$child_terms && !$child_posts){
+            return;
+        }
+
+        $output = null;
+        $boxlink_service_template = (locate_template('/mjm-clinic/boxlink-service.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/boxlink-service.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/boxlink-service.php';
+        $boxlink_category_template = (locate_template('/mjm-clinic/boxlink-service-category.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/boxlink-service-category.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/boxlink-service-category.php';
+
+
+        if($child_terms){
+            foreach ($child_terms as $category){
+                $image = false;
+                $image_alt = null;
+                $category_meta = array('excerpt' => null);
+                if(isset($category->image_id) && !empty($category->image_id)) {
+                    $images = wp_get_attachment_image_src( $category->image_id, 'mjm-clinic-service-thumb' );
+                    if($images) {
+                        $image = $images[0];
+                        $image_alt = get_post_meta($category->image_id, '_wp_attachment_image_alt', true);
+                    }
+                }
+                $category_meta = get_option( "taxonomy_$category->term_id" );
+
+                ob_start();
+                    include($boxlink_category_template);
+                    $output .= ob_get_contents();
+                ob_end_clean();
+            }
+        }
+
+        if(isset($child_posts)){
+            foreach($child_posts as $post) {
+                $img_id = get_post_thumbnail_id($post->ID);
+                $image = wp_get_attachment_image_src($img_id, 'mjm-clinic-service-thumb');
+                if ($image) {
+                    $image_url = $image[0];
+                }
+
+                ob_start();
+                    include($boxlink_service_template);
+                    $output .= ob_get_contents();
+                ob_end_clean();
+            }
+        }
+
+        return $output;
+    }
+
+    /**
+     * Searchable Conditions List
+     *
+     * @since 	1.0.1
+     * @param array $atts [searchable, show_except, show_indication_tags, show_image, paginate]
+     * @return mixed html output
+     *
+     * Attribute values:
+     *  - searchable_title : 1 or 0 (default: 1)
+     *  - searchable_excerpt: 1 or 0 (default: 0)
+     *  - searchable_tags: 1 of 0 (default: 1)
+     *  - show_excerpt:  1 or 0 (default: 1)
+     *  - show_indication_tags:  1 or 0 (default: 1)
+     *  - show_image: 1 or 0 (default: 0)
+     *  - paginate: integer (default: 200) , amount of conditions to show per page. 0 = no pagination
+     */
+    public function shortcode_condition_list( $atts ) {
+        $search = true;
+        $searchable_title = (isset($atts['searchable_title']) && $atts['searchable_title'] == 0)  ? false : true;
+        $searchable_excerpt = (isset($atts['searchable_excerpt']) && $atts['searchable_excerpt'] == 1)  ? true : false;
+        $searchable_tags = (isset($atts['searchable_tags']) && $atts['searchable_tags'] == 0)  ? false : true;
+        $show_excerpt = (isset($atts['show_excerpt']) && $atts['show_excerpt'] == 0)  ? false : true;
+        $show_indication_tags = (isset($atts['show_indication_tags']) && $atts['show_indication_tags'] == 0)  ? false : true;
+        $show_image = (isset($atts['show_image']) && $atts['show_image'] == 1)  ? true : false;
+        $paginate = (isset($atts['paginate']) && is_numeric($atts['paginate']))  ? $atts['paginate'] : 200;
+
+        if(!$searchable_title && !$searchable_excerpt && !$searchable_tags){
+            $search = false;
+        }
+
+        if(!taxonomy_exists('mjm_clinic_indication')){
+            $show_indication_tags = false;
+            $searchable_tags = false;
+        }
+
+        $conditions = mjm_clinic_get_conditions();
+            if(count($conditions) < 1){
+                return;
+            }
+
+        $list_template = (locate_template('/mjm-clinic/shortcode-condition-list.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/shortcode-condition-list.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-condition-list.php';
+
+        $entries = '';
+        $tag_line = '';
+
+        foreach($conditions as $condition){
+            $excerpt = $show_excerpt ? ' <p class="mjm_clinic_shortcode_condition_list_excerpt">'.$condition->post_excerpt.'</p>'  : '';
+
+            if($show_indication_tags){
+                $tag_line = '';
+                $indications = get_the_terms($condition->ID, 'mjm_clinic_indication');
+                if(is_array($indications)) {
+                    $tag_line = '<div class="mjm_clinic_shortcode_condition_list_tags_contain">';
+                    $tag_line .= '<i class="fa fa-tags"></i>';
+                    foreach ($indications as $indication_tag) {
+                        $tag_line .= '<a class="mjm_clinic_shortcode_condition_list_tags" href="' . get_term_link($indication_tag) . '">
+                                        ' . $indication_tag->name . '
+                                      </a>';
+                    }
+                    $tag_line .= '</div>';
+                }
+            }
+
+            $image_line = '';
+            if($show_image) {
+                $img_id = get_post_thumbnail_id($condition->ID);
+                $image = wp_get_attachment_image_src($img_id, 'mjm-clinic-service-thumb');
+                if ($image) {
+                    $image_line = '<img src="'.$image[0].'" class="mjm_clinic_shortcode_condition_list_image" />';
+                }
+            }
+
+            $entries.= ' <li class="mjm_clinic_shortcode_condition_list_entry">
+                            <a class="mjm_clinic_shortcode_condition_list_entry_link" href="'.get_the_permalink($condition).'">
+                                '.$image_line.'
+                                <div class="mjm_clinic_shortcode_condition_list_entry_text_contain">
+                                    <h3 class="mjm_clinic_shortcode_condition_list_name">'.$condition->post_name.'</h3>
+                                    '.$excerpt.'
+                                </div>
+                                <div class="mjm_clinic_shortcode_condition_list_entry_clear"></div>
+                            </a>
+                            '.$tag_line.'
+                         </li>';
+        }
+
+        ob_start();
+        include($list_template);
         $output = ob_get_contents();
         ob_end_clean();
         return $output;
