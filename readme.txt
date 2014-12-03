@@ -16,20 +16,22 @@ Built to add functionality to any theme, the MJM Clinic plugin makes use of widg
 
 The MJM Clinic plugin allows you to
 
-* Create numerous Clinic/Service locations, with contact details/forms, address, maps.
-* Create hierarchical health service categories
+* Create numerous Clinic/Service locations, with their own contact details/forms, address, maps.
+* Booking Forms are easily added for any service/location using shortcodes and widgets.
+* Organise your services in hierarchical categories
 * Create Service/Therapy listings, assign them to one or more locations, one or more categories and one or more indication/symptom tags.
 * Create Patient feedback entries and assign them to a service and/or health condition.
 * Create Case Studies and assign them to a health condition and/or service.
-* Create Indication and Contraindication tags to link services, conditions, patient feedback, case studies, products etc.
-* Set up a service/advice disclaimer.
+* Create Indication tags to link services, conditions, patient feedback, case studies, products etc.
 * Enable/Disable combinations of the above features.
 * Enable/Disable comments on your service listings.
 
 = In the pipeline =
 
-* Create related products that can be displayed on various pages through tags or direct relation. These products can be set up to link to an online shop.
-
+* Create related products that can be displayed on various pages through tags or direct relation. Products can be set up to link to an online shop.
+* Global service disclaimers
+* Contraindication Tags
+* Official Parent Theme
 
 = Widgets =
 
@@ -71,7 +73,22 @@ Optional attributes = ['location', 'id', 'height', 'width']
 - 'height' for map display, eg. 200px or 50%
 - 'width' for map display, eg. 200px or 50%
 
+`[mjm-clinic-condition-list]`
+Outputs a searchable list of conditions
+Attribute values:
+     *  - searchable_title : 1 or 0 (default: 1)
+     *  - searchable_excerpt: 1 or 0 (default: 0)
+     *  - searchable_tags: 1 of 0 (default: 1)
+     *  - show_excerpt:  1 or 0 (default: 1)
+     *  - show_indication_tags:  1 or 0 (default: 1)
+     *  - show_image: 1 or 0 (default: 0)
+     *  - paginate: integer (default: 200) , amount of conditions to show per page. 0 = no pagination
 
+
+`[mjm-clinic-service-box-links]`
+Outputs a presentation of categories and services. Use this on your services page.
+Attribute values:
+     *  - category : slug or term_ID , optional parent , if none given the top level category/services will be shown.
 
 = Helper Functions =
 There are a number of helper functions that can be used in your theme, which are found in `inc/func.php`.
@@ -80,7 +97,6 @@ There are a number of helper functions that can be used in your theme, which are
 = Theme Integration =
 All plugin generated output includes an abundance of css classes and id's all of which use mjm-clinic prefixes to prevent conflicts with any other plugins or themes.
 MJM Clinic works out of the box, but theme developers can easily over-ride the default presentation styles and templates.
-
 
 TO OVERIDE THE DEFAULT CSS
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
@@ -92,7 +108,16 @@ Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/js/ to {YOUR-THEME-DIR}/mj
 
 TO OVERIDE THE BOOKING FORM HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
-* `form-booking.php`
+* `shortcode-booking-form.php`
+
+TO OVERIDE THE [mjm-clinic-service-box-links] HTML
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+* `shortcode-boxlinks-service.php`
+* `shortcode-boxlinks-service-category.php`
+
+TO OVERIDE THE [mjm-clinic-condition-list] SEARCHABLE CONDITIONS HTML
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+* `shortcode-condition-list.php`
 
 TO CUSTOMIZE THE CATEGORY PAGES
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
@@ -127,8 +152,12 @@ This plugin was created for clinics to promote services and products in a way th
 
 == Screenshots ==
 
-1. Description
-
+1. Admin View
+2. TwentyFourteen Clean Install, widgets only.
+3. Form Validation and date selection
+4. Location Page
+5. Searchable Health Conditions
+6. Default service box output
 
 == Upgrade Notice ==
 None

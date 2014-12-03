@@ -250,7 +250,7 @@ class MJM_Clinic {
 
         wp_register_script( 'mjm-clinic-map-script', 'https://maps.googleapis.com/maps/api/js', array(), $this->version, true );
         wp_register_script( 'mjm-clinic-map-init-script', $map_js, array('mjm-clinic-map-script','jquery'), $this->version, true );
-        wp_register_script( 'mjm-clinic-script-validate_form', plugins_url( 'js/jquery.validate.js' , __FILE__ ), array('jquery'), $this->version, true );
+        wp_register_script( 'mjm-clinic-script-validate_form', plugins_url( 'js/jquery.validate.min.js' , __FILE__ ), array('jquery'), $this->version, true );
         wp_register_script('mjm-clinic-script-booking_form', $booking_js, array('jquery'), $this->version, true);
         wp_register_style( 'mjm-clinic-script-datepicker-css', $datepicker_css, array(), $this->version );
 	}
@@ -1090,7 +1090,7 @@ class MJM_Clinic {
      *
      * @since 	1.0.0
      *   //related services
-    include(plugin_dir_path( __FILE__ ) . 'views/templates/field-recommended_services.php');
+    include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-recommended_services.php');
 
      */
     public function mjm_clinic_service_box() {
@@ -1143,7 +1143,7 @@ class MJM_Clinic {
             wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
 
         //render recommended services multiselect list
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-recommended_services.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-recommended_services.php');
 
     }
 
@@ -1163,11 +1163,11 @@ class MJM_Clinic {
 
 
         //patient name field
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-patient-name.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-patient-name.php');
 
         //render related post fields
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-select-service.php');
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-select-condition.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-select-service.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-select-condition.php');
 
     }
 
@@ -1186,11 +1186,11 @@ class MJM_Clinic {
             wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
 
         //case name field
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-case-name.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-case-name.php');
 
         //render related post fields
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-select-service.php');
-        include(plugin_dir_path( __FILE__ ) . 'views/templates/field-select-condition.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-select-service.php');
+        include(plugin_dir_path( __FILE__ ) . 'views/templates/admin/field-select-condition.php');
 
     }
 
@@ -1836,10 +1836,10 @@ class MJM_Clinic {
         wp_enqueue_script('mjm-clinic-script-booking_form');
 
         ob_start();
-        if(locate_template('/mjm-clinic/form-booking.php') == '') {
-            include(plugin_dir_path(__FILE__) . 'views/templates/form-booking.php');
+        if(locate_template('/mjm-clinic/shortcode-booking-form.php') == '') {
+            include(plugin_dir_path(__FILE__) . 'views/templates/shortcode-booking-form.php');
         } else {
-            include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/form-booking.php');
+            include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-booking-form.php');
         }
         $output = ob_get_contents();
         ob_end_clean();
@@ -1908,10 +1908,10 @@ class MJM_Clinic {
         wp_enqueue_script( 'mjm-clinic-map-init-script' );
 
         ob_start();
-        if(locate_template('/mjm-clinic/widget-map.php') == '') {
-            include(plugin_dir_path(__FILE__) . 'views/templates/widget-map.php');
+        if(locate_template('/mjm-clinic/shortcode-location-map.php') == '') {
+            include(plugin_dir_path(__FILE__) . 'views/templates/shortcode-location-map.php');
         } else {
-            include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/widget-map.php');
+            include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-location-map.php');
         }
         $output = ob_get_contents();
         ob_end_clean();
@@ -1929,9 +1929,9 @@ class MJM_Clinic {
      */
     public function shortcode_service_box_links( $atts ) {
         $cat_id = 0;
-        if(isset($atts['service'])){
-            if(!is_numeric($atts['service'])) {
-                $category = get_term_by('slug', $atts['service'], 'mjm_clinic_service_category');
+        if(isset($atts['category'])){
+            if(!is_numeric($atts['category'])) {
+                $category = get_term_by('slug', $atts['category'], 'mjm_clinic_service_category');
                 if ($category) {
                     $cat_id = $category->term_id;
                 }
@@ -1956,8 +1956,8 @@ class MJM_Clinic {
         }
 
         $output = null;
-        $boxlink_service_template = (locate_template('/mjm-clinic/boxlink-service.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/boxlink-service.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/boxlink-service.php';
-        $boxlink_category_template = (locate_template('/mjm-clinic/boxlink-service-category.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/boxlink-service-category.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/boxlink-service-category.php';
+        $boxlink_service_template = (locate_template('/mjm-clinic/shortcode-boxlinks-service.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/shortcode-boxlinks-service.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-boxlinks-service.php';
+        $boxlink_category_template = (locate_template('/mjm-clinic/shortcode-boxlinks-service-category.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/shortcode-boxlinks-service-category.php' :  get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-boxlinks-service-category.php';
 
 
         if($child_terms){
