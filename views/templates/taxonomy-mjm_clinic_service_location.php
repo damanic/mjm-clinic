@@ -23,12 +23,16 @@ get_header();
             </p>
 
 
+
             <? if(!empty($location_meta['open_hours'])){?>
 
                <b> <?= __('Open Hours',',mjm-clinic')?>:</b>
+                <div class="mjm_clinic_service_locations_widget_output_open-hours">
                    <?= wpautop($location_meta['open_hours']) ?>
+                </div>
 
             <? } ?>
+
 
 
             <? if(!empty($location_meta['tel'])){?>

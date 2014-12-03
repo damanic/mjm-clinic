@@ -1008,7 +1008,7 @@ class MJM_Clinic {
             $cat_keys = array_keys( $_POST['term_meta'] );
             foreach ( $cat_keys as $key ) {
                 if ( isset ( $_POST['term_meta'][$key] ) ) {
-                    $term_meta[$key] = sanitize_text_field($_POST['term_meta'][$key]);
+                    $term_meta[$key] = implode( "\n", array_map( 'sanitize_text_field', explode( "\n", $_POST['term_meta'][$key] ) ) );
                 }
             }
             // Save the option array.

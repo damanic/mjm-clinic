@@ -61,6 +61,9 @@
 
 }
 
+.mjm_clinic_service_locations_widget_output_open-hours{
+    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
 .mjm_clinic_service_locations_widget_output_location-name{
     font-size: 108%;
     font-weight:bold;
