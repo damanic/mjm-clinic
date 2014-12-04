@@ -4,12 +4,11 @@ Donate link: http://mjman.net
 Tags: clinic, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A plugin to build clinic and health care related websites. Enables presentation of services with relations
-to common health conditions, health indications/symptoms and related products. Fully integrated booking forms.
+A plugin to build clinic and health care related websites. Service pages with booking forms, related health conditions, locations, feedback and more.
 
 == Description ==
 Built to add functionality to any theme, the MJM Clinic plugin makes use of widgets and shortcodes for quick integration.
@@ -36,6 +35,7 @@ The MJM Clinic plugin allows you to
 = Widgets =
 
 Numerous sidebar widgets have been included to help show off your services, health conditions info, clinic locations etc.
+
 * Assigned Case Studies - can be assigned to feature on a specific service or a health condition page
 * Assigned Condition - Health conditions can be assigned to feature on any number of specified service listings
 * Assigned Patient Feedback - can be assigned to feature on a specific service or a health condition page
@@ -68,6 +68,7 @@ form state for the page.
 `[mjm-clinic-location-map]`
 Outputs a google map for a given location.
 Optional attributes = ['location', 'id', 'height', 'width']
+
 - 'location' can be a clinic location id or slug.
 - 'id' can be set to a unique value if you ever find conflicts with other maps on the same page.
 - 'height' for map display, eg. 200px or 50%
@@ -76,13 +77,14 @@ Optional attributes = ['location', 'id', 'height', 'width']
 `[mjm-clinic-condition-list]`
 Outputs a searchable list of conditions
 Attribute values:
-     *  - searchable_title : 1 or 0 (default: 1)
-     *  - searchable_excerpt: 1 or 0 (default: 0)
-     *  - searchable_tags: 1 of 0 (default: 1)
-     *  - show_excerpt:  1 or 0 (default: 1)
-     *  - show_indication_tags:  1 or 0 (default: 1)
-     *  - show_image: 1 or 0 (default: 0)
-     *  - paginate: integer (default: 200) , amount of conditions to show per page. 0 = no pagination
+
+*  - searchable_title : 1 or 0 (default: 1)
+*  - searchable_excerpt: 1 or 0 (default: 0)
+*  - searchable_tags: 1 of 0 (default: 1)
+*  - show_excerpt:  1 or 0 (default: 1)
+*  - show_indication_tags:  1 or 0 (default: 1)
+*  - show_image: 1 or 0 (default: 0)
+*  - paginate: integer (default: 200) , amount of conditions to show per page. 0 = no pagination
 
 
 `[mjm-clinic-service-box-links]`
@@ -100,33 +102,40 @@ MJM Clinic works out of the box, but theme developers can easily over-ride the d
 
 TO OVERIDE THE DEFAULT CSS
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+
 * `public.css`
 
 TO OVERIDE THE BOOKING FORM JS
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/js/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+
 * `booking_form.js`
 
 TO OVERIDE THE BOOKING FORM HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+
 * `shortcode-booking-form.php`
 
 TO OVERIDE THE [mjm-clinic-service-box-links] HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+
 * `shortcode-boxlinks-service.php`
 * `shortcode-boxlinks-service-category.php`
 
 TO OVERIDE THE [mjm-clinic-condition-list] SEARCHABLE CONDITIONS HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+
 * `shortcode-condition-list.php`
 
 TO CUSTOMIZE THE CATEGORY PAGES
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
+
 * `taxonomy-mjm_clinic_service_category.php`
 * `taxonomy-mjm_clinic_service_location.php`
 * `taxonomy-mjm_clinic_indication.php`
 
 TO CREATE YOUR OWN SERVICE, CONDITION, FEEDBACK AND CASE STUDY TEMPLATES
 Create the following files in your themes root directory. Use your themes single.php as reference for setting up a single post template.
+
 * `single-mjm_clinic_service.php`
 * `single-mjm_clinic_condition.php`
 * `single-mjm_clinic_feedback.php`
@@ -166,3 +175,6 @@ None
 
 = 1.0.1 =
 * initial release
+
+= 1.0.2 =
+* updated readme.txt
