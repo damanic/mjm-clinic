@@ -1,10 +1,10 @@
 === MJM Clinic ===
 Contributors: damanic
 Donate link: http://mjman.net
-Tags: clinic, therapy, services, listings, health, conditions
+Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -178,3 +178,6 @@ None
 
 = 1.0.2 =
 * updated readme.txt
+
+= 1.0.3 =
+* small bugfix with single templates look up.

@@ -30,6 +30,7 @@ function mjm_clinic_load_default_single_templates($template)
 //		$template = dirname(__FILE__) . '/templates/single-clinic-service.php';
 //		return $template;
 	}
+	return $template;
 }
 
 /**
