@@ -3,17 +3,17 @@
  * Plugin Name.
  *
  * @package   MJM_Clinic
- * @author    Matt Manning <spam2014@mjman.net>
+ * @author    Matt Manning <2015@mjman.net>
  * @license   GPLv3
  * @link      http://mjman.net
- * @copyright 2014 Matt Manning
+ * @copyright 2014, 2015 Matt Manning
  */
 
 /**
  * Plugin class.
  *
  * @package MJM_Clinic
- * @author  Matt Manning <spam2014@mjman.net>
+ * @author  Matt Manning <2015@mjman.net>
  */
 class MJM_Clinic {
 
@@ -24,7 +24,7 @@ class MJM_Clinic {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.3';
+	protected $version = '1.0.4';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -1788,7 +1788,7 @@ class MJM_Clinic {
                     'name' => $the_slug,
                     'post_type' => 'mjm-clinic-service',
                     'post_status' => 'publish',
-                    'numberposts' => 1
+                    'posts_per_page' => 1
                 );
                 $service = get_posts($args);
                 if( $service ) {

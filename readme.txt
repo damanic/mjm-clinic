@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -181,3 +181,6 @@ None
 
 = 1.0.3 =
 * small bugfix with single templates look up.
+
+= 1.0.4 =
+* fixed issue where some queries using get_posts did not make proper use of 'posts_per_page' parameter.

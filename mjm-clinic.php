@@ -1,16 +1,16 @@
 <?php
 /**
  * @package   MJM_Clinic
- * @author    Matt Manning <spam2014@mjman.net>
+ * @author    Matt Manning <2015@mjman.net>
  * @license   GPLv3
  * @link      http://mjman.net
- * @copyright 2014 Matt Manning
+ * @copyright 2014, 2015 Matt Manning
  *
  * @wordpress-plugin
  * Plugin Name: Clinic Services
  * Plugin URI:  http://mjman.net.com/
  * Description: A plugin to promote health clinic services.
- * Version:     1.0.3
+ * Version:     1.0.4
  * Author:      Matt Manning
  * Author URI:  http://mjman.net
  * License:     GPL3

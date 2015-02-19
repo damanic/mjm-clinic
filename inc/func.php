@@ -3,10 +3,10 @@
  * Some helper functions used by the plugin
  *
  * @package   MJM_Clinic
- * @author    Matt Manning <spam2014@mjman.net>
+ * @author    Matt Manning <2015@mjman.net>
  * @license   GPL-3.0
  * @link      http://mjman.net
- * @copyright 2014 Matt Manning
+ * @copyright 2014, 2015 Matt Manning
  */
 
 /**
@@ -166,6 +166,7 @@ function mjm_clinic_get_all_service_categories(){
 function mjm_clinic_get_services_in_category($term_id){
 	$posts = get_posts(array(
 			'post_type' => 'mjm-clinic-service',
+            'posts_per_page' => -1,
             'orderby'          => 'post_title',
             'order'            => 'ASC',
             'post_status'      => 'publish',
@@ -205,6 +206,7 @@ function mjm_clinic_get_service_list(){
             'post_type' => 'mjm-clinic-service',
             'order_by' => 'title',
             'post_status'  => 'publish',
+            'posts_per_page' => -1
         )
     );
 

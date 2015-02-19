@@ -4,10 +4,10 @@
  * @TODO tune default front end filters
  *
  * @package   MJM_Clinic
- * @author    Matt Manning <spam2014@mjman.net>
+ * @author    Matt Manning <2015@mjman.net>
  * @license   GPL-3.0
  * @link      http://mjman.net
- * @copyright 2014 Matt Manning
+ * @copyright 2014, 2015 Matt Manning
  */
 
 add_action( 'init', 'clinic_service_category_template_check' );
