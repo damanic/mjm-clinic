@@ -43,23 +43,24 @@ function load_default_taxonomy_templates($template)
 {
     global $wp_query;
     $taxonomy = get_query_var('taxonomy');
-    if ($taxonomy == 'mjm_clinic_service_category' && !strstr($template,'taxonomy-mjm-clinic_service_category.php')) {
+    if ($taxonomy == 'mjm_clinic_service_category' && !strstr($template,'taxonomy-mjm_clinic_service_category.php')) {
         // type and WP did NOT locate a template, use default.
         $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_service_category.php';
         return $template;
     }
 
-    if ($taxonomy == 'mjm_clinic_location' && !strstr($template,'taxonomy-mjm-clinic_location.php')) {
+    if ($taxonomy == 'mjm_clinic_location' && !strstr($template,'taxonomy-mjm_clinic_location.php')) {
         // type and WP did NOT locate a template, use default.
         $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_service_location.php';
         return $template;
     }
 
-    if ($taxonomy == 'mjm_clinic_indication' && !strstr($template,'taxonomy-mjm-clinic_indication.php')) {
+    if ($taxonomy == 'mjm_clinic_indication' && !strstr($template,'taxonomy-mjm_clinic_indication.php')) {
         // type and WP did NOT locate a template, use default.
         $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_indication.php';
         return $template;
     }
+	return $template;
 }
 
 
@@ -287,6 +288,7 @@ function filter_clinic_service_excerpt( $content ) {
 //	else : // otherwise, don't do anything
 //		return $content;
 //	endif;
+	return $content;
 }
 
 /**
@@ -297,7 +299,7 @@ function filter_clinic_service_excerpt( $content ) {
 function filter_mjm_clinic_service_category_title( $title ) {
 	global $post;
 
-		return 'sjag';
+		return $title;
 
 }
 

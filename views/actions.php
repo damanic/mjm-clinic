@@ -37,7 +37,7 @@
 
 
             add_action( 'init', array( $this, 'register_taxonomy_mjm_clinic_location' ) );
-            add_action( 'cjc_clinic_location_add_form_fields', array( $this, 'add_taxonomy_form_fields_mjm_clinic_location' ) );
+            add_action( 'mjm_clinic_location_add_form_fields', array( $this, 'add_taxonomy_form_fields_mjm_clinic_location' ) );
             add_action( 'mjm_clinic_location_edit_form_fields', array($this, 'add_taxonomy_edit_form_fields_mjm_clinic_location'));
             add_action( 'edited_mjm_clinic_location',array($this, 'save_taxonomy_custom_meta'));
             add_action( 'created_mjm_clinic_location', array($this, 'save_taxonomy_custom_meta'));
