@@ -24,7 +24,7 @@ class MJM_Clinic {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.4';
+	protected $version = '1.0.6';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -1105,7 +1105,15 @@ class MJM_Clinic {
 
         echo '<div class="session_info-meta">';
         echo '<label for="session_info"><strong>' . __( 'Session Info:', 'mjm-clinic' ) . '</strong></label><br />';
-        echo '<textarea cols="40" rows="6" style="width:90%" id="session_info" name="session_info">'.wp_strip_all_tags( get_post_meta( $post->ID, 'session_info', true ), false ) . '</textarea>';
+
+        $editor_settings = array(
+            'textarea_name'=>'session_info',
+            'media_buttons'=>false,
+            'teeny'=>true,
+        );
+        wp_editor( htmlspecialchars_decode(get_post_meta( $post->ID, 'session_info', true )), 'wp_editor_session_info', $editor_settings);
+
+        //echo '<textarea cols="40" rows="6" style="width:90%" id="session_info" name="session_info">'.wp_strip_all_tags( get_post_meta( $post->ID, 'session_info', true ), false ) . '</textarea>';
         echo '</div>';
 
 
@@ -1480,7 +1488,7 @@ class MJM_Clinic {
 		$meta_keys = array(
             'contraindication_image' => 'text',
             'price' => 'price',
-            'session_info' => 'text',
+            'session_info' => 'html',
             'mjm_clinic_recommended_service_selected_ids' => 'commadel-numeric-ids',
             'mjm_clinic_related_service_id' => 'numeric',
             'mjm_clinic_related_condition_id' => 'numeric',
@@ -1517,6 +1525,10 @@ class MJM_Clinic {
 
                 if( $type == 'numeric'){
                     $value = is_numeric($_POST[ $meta_key ]) ? $_POST[ $meta_key ] : null;
+                }
+
+                if( $type == 'html'){
+                    $value = htmlspecialchars($_POST[ $meta_key ]);
                 }
 
 				update_post_meta( $post->ID, $meta_key, $value );
@@ -1621,6 +1633,9 @@ class MJM_Clinic {
                 $this->bf_ajax_header_error_response(__( 'Please select a valid location', 'mjm-clinic' ));
             }
 
+            //get the location data
+            $location = mjm_clinic_get_location($location_id);
+
             if(empty($name)){
                 $this->bf_ajax_header_error_response(__( 'Please enter your name', 'mjm-clinic' ));
             }
@@ -1672,7 +1687,7 @@ class MJM_Clinic {
         if($msg){
             $headers[] = 'From: '.get_bloginfo('name').' <'.$noreply_email.'>';
             $headers[] = 'Reply-To: '.$msg['from_name'].' <'.$msg['from_email'].'>';
-            wp_mail( 'm@mjman.net', $msg['subject'], $msg['content'] , $headers);
+            wp_mail( $location->meta['email'], $msg['subject'], $msg['content'] , $headers);
             return;
         }
 

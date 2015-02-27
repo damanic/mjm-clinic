@@ -240,6 +240,32 @@ function mjm_clinic_get_location_list(){
 
 
 /**
+ * Get a location data given the locations ID
+ * returns post
+ *
+ * @since 	1.0.6
+ *
+ * @param 	$id 	int 		Location taxonomy ID
+ * @return 	        object	    taxonomy or false
+ */
+function mjm_clinic_get_location($id){
+    if(!is_numeric($id)){
+        return false;
+    }
+
+    $term =  get_term( $id, 'mjm_clinic_location');
+
+    if($term){
+        $location_meta = get_option( "taxonomy_$id" );
+        $term->meta = $location_meta;
+        return $term;
+    }
+
+    return false;
+}
+
+
+/**
  * Get feedback that was manually assigned to a given service or condition post
  * returns posts
  *

@@ -337,7 +337,7 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
                     echo $args['before_title'] . esc_html($title) . $args['after_title'];
                 }?>
                     <div class="mjm_clinic_service_session_info_widget_output_session-info">
-                    <?=wpautop($this_post->session_info)?>
+                    <?= wpautop(htmlspecialchars_decode($this_post->session_info))?>
                     </div>
 
                 </div>
