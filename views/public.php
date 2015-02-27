@@ -51,7 +51,7 @@ function load_default_taxonomy_templates($template)
 
     if ($taxonomy == 'mjm_clinic_location' && !strstr($template,'taxonomy-mjm_clinic_location.php')) {
         // type and WP did NOT locate a template, use default.
-        $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_service_location.php';
+        $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_location.php';
         return $template;
     }
 

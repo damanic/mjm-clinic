@@ -243,7 +243,7 @@ function mjm_clinic_get_location_list(){
  * Get a location data given the locations ID
  * returns post
  *
- * @since 	1.0.6
+ * @since 	1.0.7
  *
  * @param 	$id 	int 		Location taxonomy ID
  * @return 	        object	    taxonomy or false

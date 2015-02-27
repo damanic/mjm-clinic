@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -130,7 +130,7 @@ TO CUSTOMIZE THE CATEGORY PAGES
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
 
 * `taxonomy-mjm_clinic_service_category.php`
-* `taxonomy-mjm_clinic_service_location.php`
+* `taxonomy-mjm_clinic_location.php`
 * `taxonomy-mjm_clinic_indication.php`
 
 TO CREATE YOUR OWN SERVICE, CONDITION, FEEDBACK AND CASE STUDY TEMPLATES
@@ -192,4 +192,7 @@ None
 * fixed issue with inbuilt booking forms not using the locations email address.
 * updated custom field `session_info` to HTML WYSIWYG input, for services.
 * updated session info widget to display html.
+
+= 1.0.7 =
+* fixed template name issue: `taxonomy-mjm_clinic_service_location` change to `taxonomy-mjm_clinic_location`
 
