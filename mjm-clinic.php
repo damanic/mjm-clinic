@@ -10,7 +10,7 @@
  * Plugin Name: Clinic Services
  * Plugin URI:  http://mjman.net.com/
  * Description: A plugin to promote health clinic services.
- * Version:     1.0.7
+ * Version:     1.0.8
  * Author:      Matt Manning
  * Author URI:  http://mjman.net
  * License:     GPL3
@@ -25,7 +25,6 @@ if ( ! defined( 'WPINC' ) ) {
 }
 define( 'CLINIC_SERVICES_FUNC', plugin_dir_path( __FILE__ ) . 'inc/func.php' );
 define( 'CLINIC_SERVICES_WIDGETS', plugin_dir_path( __FILE__ ) . 'inc/widgets.php' );
-define( 'CLINIC_SERVICES_AKISMET', plugin_dir_path( __FILE__ ) . 'vendor/akismet.class.php' );
 
 $is_clinic_service_shortcode = false;
 

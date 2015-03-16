@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -195,4 +195,7 @@ None
 
 = 1.0.7 =
 * fixed template name issue: `taxonomy-mjm_clinic_service_location` change to `taxonomy-mjm_clinic_location`
+
+= 1.0.8 =
+* removed reference to old akismet check
 

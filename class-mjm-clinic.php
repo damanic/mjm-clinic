@@ -24,7 +24,7 @@ class MJM_Clinic {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.7';
+	protected $version = '1.0.8';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -1605,9 +1605,6 @@ class MJM_Clinic {
      *
      */
     public function process_booking_form(){
-        if(!class_exists('MJM_Clinic\Akismet')) {
-            include_once(CLINIC_SERVICES_AKISMET);
-        }
 
         $allowed_contact_types = array('phone', 'email');
         $allowed_preferred_times = array('morning','afternoon');
