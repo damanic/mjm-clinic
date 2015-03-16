@@ -936,12 +936,13 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
 
                         <i class="fa fa-plus-square"></i>
                         <a class="mjm_clinic_related_conditions_widget_output_title-link"
-                           href="<?php echo get_post_permalink($related_condition->ID)?>">
-                            <?php echo $related_condition->post_title?>
+                           href="<?php echo get_post_permalink($related_condition->ID); ?>">
+                            <?php echo $related_condition->post_title; ?>
                         </a>
 
                     </div>
-                <?php}
+                <?php
+                }
                 echo $args['after_widget'];
             }
     }
@@ -1038,7 +1039,8 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
                     </a>
 
                 </div>
-            <?php}
+            <?php
+            }
             echo $args['after_widget'];
         }
 
