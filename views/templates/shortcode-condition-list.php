@@ -2,16 +2,16 @@
 
     <?php if($search){?>
     <input class="mjm_clinic_shortcode_condition_list_search" placeholder="Search" />
-    <?}?>
+    <?php } ?>
 
     <ul class="mjm_clinic_shortcode_condition_list">
-        <?= $entries ?>
+        <?php echo $entries ?>
     </ul>
 
 </div>
 
-<script src="<?=  plugins_url('../../js/list.min.js', __FILE__) ?>"></script>
-<?
+<script src="<?php echo  plugins_url('../../js/list.min.js', __FILE__) ?>"></script>
+<?php
 //list options
     $value_names = '';
     $value_names .= $searchable_title ? "'mjm_clinic_shortcode_condition_list_name'," : null;
@@ -22,10 +22,10 @@
 <script>
     var options = {
         listClass: 'mjm_clinic_shortcode_condition_list',
-        page: <?=$paginate?>,
+        page: <?php echo $paginate?>,
         indexAsync: false,
         searchClass: 'mjm_clinic_shortcode_condition_list_search',
-        valueNames: [ <?=$value_names?> ]
+        valueNames: [ <?php echo $value_names?> ]
     };
 
     var userList = new List('mjm_clinic_shortcode_condition_list_contain', options);

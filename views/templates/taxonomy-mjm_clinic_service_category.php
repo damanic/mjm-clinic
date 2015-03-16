@@ -17,13 +17,13 @@ get_header();
     <div id="content" class="site-content" role="main">
 
         <header class="entry-header">
-            <h1 class="entry-title"><?=$term->name?></h1>
-            <p><?=$term_meta['excerpt']?></p>
+            <h1 class="entry-title"><?php echo $term->name?></h1>
+            <p><?php echo $term_meta['excerpt']?></p>
         </header>
 
 
         <div class="page-content">
-            <?= do_shortcode('[mjm-clinic-service-box-links]')?>
+            <?php echo do_shortcode('[mjm-clinic-service-box-links]')?>
 
             </div>
 

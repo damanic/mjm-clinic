@@ -1,4 +1,4 @@
-<?
+<?php
 class MJM_Walker_SlugValueCategoryDropdown extends Walker_CategoryDropdown {
 
     function start_el(&$output, $category, $depth, $args) {
@@ -15,3 +15,4 @@ class MJM_Walker_SlugValueCategoryDropdown extends Walker_CategoryDropdown {
         $output .= "</option>\n";
     }
 }
+?>

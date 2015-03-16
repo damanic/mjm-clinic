@@ -173,7 +173,7 @@ function mjm_clinic_disclaimer() {
    // if($selected){$style='style="background-color: #00acee; padding:5px;"';}
     ?>
 
-    <tr valign="top" <?=$style?>><th scope="row"><?php _e( 'Service Disclaimer', 'mjm-clinic' ); ?></th>
+    <tr valign="top" <?php echo $style?>><th scope="row"><?php _e( 'Service Disclaimer', 'mjm-clinic' ); ?></th>
         <td>
             <select name="mjm_clinic_settings[mjm_clinic_disclaimer_toggle]" id="mjm_clinic_disclaimer_toggle">
                 <?php
@@ -187,14 +187,14 @@ function mjm_clinic_disclaimer() {
         </td>
     </tr>
 
-    <? if($selected){?>
-    <tr valign="top" <?=$style?>><th scope="row"><?php _e( 'Disclaimer Text', 'mjm-clinic' ); ?></th>
+    <?php if($selected){?>
+    <tr valign="top" <?php echo $style?>><th scope="row"><?php _e( 'Disclaimer Text', 'mjm-clinic' ); ?></th>
         <td>
-            <textarea cols="40" rows="6" name="mjm_clinic_settings[mjm_clinic_disclaimer_text]" id="mjm_clinic_disclaimer_text"><?= $options['mjm_clinic_disclaimer_text'];?></textarea>
+            <textarea cols="40" rows="6" name="mjm_clinic_settings[mjm_clinic_disclaimer_text]" id="mjm_clinic_disclaimer_text"><?php echo $options['mjm_clinic_disclaimer_text'];?></textarea>
         </td>
     </tr>
 
-        <?}?>
+        <?php }?>
 <?php
 }
 

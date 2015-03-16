@@ -16,8 +16,8 @@ get_header();
 
 
         <div class="page-content">
-            <h1>Symptom: <?=$term->name?></h1>
-            <p><?=wpautop($term->description)?></p>
+            <h1>Symptom: <?php echo $term->name?></h1>
+            <p><?php echo wpautop($term->description)?></p>
         </div>
 
     </div><!-- #content -->

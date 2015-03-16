@@ -16,65 +16,65 @@ get_header();
 
         <div class="page-content">
 
-            <h1><?=$location->name?></h1>
+            <h1><?php echo $location->name?></h1>
 
             <p>
-                <?= wpautop($location->description) ?>
+                <?php echo wpautop($location->description) ?>
             </p>
 
 
 
-            <? if(!empty($location_meta['open_hours'])){?>
+            <?php if(!empty($location_meta['open_hours'])){?>
 
-               <b> <?= __('Open Hours',',mjm-clinic')?>:</b>
+               <b> <?php echo __('Open Hours',',mjm-clinic')?>:</b>
                 <div class="mjm_clinic_service_locations_widget_output_open-hours">
-                   <?= wpautop($location_meta['open_hours']) ?>
+                   <?php echo wpautop($location_meta['open_hours']) ?>
                 </div>
 
-            <? } ?>
+            <?php } ?>
 
 
 
-            <? if(!empty($location_meta['tel'])){?>
-            <p> <a href="tel:<?=wp_strip_all_tags($location_meta['tel'])?>">
-                    <i class="fa fa-phone"></i> <?=wp_strip_all_tags($location_meta['tel'])?>
+            <?php if(!empty($location_meta['tel'])){?>
+            <p> <a href="tel:<?php echo wp_strip_all_tags($location_meta['tel'])?>">
+                    <i class="fa fa-phone"></i> <?php echo wp_strip_all_tags($location_meta['tel'])?>
                 </a></p>
-            <? } ?>
-            <? if(!empty($location_meta['contact_link'])){
+            <?php } ?>
+            <?php if(!empty($location_meta['contact_link'])){
                 $link = str_replace('{service_id}','', wp_strip_all_tags($location_meta['contact_link']));
                 $link = str_replace('{service_name}','', $link);
                 ?>
-            <p><a href="<?=$link?>">
-                    <i class="fa fa-calendar"></i> <?= __('Book Appointment',',mjm-clinic')?>
+            <p><a href="<?php echo $link?>">
+                    <i class="fa fa-calendar"></i> <?php echo __('Book Appointment',',mjm-clinic')?>
                 </a></p>
-            <? } else if(!empty($location_meta['email'])){?>
-            <p> <a href="mailto:<?=antispambot(wp_strip_all_tags($location_meta['email']))?>">
-                    <i class="fa fa-envelope"></i>  <?= __('Email Us',',mjm-clinic')?>
+            <?php } else if(!empty($location_meta['email'])){?>
+            <p> <a href="mailto:<?php echo antispambot(wp_strip_all_tags($location_meta['email']))?>">
+                    <i class="fa fa-envelope"></i>  <?php echo __('Email Us',',mjm-clinic')?>
                 </a></p>
-            <? } ?>
+            <?php } ?>
 
 
             <hr/> <h4>Booking Form</h4>
-            <?= do_shortcode('[mjm-clinic-booking-form location='.$location->term_id.' no_location_select=1]'); ?>
+            <?php echo do_shortcode('[mjm-clinic-booking-form location='.$location->term_id.' no_location_select=1]'); ?>
 
 
-            <?
+            <?php
                              if ( have_posts() ) { ?>
                             <hr/>
-                                 <h2> <?= __('Available Services',',mjm-clinic')?></h2>
+                                 <h2> <?php echo __('Available Services',',mjm-clinic')?></h2>
 
-                                 <?while ( have_posts() ) : the_post();?>
+                                 <?php while ( have_posts() ) : the_post();?>
                                     <h5>
                                         <i class="fa fa-plus-square"></i>
-                                            <a href="<?= get_permalink( $post->ID)?>">
-                                                <?=$post->post_title?>
+                                            <a href="<?php echo get_permalink( $post->ID)?>">
+                                                <?php echo $post->post_title?>
                                             </a>
                                     </h5>
-                                     <p><?=$post->post_excerpt?></p>
-                                 <?endwhile;?>
+                                     <p><?php echo $post->post_excerpt?></p>
+                                 <?php endwhile; ?>
 
 
-                            <?}?>
+                            <?php } ?>
             </div>
 
     </div><!-- #content -->

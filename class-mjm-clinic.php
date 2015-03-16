@@ -24,7 +24,7 @@ class MJM_Clinic {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.8';
+	protected $version = '1.0.9';
 
 	/**
 	 * Unique identifier for your plugin.
@@ -616,7 +616,7 @@ class MJM_Clinic {
 				jQuery("label[for='tag-description']").text("Long Description");
 			});
 		</script>
-	<?
+	<?php
 	}
 
 
@@ -638,7 +638,7 @@ class MJM_Clinic {
 				<p class="description"><?php _e( 'This short description is used in category list views','mjm-clinic' ); ?></p>
 			</td>
 		</tr>
-	<?
+	<?php
 	}
 
     public function edit_service_category_columns($columns){
@@ -715,7 +715,7 @@ class MJM_Clinic {
                 jQuery("label[for='tag-description']").text("Promotional Text");
             });
         </script>
-    <?
+    <?php
     }
 
 
@@ -737,7 +737,7 @@ class MJM_Clinic {
                 <p class="description"><?php _e( 'Enter the products stockcode (SKU)','mjm-clinic' ); ?></p>
             </td>
         </tr>
-    <?
+    <?php
     }
 
 	/**
@@ -882,7 +882,7 @@ class MJM_Clinic {
 				jQuery("label[for='description']").text('<?php _e( 'Address','mjm-clinic')?>');
 			});
 		</script>
-	<?
+	<?php
 	}
 
 
@@ -942,7 +942,7 @@ class MJM_Clinic {
                 jQuery("label[for='description']").text('<?php _e( 'Address','mjm-clinic')?>');
             });
         </script>
-    <?
+    <?php
     }
 
 	/**
@@ -2103,3 +2103,4 @@ class MJM_Clinic {
         return $output;
     }
 }
+?>

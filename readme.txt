@@ -199,3 +199,6 @@ None
 = 1.0.8 =
 * removed reference to old akismet check
 
+= 1.0.9 =
+* removed all php short_open_tags in case compatibility issues
+
