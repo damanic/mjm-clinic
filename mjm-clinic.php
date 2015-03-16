@@ -37,3 +37,4 @@ register_deactivation_hook( __FILE__, array( 'MJM_Clinic', 'deactivate' ) );
 
 
 MJM_Clinic::get_instance();
+?>

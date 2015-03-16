@@ -96,5 +96,4 @@
 		// do i18n stuff
 		add_action( 'plugins_loaded', array( $this, 'setup_i18n' ) );
 
-
-
+?>

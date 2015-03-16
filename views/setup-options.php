@@ -278,3 +278,4 @@ function mjm_clinic_do_options() {
     mjm_clinic_comments();
 	echo $options_after;
 }
+?>

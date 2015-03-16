@@ -313,3 +313,4 @@ function filter_mjm_clinic_service_category_title_newline( $title ) {
 
 	return $title;
 }
+?>

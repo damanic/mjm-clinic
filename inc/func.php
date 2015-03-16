@@ -443,5 +443,5 @@ function mjm_clinic_get_post_related_posts($post, $get_post_type, $taxonomy, $li
    return mjm_clinic_get_posts_related_to_terms($get_post_type, $taxonomy, $terms, $limit, array($post->id));
 
 }
-
+?>
 
