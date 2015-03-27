@@ -10,7 +10,7 @@
  * Plugin Name: Clinic Services
  * Plugin URI:  http://mjman.net.com/
  * Description: A plugin to promote health clinic services.
- * Version:     1.0.9
+ * Version:     1.0.10
  * Author:      Matt Manning
  * Author URI:  http://mjman.net
  * License:     GPL3
