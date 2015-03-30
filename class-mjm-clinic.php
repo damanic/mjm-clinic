@@ -24,7 +24,7 @@ class MJM_Clinic {
 	 *
 	 * @var     string
 	 */
-	protected $version = '1.0.10';
+	protected $version = '1.0.11';
 
 	/**
 	 * Unique identifier for your plugin.

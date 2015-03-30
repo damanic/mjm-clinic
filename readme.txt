@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.10
+Stable tag: 1.0.11
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -204,3 +204,6 @@ None
 
 = 1.0.10 =
 * removed `menu_position` on clinic menu entry, to avoid possible conflicts with other plugins
+
+= 1.0.11 =
+* fixed service location map widget output,  was not being output to screen after recent switch from php short_open_tags to full. `<?= to <?php echo`
