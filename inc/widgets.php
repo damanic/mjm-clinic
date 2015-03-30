@@ -243,7 +243,7 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
                                 <i class="fa fa-map-marker"></i> Map
                             </a>
                             <div class="mjm_clinic_service_locations_widget_output_map-contain" style="display: none;">
-                                <?php do_shortcode('[mjm-clinic-location-map id="service_locations_widget" location="'.$location->term_id.'"]')?>
+                                <?php echo do_shortcode('[mjm-clinic-location-map id="service_locations_widget" location="'.$location->term_id.'"]')?>
 
                             </div>
                         <?php } ?>
