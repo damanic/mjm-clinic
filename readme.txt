@@ -210,7 +210,7 @@ None
 = 1.0.11 =
 * fixed service location map widget output,  was not being output to screen after recent switch from php short_open_tags to full. `<?= to <?php echo`
 
-= 1.1 ==
+= 1.1 =
 * added staff member listings to allow for doctor/therapist pages.
 * added staff type/role taxonomy for grouping staff into roles. Eg: Doctor, Therapist.
 * added staff member multi relation to services. Allows you to show doctors that provide the service.
