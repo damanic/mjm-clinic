@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0.11
+Stable tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -19,6 +19,8 @@ The MJM Clinic plugin allows you to
 * Booking Forms are easily added for any service/location using shortcodes and widgets.
 * Organise your services in hierarchical categories
 * Create Service/Therapy listings, assign them to one or more locations, one or more categories and one or more indication/symptom tags.
+* Create Staff Member pages for Doctors and Therapists.
+* Relate Doctors/Therapist with Services
 * Create Patient feedback entries and assign them to a service and/or health condition.
 * Create Case Studies and assign them to a health condition and/or service.
 * Create Indication tags to link services, conditions, patient feedback, case studies, products etc.
@@ -26,8 +28,8 @@ The MJM Clinic plugin allows you to
 * Enable/Disable comments on your service listings.
 
 = In the pipeline =
-
-* Create related products that can be displayed on various pages through tags or direct relation. Products can be set up to link to an online shop.
+* More shortcodes, functions and widgets to facilitate data access.
+* Related products that can be displayed on various pages through tags or direct relation. Products can be set up to link to an online shop.
 * Global service disclaimers
 * Contraindication Tags
 * Official Parent Theme
@@ -207,3 +209,9 @@ None
 
 = 1.0.11 =
 * fixed service location map widget output,  was not being output to screen after recent switch from php short_open_tags to full. `<?= to <?php echo`
+
+= 1.1 ==
+* added staff member listings to allow for doctor/therapist pages.
+* added staff type/role taxonomy for grouping staff into roles. Eg: Doctor, Therapist.
+* added staff member multi relation to services. Allows you to show doctors that provide the service.
+* some minor fixes for Wordpress 4.2+

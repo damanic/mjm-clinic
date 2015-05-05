@@ -1386,4 +1386,3 @@ class MJM_Clinic_Booking_Form extends WP_Widget {
     }
 
 }
-?>
