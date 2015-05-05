@@ -15,4 +15,3 @@ class MJM_Walker_SlugValueCategoryDropdown extends Walker_CategoryDropdown {
         $output .= "</option>\n";
     }
 }
-?>

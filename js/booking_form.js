@@ -19,7 +19,7 @@ jQuery(document).ready(function($) {
         var elements = {
             phone:  $(this).nextAll('.mjm_clinic_bf_phone_toggle_contain:first'),
             email:  $(this).nextAll('.mjm_clinic_bf_email_toggle_contain:first')
-        }
+        };
         elements['email'].hide();
         elements['phone'].hide();
         elements[$(this).val()].show();

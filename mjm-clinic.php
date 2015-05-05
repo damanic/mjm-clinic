@@ -10,7 +10,7 @@
  * Plugin Name: Clinic Services
  * Plugin URI:  http://mjman.net.com/
  * Description: A plugin to promote health clinic services.
- * Version:     1.0.11
+ * Version:     1.1
  * Author:      Matt Manning
  * Author URI:  http://mjman.net
  * License:     GPL3
@@ -18,9 +18,8 @@
  * Text Domain: mjm-clinic
  * Domain Path: /lang
  */
-
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
+if ( !defined( 'WPINC' ) ) {
 	die;
 }
 define( 'CLINIC_SERVICES_FUNC', plugin_dir_path( __FILE__ ) . 'inc/func.php' );
@@ -35,6 +34,4 @@ require_once( plugin_dir_path( __FILE__ ) . 'class-misc.php' );
 register_activation_hook( __FILE__, array( 'MJM_Clinic', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'MJM_Clinic', 'deactivate' ) );
 
-
 MJM_Clinic::get_instance();
-?>
