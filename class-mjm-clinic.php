@@ -834,7 +834,7 @@ class MJM_Clinic
      */
     public function register_taxonomy_mjm_clinic_location()
     {
-        register_taxonomy('mjm_clinic_location', array('mjm-clinic-service',',mjm-clinic-staff'), array(
+        register_taxonomy('mjm_clinic_location', array('mjm-clinic-service','mjm-clinic-staff'), array(
             'label' => __('Clinic Locations', 'mjm-clinic'),
             'labels' => array(
                 'name' => __('Clinic Locations', 'mjm-clinic'),
@@ -856,7 +856,7 @@ class MJM_Clinic
             'public' => true,
             'show_in_nav_menus' => true,
             'show_ui' => true,
-            'show_tagcloud' => false,
+            'show_tagcloud' => true,
             'hierarchical' => false,
             'update_count_callback' => '',
             'query_var' => 'mjm_clinic_location',
@@ -1085,8 +1085,8 @@ class MJM_Clinic
         add_meta_box('mjm-clinic-condition-meta', __('Additional Information', 'mjm-clinic'), array($this, 'mjm_clinic_condition_box'), 'mjm-clinic-condition', 'normal', 'default');
         add_meta_box('mjm-clinic-feedback-meta', __('Additional Information', 'mjm-clinic'), array($this, 'mjm_clinic_patient_feedback_box'), 'mjm-clinic-feedback', 'normal', 'default');
         add_meta_box('mjm-clinic-casestudy-meta', __('Additional Information', 'mjm-clinic'), array($this, 'mjm_clinic_case_study_box'), 'mjm-clinic-casestudy', 'normal', 'default');
-
-    }
+		add_meta_box('mjm-clinic-staff-meta', __('Additional Information', 'mjm-clinic'), array($this, 'mjm_clinic_staff_box'), 'mjm-clinic-staff', 'normal', 'default');
+	}
 
 
     /**
@@ -1160,6 +1160,29 @@ class MJM_Clinic
         include(plugin_dir_path(__FILE__) . 'views/templates/admin/field-recommended_services.php');
 
     }
+
+
+	/**
+	 * Render content for staff meta box
+	 *
+	 * @since    1.1
+	 *
+	 */
+	public function mjm_clinic_staff_box()
+	{
+		global $post;
+
+		include_once(CLINIC_SERVICES_FUNC);
+		$service_posts = mjm_clinic_get_staff_assigned_services($post);
+		$options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+
+		echo '<input type="hidden" name="noncename" id="noncename" value="' .
+			wp_create_nonce(plugin_basename(__FILE__)) . '" />';
+
+		//render recommended services multiselect list
+		include(plugin_dir_path(__FILE__) . 'views/templates/admin/field-recommended_services.php');
+
+	}
 
     /**
      * Render content for patient feedback meta box

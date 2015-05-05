@@ -1,6 +1,6 @@
 <div class="mjm_clinic_recommended_services-meta">
     <label for="mjm_clinic_recommended_service_selector">
-        <strong><?php echo __( 'Recommended Services:', 'mjm-clinic' ) ?></strong>
+        <strong><?php echo __( 'Related Services:', 'mjm-clinic' ) ?></strong>
     </label>
 
     <br />

@@ -197,6 +197,17 @@ function mjm_clinic_get_condition_assigned_services($condition_post, $limit = -1
     return $posts;
 }
 
+function mjm_clinic_get_staff_assigned_services($staff_post, $limit = -1){
+	$service_id_array = explode(',',$staff_post->mjm_clinic_recommended_service_selected_ids);
+	$posts = get_posts(
+		array(
+			'post__in' => $service_id_array,
+			'post_type' => 'mjm-clinic-service',
+			'posts_per_page' => $limit
+		)
+	);
+	return $posts;
+}
 
 
 function mjm_clinic_get_service_list(){
