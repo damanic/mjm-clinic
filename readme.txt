@@ -3,7 +3,7 @@ Contributors: damanic
 Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
-Tested up to: 4.2.1
+Tested up to: 4.2.4
 Stable tag: 1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -208,7 +208,7 @@ None
 * removed `menu_position` on clinic menu entry, to avoid possible conflicts with other plugins
 
 = 1.0.11 =
-* fixed service location map widget output,  was not being output to screen after recent switch from php short_open_tags to full. `<?= to <?php echo`
+* fixed service location map widget output,  was not being output to screen after recent switch from php short_open_tags to full. `<?= to <?php echo`.
 
 = 1.1 =
 * added staff member listings to allow for doctor/therapist pages.

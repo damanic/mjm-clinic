@@ -8,4 +8,3 @@
 		<p class="description"><?php _e('This short description is used in category list views', 'mjm-clinic'); ?></p>
 	</td>
 </tr>
-<?php
