@@ -3,8 +3,8 @@ Contributors: damanic
 Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
-Tested up to: 4.2.4
-Stable tag: 1.1
+Tested up to: 4.3
+Stable tag: 1.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -93,6 +93,10 @@ Attribute values:
 Outputs a presentation of categories and services. Use this on your services page.
 Attribute values:
      *  - category : slug or term_ID , optional parent , if none given the top level category/services will be shown.
+
+`[mjm-clinic-disclaimer]`
+Outputs the disclaimer text, editable in the settings admin area. Uses overidable template 'shortcode-disclaimer
+.php'
 
 = Helper Functions =
 There are a number of helper functions that can be used in your theme, which are found in `inc/func.php`.
