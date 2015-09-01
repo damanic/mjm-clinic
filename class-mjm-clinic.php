@@ -23,7 +23,7 @@ class MJM_Clinic
      *
      * @var     string
      */
-    protected $version = '1.1';
+    protected $version = '1.1.1';
 
     /**
      * Unique identifier for your plugin.
@@ -150,7 +150,6 @@ class MJM_Clinic
             $role->add_cap('edit_published_mjm-clinic');
             $role->add_cap('delete_published_mjm-clinic');
             $role->add_cap('delete_mjm-clinic');
-
             $role->add_cap('add_mjm_clinic_location');
             $role->add_cap('manage_clinic_service_options');
         }
@@ -2129,4 +2128,27 @@ class MJM_Clinic
         ob_end_clean();
         return $output;
     }
+
+	/**
+	 * Disclaimer Shortcode
+	 *
+	 * @since    1.1.1
+	 * @param array $atts (none)
+	 * @return mixed html output
+	 *
+	 */
+	public function shortcode_disclaimer($atts)
+	{
+		ob_start();
+		if (locate_template('/mjm-clinic/shortcode-disclaimer.php') == '') {
+			include(plugin_dir_path(__FILE__) . 'views/templates/shortcode-disclaimer.php');
+		} else {
+			include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-disclaimer.php');
+		}
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		return $output;
+	}
+
 }

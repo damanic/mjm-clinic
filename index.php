@@ -14,6 +14,13 @@
  *       - Description => Address
  *       - Name => Clinic Name
  *
+ * @TODO Create a content block area.
+ *       - currently the disclaimer text is set on the settings page which can only be managed by ADMIN.
+ *       - Move disclaimer text into a new content block area.
+ *       - The content in this area can be output in shortcodes and templates.
+ *       - All content editable by 'Editor' role.
+ *       - Perhaps allow for creation of custom content blocks.
+ *
  */
 
 ?>

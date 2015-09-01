@@ -215,3 +215,8 @@ None
 * added staff type/role taxonomy for grouping staff into roles. Eg: Doctor, Therapist.
 * added staff member multi relation to services. Allows you to show doctors that provide the service.
 * some minor fixes for Wordpress 4.2+
+
+= 1.1.1 =
+* Restored the disclaimer on/off toggle option in settings
+* Added shortcode `mjm-clinic-disclaimer`
+* Tested on Wordpress 4.3+

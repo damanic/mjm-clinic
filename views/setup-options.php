@@ -271,7 +271,7 @@ function mjm_clinic_do_options() {
     mjm_clinic_indication();
 	//mjm_clinic_contraindications();
     //mjm_clinic_price();
-    //mjm_clinic_disclaimer();
+    mjm_clinic_disclaimer();
     //mjm_clinic_related_product();
     mjm_clinic_feedback();
     mjm_clinic_casestudy();
