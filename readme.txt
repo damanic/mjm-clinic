@@ -8,10 +8,16 @@ Stable tag: 1.1.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-A plugin to build clinic and health care related websites. Service pages with booking forms, related health conditions, locations, feedback and more.
+For health clinic and related websites, this plugin extends the WordPress CMS to allow for the addition of many clinic related features including service pages with booking forms, related health conditions, clinic locations, staff/doctors, client feedback and more.
 
 == Description ==
-Built to add functionality to any theme, the MJM Clinic plugin makes use of widgets and shortcodes for quick integration.
+All your sites clinic data is easily updated and control in the Wordpress CMS whilst widgets and shortcodes allow for quick integration into any wordpress theme.
+
+Front end control of design is facilitated by:
+* all shortcode/widget output making use of thoughtful classes and id's to allow you to fully control and customise the design.
+* the plugins use of CSS/JS/HTML can easily be overridden by creating a folder in your theme: {YOUR-THEME-DIR}/mjm-clinic/.
+
+All contact forms will be protected from spam by the Akismet WordPress plugin.
 
 The MJM Clinic plugin allows you to
 
@@ -30,7 +36,6 @@ The MJM Clinic plugin allows you to
 = In the pipeline =
 * More shortcodes, functions and widgets to facilitate data access.
 * Related products that can be displayed on various pages through tags or direct relation. Products can be set up to link to an online shop.
-* Global service disclaimers
 * Contraindication Tags
 * Official Parent Theme
 
@@ -106,28 +111,28 @@ There are a number of helper functions that can be used in your theme, which are
 All plugin generated output includes an abundance of css classes and id's all of which use mjm-clinic prefixes to prevent conflicts with any other plugins or themes.
 MJM Clinic works out of the box, but theme developers can easily over-ride the default presentation styles and templates.
 
-TO OVERIDE THE DEFAULT CSS
+TO OVERRIDE THE DEFAULT CSS
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/css/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 
 * `public.css`
 
-TO OVERIDE THE BOOKING FORM JS
+TO OVERRIDE THE BOOKING FORM JS
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/js/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 
 * `booking_form.js`
 
-TO OVERIDE THE BOOKING FORM HTML
+TO OVERRIDE THE BOOKING FORM HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 
 * `shortcode-booking-form.php`
 
-TO OVERIDE THE [mjm-clinic-service-box-links] HTML
+TO OVERRIDE THE [mjm-clinic-service-box-links] HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 
 * `shortcode-boxlinks-service.php`
 * `shortcode-boxlinks-service-category.php`
 
-TO OVERIDE THE [mjm-clinic-condition-list] SEARCHABLE CONDITIONS HTML
+TO OVERRIDE THE [mjm-clinic-condition-list] SEARCHABLE CONDITIONS HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 
 * `shortcode-condition-list.php`
