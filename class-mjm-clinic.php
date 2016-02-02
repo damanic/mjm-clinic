@@ -1656,7 +1656,7 @@ class MJM_Clinic
             $this->bf_ajax_header_error_response(__('Please enter your name', 'mjm-clinic'));
         }
 
-        if (empty($date) || (substr_count($date, '/') != 2) || strlen($date) != 10) {
+        if (empty($date)) {
             $this->bf_ajax_header_error_response(__('Please enter a valid date', 'mjm-clinic'));
         }
 

@@ -137,6 +137,8 @@ function mjm_clinic_get_sub_service_categories($parent_term_id){
 
 function mjm_clinic_get_all_service_categories(){
 
+	//@TODO cache results
+
 	$categories = false;
 
 	$args =  array(
