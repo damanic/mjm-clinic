@@ -10,6 +10,108 @@
  */
 
 
+
+/**
+ * Clinic Conditions List
+ *
+ * @since    1.1.3
+ */
+class MJM_Clinic_Condition_List extends WP_Widget {
+	public function __construct() {
+		$widget_options  = array( 'classname' => 'mjm_clinic_condition_list_widget', 'description' => __( 'Displays a menu/list of health conditions', 'mjm-clinic' ) );
+		$control_options = array( 'id_base' => 'mjm_clinic_condition_list_widget' );
+		parent::__construct( 'mjm_clinic_condition_list_widget', 'MJM Clinic: Condition List', $widget_options, $control_options );
+	}
+
+	public function widget( $args, $instance ) {
+		extract( $args );
+		$title    =  isset( $instance['title']) ? apply_filters( 'widget_title', $instance['title'] ) : null;
+		$searchable_title       = isset( $instance['searchable_title'] ) ? $instance['searchable_title'] : 1;
+		$searchable_excerpt       = isset( $instance['searchable_excerpt'] ) ? $instance['searchable_excerpt'] : 0;
+		$searchable_tags     = isset( $instance['searchable_tags'] ) ? $instance['searchable_tags'] : 1;
+		$show_excerpt      = isset( $instance['show_excerpt'] ) ? $instance['show_excerpt'] : 1;
+		$show_indication_tags       = isset( $instance['show_indication_tags'] ) ? $instance['show_indication_tags'] : 1;
+		$show_image       = isset( $instance['show_image'] ) ? $instance['show_image'] : 0;
+		$paginate       = isset( $instance['paginate'] ) ? $instance['paginate'] : 0;
+
+			echo $args['before_widget'];
+			if ( !empty( $title ) ) {
+				echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
+			}
+
+			echo do_shortcode( '[mjm-clinic-condition-list searchable_title="'.$searchable_title.'" searchable_excerpt="' .$searchable_excerpt . '" searchable_tags="'.$searchable_tags.'" show_excerpt="'.$show_excerpt.'" show_indication_tags="'.$show_indication_tags.'" show_image="'.$show_image.'" paginate="'.$paginate.'"]' );
+			echo $args['after_widget'];
+
+	}
+
+	public function form( $instance ) {
+		$defaults = array(
+			'title' => __( 'Condition List', 'mjm-clinic' ),
+			'searchable_title' => 1,
+			'searchable_excerpt' => 0,
+			'searchable_tags' => 1,
+			'show_excerpt' => 1,
+			'show_indication_tags' => 1,
+			'show_image' => 0,
+			'paginate' => 0,
+		);
+
+		$instance = wp_parse_args( (array) $instance, $defaults );
+		$title        = apply_filters( 'widget_title', $instance['title'] );
+		$searchable_title        = isset( $instance['searchable_title'] ) ? (bool) $instance['searchable_title'] : false;
+		$searchable_excerpt = isset( $instance['searchable_excerpt'] ) ? (bool) $instance['searchable_excerpt'] : false;
+		$searchable_tags        =  isset( $instance['searchable_tags'] ) ? (bool) $instance['searchable_tags'] : false;
+		$show_excerpt     = isset( $instance['show_excerpt'] ) ? (bool) $instance['show_excerpt'] : false;
+		$show_indication_tags     = isset( $instance['show_indication_tags'] ) ? (bool) $instance['show_indication_tags'] : false;
+		$show_image     = isset( $instance['show_image'] ) ? (bool) $instance['show_image'] : false;
+		$paginate       = ( isset( $instance['paginate'] ) && is_numeric( $instance['paginate'] ) ) ? $instance['paginate'] : 0;
+
+
+
+		?>
+		<p>
+			<label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:', 'mjm-clinic' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+			<span class="description"><?php _e( 'The title that displays above the widget.', 'mjm-clinic' ); ?></span>
+		</p>
+
+		<p>
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'searchable_title' ); ?>" name="<?php echo $this->get_field_name( 'searchable_title' ); ?>"<?php checked( $searchable_title ); ?> />
+			<label for="<?php echo $this->get_field_id( 'searchable_title' ); ?>"><?php _e( 'Searchable Title' ); ?></label><br />
+
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'searchable_excerpt' ); ?>" name="<?php echo $this->get_field_name( 'searchable_excerpt' ); ?>"<?php checked( $searchable_excerpt ); ?> />
+			<label for="<?php echo $this->get_field_id( 'searchable_excerpt' ); ?>"><?php _e( 'Searchable Excerpt' ); ?></label><br />
+
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'searchable_tags' ); ?>" name="<?php echo $this->get_field_name( 'searchable_tags' ); ?>"<?php checked( $searchable_tags ); ?> />
+			<label for="<?php echo $this->get_field_id( 'searchable_tags' ); ?>"><?php _e( 'Searchable Tags' ); ?></label><br />
+
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_excerpt' ); ?>" name="<?php echo $this->get_field_name( 'show_excerpt' ); ?>"<?php checked( $show_excerpt ); ?> />
+			<label for="<?php echo $this->get_field_id( 'show_excerpt' ); ?>"><?php _e( 'Show Excerpt' ); ?></label><br />
+
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_indication_tags' ); ?>" name="<?php echo $this->get_field_name( 'show_indication_tags' ); ?>"<?php checked( $show_indication_tags ); ?> />
+			<label for="<?php echo $this->get_field_id( 'show_indication_tags' ); ?>"><?php _e( 'Show Indication Tags' ); ?></label><br />
+
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>"<?php checked( $show_image ); ?> />
+			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Show Image' ); ?></label>
+		</p>
+
+		<?php
+	}
+
+	public function update( $new_instance, $old_instance ) {
+		$instance                 = $old_instance;
+		$instance['title']        = strip_tags( $new_instance['title'] );
+		$instance['searchable_title']        = !empty( $new_instance['searchable_title'] ) ? 1 : 0;
+		$instance['searchable_excerpt'] = !empty( $new_instance['searchable_excerpt'] ) ? 1 : 0;
+		$instance['searchable_tags'] = !empty( $new_instance['searchable_tags'] ) ? 1 : 0;
+		$instance['show_excerpt'] = !empty( $new_instance['show_excerpt'] ) ? 1 : 0;
+		$instance['show_indication_tags'] = !empty( $new_instance['show_indication_tags'] ) ? 1 : 0;
+		$instance['show_image'] = !empty( $new_instance['show_image'] ) ? 1 : 0;
+		return $instance;
+	}
+}
+
+
 /**
  * Clinic Service Location Map Widget
  *
@@ -210,7 +312,7 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
 				<div class="mjm_clinic_service_locations_widget_output_entry-container">
 
                         <span class="mjm_clinic_service_locations_widget_output_location-name">
-                            <i class="fa fa-hospital-o"></i> <a href="<?php echo get_term_link( $location ) ?>"> <?= wp_strip_all_tags( $location->name ) ?> </a>
+                            <i class="fa fa-hospital-o"></i> <a href="<?php echo get_term_link( $location ) ?>"> <?php echo wp_strip_all_tags( $location->name ) ?> </a>
                         </span>
 
                         <span class="mjm_clinic_service_locations_widget_output_location-description">

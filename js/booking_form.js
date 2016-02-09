@@ -52,7 +52,7 @@ jQuery(document).ready(function($) {
                 $.ajax({
                     type: "POST",
                     url: '/',
-                    data: thatform.serialize(), // serializes the form's elements.
+                    data: thatform.serialize() , // serializes the form's elements.
                     success: function (response) {
                         thatform.nextAll('.mjm_clinic_bf_success_msg_contain:first').show();
                         thatform.hide();

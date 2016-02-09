@@ -130,7 +130,10 @@ function mjm_clinic_get_sub_service_categories($parent_term_id){
 
     $plugin = 'taxonomy-images/taxonomy-images.php';
     if(is_plugin_active($plugin)){
-    return apply_filters( 'taxonomy-images-get-terms', '', $plugin_args );
+		$terms = apply_filters( 'taxonomy-images-get-terms', '', $plugin_args );
+		if(!empty($terms)){
+			return $terms;
+		}
     }
     return get_terms(array('mjm_clinic_service_category'), $args);
 }
@@ -160,7 +163,7 @@ function mjm_clinic_get_all_service_categories(){
 		$categories = apply_filters( 'taxonomy-images-get-terms', '', $plugin_args );
 	}
 
-	if(!$categories) {
+	if(!$categories || empty($categories)) {
 		$categories = get_terms(array('mjm_clinic_service_category'), $args);
 	}
 

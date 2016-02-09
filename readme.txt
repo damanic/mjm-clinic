@@ -3,8 +3,8 @@ Contributors: damanic
 Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
-Tested up to: 4.3.1
-Stable tag: 1.1.2
+Tested up to: 4.4.2
+Stable tag: 1.1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,7 +57,7 @@ Numerous sidebar widgets have been included to help show off your services, heal
 * Service Categories - A list or dropdown menu of clinic service categories.
 * Service Session Info - Displays a services session info, price
 * Shared Symptoms - Displays other conditions that share symptoms (indication tags)
-
+* Conditions List/Menu - Displays links to conditions
 
 = Shortcodes =
 
@@ -233,3 +233,9 @@ None
 = 1.1.2 =
 * Added hierarchy level control to service category navigation widget
 * Removed PHP4 Widget constructors for future compatibility
+
+= 1.1.3 =
+* Booking form date validation requirements reduced to allow more date formats.
+* Condition list now available as widget
+* fixed issue with condition list container ID duplication
+* fixed issue with condition list showing slug instead of title

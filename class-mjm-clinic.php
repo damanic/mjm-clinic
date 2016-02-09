@@ -23,7 +23,7 @@ class MJM_Clinic
      *
      * @var     string
      */
-    protected $version = '1.1.2';
+    protected $version = '1.1.3';
 
     /**
      * Unique identifier for your plugin.
@@ -255,7 +255,9 @@ class MJM_Clinic
         wp_register_script('mjm-clinic-map-init-script', $map_js, array('mjm-clinic-map-script', 'jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-validate_form', plugins_url('js/jquery.validate.min.js', __FILE__), array('jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-booking_form', $booking_js, array('jquery'), $this->version, true);
+        wp_register_script('mjm-clinic-script-list', plugins_url('js/list.min.js', __FILE__), array('jquery'), $this->version, true);
         wp_register_style('mjm-clinic-script-datepicker-css', $datepicker_css, array(), $this->version);
+
     }
 
 
@@ -1591,6 +1593,8 @@ class MJM_Clinic
 
         register_widget('MJM_Clinic_Assigned_Conditions');
         register_widget('MJM_Clinic_Related_Conditions');
+        register_widget('MJM_Clinic_Service_Locations');
+        register_widget('MJM_Clinic_Condition_List');
 
 
     }
@@ -1642,30 +1646,30 @@ class MJM_Clinic
 
 
         if (!isset($allowed_services[$service_id])) {
-            $this->bf_ajax_header_error_response(__('Please select a valid service', 'mjm-clinic'));
+            self::bf_ajax_header_error_response(__('Please select a valid service', 'mjm-clinic'));
         }
 
         if (!isset($allowed_locations[$location_id])) {
-            $this->bf_ajax_header_error_response(__('Please select a valid location', 'mjm-clinic'));
+            self::bf_ajax_header_error_response(__('Please select a valid location', 'mjm-clinic'));
         }
 
         //get the location data
         $location = mjm_clinic_get_location($location_id);
 
         if (empty($name)) {
-            $this->bf_ajax_header_error_response(__('Please enter your name', 'mjm-clinic'));
+            self::bf_ajax_header_error_response(__('Please enter your name', 'mjm-clinic'));
         }
 
         if (empty($date)) {
-            $this->bf_ajax_header_error_response(__('Please enter a valid date', 'mjm-clinic'));
+            self::bf_ajax_header_error_response(__('Please enter a valid date', 'mjm-clinic'));
         }
 
         if (!in_array($pref_time, $allowed_preferred_times)) {
-            $this->bf_ajax_header_error_response(__('Please select a preferred appointment time', 'mjm-clinic'));
+            self::bf_ajax_header_error_response(__('Please select a preferred appointment time', 'mjm-clinic'));
         }
 
         if (!in_array($contact_via, $allowed_contact_types)) {
-            $this->bf_ajax_header_error_response(__('Please select a preferred contact method', 'mjm-clinic'));
+            self::bf_ajax_header_error_response(__('Please select a preferred contact method', 'mjm-clinic'));
         }
 
         if ($contact_via == 'phone') {
@@ -1675,42 +1679,44 @@ class MJM_Clinic
         if ($contact_via == 'email') {
             //validate email
             if (!is_email($email)) {
-                $this->bf_ajax_header_error_response(__('Please enter a valid email address', 'mjm-clinic'));
+                self::bf_ajax_header_error_response(__('Please enter a valid email address', 'mjm-clinic'));
             }
             $contact_msg = __('Please email to confirm', 'mjm-clinic') . ': ' . $email;
         }
 
-
         $noreply_email = "noreply@" . preg_replace('/^www\./', '', $_SERVER['SERVER_NAME']);
-        $msg = array();
-        $msg['from_name'] = $name;
-        $msg['from_email'] = empty($email) ? $noreply_email : $email;
-        $msg['content'] =
-            "
-            " . __("Booking For", 'mjm-clinic') . ": " . $name . "\r\n
-            " . __("Service", 'mjm-clinic') . ": " . $allowed_services[$service_id] . "\r\n
-            " . __("Location", 'mjm-clinic') . ": " . $allowed_locations[$location_id] . "\r\n
-            " . __("Booking Date", 'mjm-clinic') . ": " . $date . "\r\n
-            " . __("Booking Time", 'mjm-clinic') . ": " . $pref_time . "\r\n
-            $contact_msg \r\n
-            $extra_msg
-            ";
-        $msg['subject'] = __("New Booking Request", 'mjm-clinic') . ': ' . $allowed_services[$service_id];
-        $msg['form_action_url'] = '/';
-        $msg = $this->akismet_check($msg);
+
+        $content =  __("Booking For", 'mjm-clinic').": ".$name.PHP_EOL.
+            __("Service", 'mjm-clinic') . ": " . $allowed_services[$service_id].PHP_EOL.
+            __("Location", 'mjm-clinic') . ": " . $allowed_locations[$location_id].PHP_EOL.
+            __("Booking Date", 'mjm-clinic') . ": " . $date.PHP_EOL.
+            __("Booking Time", 'mjm-clinic') . ": " . $pref_time.PHP_EOL.
+            $contact_msg.PHP_EOL.
+            $extra_msg;
+
+        $message       = array(
+            'from_name' => $name,
+            'from_email' => empty($email) ? $noreply_email : $email,
+            'contents' => $content,
+            'subject' => __("New Booking Request", 'mjm-clinic') . ': ' . $allowed_services[$service_id],
+            'form_action_url' => '/',
+        );
 
 
-        if ($msg) {
+        $message = self::akismet_check($message);
+
+        if ($message) {
+            $headers= array();
             $headers[] = 'From: ' . get_bloginfo('name') . ' <' . $noreply_email . '>';
-            $headers[] = 'Reply-To: ' . $msg['from_name'] . ' <' . $msg['from_email'] . '>';
-            wp_mail($location->meta['email'], $msg['subject'], $msg['content'], $headers);
+            $headers[] = 'Reply-To: ' . $message['from_name'] . ' <' . $message['from_email'] . '>';
+            wp_mail($location->meta['email'], $message['subject'], $message['contents'], $headers);
             return;
         }
 
-        $this->bf_ajax_header_error_response(__('Sorry your booking could not be sent.', 'mjm-clinic'));
+        self::bf_ajax_header_error_response(__('Sorry your booking could not be sent.', 'mjm-clinic'));
     }
 
-    public function bf_ajax_header_error_response($msg)
+    public static function bf_ajax_header_error_response($msg)
     { //
         header($_SERVER['SERVER_PROTOCOL'] . ' 400 ' . $msg, true, 400);
         die();
@@ -1722,7 +1728,7 @@ class MJM_Clinic
      *
      *
      */
-    function check_for_form_submissions()
+    function  check_for_form_submissions()
     {
         if (isset($_POST['mjm-clinic-bf'])) {
             $this->process_booking_form();
@@ -1731,7 +1737,7 @@ class MJM_Clinic
 
     }
 
-    static function akismet_check($msg, $test = NULL)
+    public static function akismet_check($msg, $test = NULL)
     {
 
         // Check with Akismet, but only if Akismet is installed, activated, and has a KEY. (Recommended for spam control).
@@ -1739,6 +1745,7 @@ class MJM_Clinic
         // check if akismet is activated, version 2.x or 3.x
         if ((is_callable(array('Akismet', 'http_post')) || function_exists('akismet_http_post')) && get_option('wordpress_api_key')) {
             global $akismet_api_host, $akismet_api_port;
+            $c = array();
             $c['user_ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
             $c['user_agent'] = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
             $c['referrer'] = (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : '';
@@ -1751,7 +1758,7 @@ class MJM_Clinic
                 $c['comment_author'] = $msg['from_name'];
             if (!empty($msg['from_email']))
                 $c['comment_author_email'] = $msg['from_email'];
-            $c['comment_content'] = $msg['content'];
+            $c['comment_content'] = $msg['contents'];
             $ignore = array('HTTP_COOKIE', 'HTTP_COOKIE2', 'PHP_AUTH_PW');
             foreach ($_SERVER as $key => $value) {
                 if (!in_array($key, $ignore) && is_string($value))
@@ -1789,7 +1796,7 @@ class MJM_Clinic
         if ($test) {
             echo 'AKISMET NOT WORKING';
         }
-        $msg['content'] = $msg['content'] . " \r\n\r\nMJM CLINIC ADVICE \r\n------------------\r\nYour WordPress AKISMET plugin is not active! \r\nTo reduce spam submissions you should activate AKISMET in the WordPress Admin Panel: " . get_site_url() . "/wp-admin/plugins.php]";
+        $msg['contents'] .= PHP_EOL . PHP_EOL ."MJM CLINIC ADVICE". PHP_EOL ."------------------".PHP_EOL."Your WordPress AKISMET plugin is not active!".PHP_EOL."To reduce spam submissions you should activate AKISMET in the WordPress Admin Panel: " . get_site_url() . "/wp-admin/plugins.php]";
         return $msg; //we dont know if its spam, could not get an answer from askimet. Let it through.
 
     }
@@ -2054,6 +2061,9 @@ class MJM_Clinic
      */
     public function shortcode_condition_list($atts)
     {
+
+        STATIC $container_id = 0;
+        $container_id++;
         $search = true;
         $searchable_title = (isset($atts['searchable_title']) && $atts['searchable_title'] == 0) ? false : true;
         $searchable_excerpt = (isset($atts['searchable_excerpt']) && $atts['searchable_excerpt'] == 1) ? true : false;
@@ -2063,7 +2073,7 @@ class MJM_Clinic
         $show_image = (isset($atts['show_image']) && $atts['show_image'] == 1) ? true : false;
         $paginate = (isset($atts['paginate']) && is_numeric($atts['paginate'])) ? $atts['paginate'] : 200;
 
-        if (!$searchable_title && !$searchable_excerpt && !$searchable_tags) {
+        if ((!$searchable_title && !$searchable_excerpt && !$searchable_tags) || $container_id > 1) { //@TODO fix issue where multiple search activated lists fail
             $search = false;
         }
 
@@ -2083,16 +2093,26 @@ class MJM_Clinic
         $tag_line = '';
 
         foreach ($conditions as $condition) {
-            $excerpt = $show_excerpt ? ' <p class="mjm_clinic_shortcode_condition_list_excerpt">' . $condition->post_excerpt . '</p>' : '';
+
+            //if alphabetical add a separator class between letter changes
+            $next = next( $conditions );
+            if($next->post_title[0] != $condition->post_title[0]){
+                $alpha_hr_class = 'mjm_clinic_li_hr';
+            } else {
+                $alpha_hr_class = null;
+            }
+
+
+            $excerpt = $show_excerpt ? ' <p class="mjm_clinic_shortcode_condition_list_excerpt mjm_clinic_shortcode_condition_list_excerpt_'.$container_id.'">' . $condition->post_excerpt . '</p>' : '';
 
             if ($show_indication_tags) {
                 $tag_line = '';
                 $indications = get_the_terms($condition->ID, 'mjm_clinic_indication');
                 if (is_array($indications)) {
-                    $tag_line = '<div class="mjm_clinic_shortcode_condition_list_tags_contain">';
+                    $tag_line = '<div class="mjm_clinic_shortcode_condition_list_tags_contain mjm_clinic_shortcode_condition_list_tags_contain_'.$container_id.'">';
                     $tag_line .= '<i class="fa fa-tags"></i>';
                     foreach ($indications as $indication_tag) {
-                        $tag_line .= '<a class="mjm_clinic_shortcode_condition_list_tags" href="' . get_term_link($indication_tag) . '">
+                        $tag_line .= '<a class="mjm_clinic_shortcode_condition_list_tags mjm_clinic_shortcode_condition_list_tags_'.$container_id.'" href="' . get_term_link($indication_tag) . '">
                                         ' . $indication_tag->name . '
                                       </a>';
                     }
@@ -2109,11 +2129,11 @@ class MJM_Clinic
                 }
             }
 
-            $entries .= ' <li class="mjm_clinic_shortcode_condition_list_entry">
+            $entries .= ' <li class="mjm_clinic_shortcode_condition_list_entry '.$alpha_hr_class.'">
                             <a class="mjm_clinic_shortcode_condition_list_entry_link" href="' . get_the_permalink($condition) . '">
                                 ' . $image_line . '
                                 <div class="mjm_clinic_shortcode_condition_list_entry_text_contain">
-                                    <h3 class="mjm_clinic_shortcode_condition_list_name">' . $condition->post_name . '</h3>
+                                    <h3 class="mjm_clinic_shortcode_condition_list_name mjm_clinic_shortcode_condition_list_name_'.$container_id.'">' . $condition->post_title . '</h3>
                                     ' . $excerpt . '
                                 </div>
                                 <div class="mjm_clinic_shortcode_condition_list_entry_clear"></div>
@@ -2122,6 +2142,7 @@ class MJM_Clinic
                          </li>';
         }
 
+        wp_enqueue_script('mjm-clinic-script-list');
         ob_start();
         include($list_template);
         $output = ob_get_contents();
