@@ -35,7 +35,7 @@ class MJM_Clinic_Condition_List extends WP_Widget {
 		$paginate       = isset( $instance['paginate'] ) ? $instance['paginate'] : 0;
 
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_condition_list">
 			<?php
 			if ( !empty( $title ) ) {
 				echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -242,7 +242,7 @@ class MJM_Clinic_Indication_Tags extends WP_Widget {
 
 		if ( $indications && count( $indications ) > 0 ) {
 			echo $args['before_widget']; ?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_indication_tags">
 			<?php
 			if ( !empty( $title ) ) {
 				echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -336,7 +336,7 @@ class MJM_Clinic_Service_Locations extends WP_Widget {
 			<?
 			echo $args['before_widget'];
 			?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_service_locations">
 			<?
 			if ( !empty( $title ) ) {
 				echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -573,7 +573,7 @@ class MJM_Clinic_Assigned_Services extends WP_Widget {
 		$services = mjm_clinic_get_assigned_services( $this_post, $count );
 		if ( $services ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_assigned_services">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -657,7 +657,7 @@ class MJM_Clinic_Assigned_Patient_Feedback extends WP_Widget {
 		if ( $feedback ) {
 			echo $args['before_widget'];
 			?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_assigned_patient_feedback">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -749,7 +749,7 @@ class MJM_Clinic_Assigned_Case_Studies extends WP_Widget {
 		if ( $studies ) {
 			echo $args['before_widget'];
 			?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_assigned_case_studies">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -843,7 +843,7 @@ class MJM_Clinic_Assigned_Conditions extends WP_Widget {
 		$conditions = mjm_clinic_get_assigned_conditions( $this_post, $count );
 		if ( $conditions ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_assigned_conditions">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -939,7 +939,7 @@ class MJM_Clinic_Shared_Symptoms extends WP_Widget {
 		$related_conditions = mjm_clinic_get_post_related_posts( $this_post, 'mjm-clinic-condition', $taxonomy, $count, $terms );
 		if ( count( $related_conditions ) > 0 ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_shared_symptoms">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -1056,7 +1056,7 @@ class MJM_Clinic_Related_Services extends WP_Widget {
 
 		if ( count( $related_services ) > 0 ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_related_services">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -1162,7 +1162,7 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
 
 		if ( count( $related_conditions ) > 0 ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_related_conditions">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -1271,7 +1271,7 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
 
 		if ( count( $related_feedback ) > 0 ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_related_feedback">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -1395,7 +1395,7 @@ class MJM_Clinic_Related_Casestudy extends WP_Widget {
 
 		if ( count( $related_casestudy ) > 0 ) {
 			echo $args['before_widget'];?>
-			<div class="mjm_clinic_widget_container">
+			<div class="mjm_clinic_widget_container mjm_clinic_widget_container_related_casestudy">
 				<?php
 				if ( !empty( $title ) ) {
 					echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
@@ -1484,7 +1484,7 @@ class MJM_Clinic_Service_Categories extends WP_Widget {
 		$depth = ( isset( $instance['depth'] ) && is_numeric( $instance['depth'] ) ) ? $instance['depth'] : '0';
 
 		echo $args['before_widget'];?>
-		<div class="mjm_clinic_widget_container">
+		<div class="mjm_clinic_widget_container mjm_clinic_widget_container_service_categories">
 			<?php
 			if ( $title ) {
 				echo $args['before_title'] . $title . $args['after_title'];
@@ -1652,7 +1652,7 @@ class MJM_Clinic_Booking_Form extends WP_Widget {
 		 *   Could wrap the shortcode form as a widget if requested.
 		 */
 		echo $args['before_widget'];?>
-		<div class="mjm_clinic_widget_container">
+		<div class="mjm_clinic_widget_container mjm_clinic_widget_container_booking_form">
 		</div>
 		<?php
 		echo $args['after_widget'];

@@ -13,13 +13,14 @@ For health clinic and related websites, this plugin extends the WordPress CMS to
 == Description ==
 All your sites clinic data is easily updated and control in the Wordpress CMS whilst widgets and shortcodes allow for quick integration into any wordpress theme.
 
-Front end control of design is facilitated by:
-* all shortcode/widget output making use of thoughtful classes and id's to allow you to fully control and customise the design.
-* the plugins use of CSS/JS/HTML can easily be overridden by creating a folder in your theme: {YOUR-THEME-DIR}/mjm-clinic/.
+= Front end control of design =
+
+* All shortcode/widget output given a thoughtful set of classes and id's to allow you to fully control and customise the design.
+* CSS/JS/HTML can easily be overridden by creating a folder in your theme: {YOUR-THEME-DIR}/mjm-clinic/.
 
 All contact forms will be protected from spam by the Akismet WordPress plugin.
 
-The MJM Clinic plugin allows you to
+= The MJM Clinic plugin allows you to =
 
 * Create numerous Clinic/Service locations, with their own contact details/forms, address, maps.
 * Booking Forms are easily added for any service/location using shortcodes and widgets.
