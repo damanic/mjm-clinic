@@ -125,13 +125,22 @@ class MJM_Clinic_Location_Map extends WP_Widget {
 	}
 
 	public function widget( $args, $instance ) {
-		if ( !is_tax( 'mjm_clinic_location' ) ) {
-			return;
-		}
+
 		global $wp_query;
 		extract( $args );
 		$title    = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : __( 'Assigned Services', 'mjm-clinic' );
-		$location = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
+		$location_slug = $instance['location_slug'];
+		$width_percent = isset( $instance['width']) && is_numeric($instance['width']) ? $instance['width'] : '100'; //%
+		$height_px = isset( $instance['height']) && is_numeric($instance['height']) ? $instance['height'] : '200'; //px
+
+
+		if(empty($location_slug) && is_tax( 'mjm_clinic_location' )){
+			$location_slug = get_query_var( 'term' );
+		}
+
+		$location = get_term_by( 'slug', $location_slug, 'mjm_clinic_location' );
+
+		//@todo allow location id to be specified, overiding detection
 
 		if ( $location ) {
 
@@ -140,24 +149,25 @@ class MJM_Clinic_Location_Map extends WP_Widget {
 				echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
 			}
 
-			echo do_shortcode( '[mjm-clinic-location-map id="location_map_widget" location="' . get_query_var( 'term' ) . '"]' );
+			echo do_shortcode( '[mjm-clinic-location-map id="location_map_widget" location="' . $location_slug . '"  height="'.$height_px.'px" width="'.$width_percent.'%"]' );
 			echo $args['after_widget'];
 		}
+
+		return;
 	}
 
 	public function form( $instance ) {
-		$defaults = array( 'title' => __( 'Map', 'mjm-clinic' ), 'count' => - 1 );
+		$defaults = array(
+			'title' => __( 'Map', 'mjm-clinic' ),
+			'width' => 100,
+			'height' => 200,
+		);
 		$instance = wp_parse_args( (array) $instance, $defaults );
+		$title = isset( $instance['title'] )? apply_filters( 'widget_title', $instance['title'] ) : $defaults['title'];
+		$location_slug = $instance['location_slug'];
+		$width = isset( $instance['width'] )? $instance['width'] : $defaults['width'];
+		$height = isset( $instance['height'] )? $instance['height'] : $defaults['height'];
 
-		$values = array(
-			array( 'id' => false, 'text' => __( 'No', 'mjm-clinic' ) ),
-			array( 'id' => true, 'text' => __( 'Yes', 'mjm-clinic' ) ) );
-
-		if ( isset( $instance['title'] ) ) {
-			$title = apply_filters( 'widget_title', $instance['title'] );
-		} else {
-			$title = $defaults['title'];
-		}
 
 		?>
 		<p>
@@ -166,12 +176,32 @@ class MJM_Clinic_Location_Map extends WP_Widget {
 			<span class="description"><?php _e( 'The title that displays above the widget.', 'mjm-clinic' ); ?></span>
 		</p>
 
+		<p>
+			<label for="<?php echo $this->get_field_name( 'location_slug' ); ?>"><?php _e( 'Location Slug :', 'mjm-clinic' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'location_slug' ); ?>" name="<?php echo $this->get_field_name( 'location_slug' ); ?>" type="text" value="<?php echo esc_attr( $location_slug ); ?>" />
+			<span class="description"><?php _e( 'If specified widget will show selected location on any page. If not, widget will only show on location pages.', 'mjm-clinic' ); ?></span>
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_name( 'width' ); ?>"><?php _e( 'Width % :', 'mjm-clinic' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'width' ); ?>" name="<?php echo $this->get_field_name( 'width' ); ?>" type="text" value="<?php echo esc_attr( $width ); ?>" />
+			<span class="description"><?php _e( 'Enter width value (treated as %)', 'mjm-clinic' ); ?></span>
+		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_name( 'height' ); ?>"><?php _e( 'Height px :', 'mjm-clinic' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'height' ); ?>" name="<?php echo $this->get_field_name( 'height' ); ?>" type="text" value="<?php echo esc_attr( $height ); ?>" />
+			<span class="description"><?php _e( 'Enter height value (treated as %)', 'mjm-clinic' ); ?></span>
+		</p>
 		<?php
 	}
 
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
 		$instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance['location_slug'] = $new_instance['location_slug'];
+		$instance['width'] = !empty($new_instance['width']) ?  preg_replace("/[^0-9]/", "", $new_instance['width']) : 100;
+		$instance['height'] = !empty($new_instance['height']) ?  preg_replace("/[^0-9]/", "", $new_instance['height']) : 200;
 
 		return $instance;
 	}
