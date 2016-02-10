@@ -91,7 +91,7 @@
     <input class="mjm_clinic_bf_submit_button" type="submit" value="<?php echo __( 'Send', 'mjm-clinic' ) ?>" />
 
 </form>
-
+<a id="mjm_clinic_bg_success_top"></a>
 <div class="mjm_clinic_bf_success_msg_contain" style="display: none;">
     <span class="mjm_clinic_bf_success_msg"><i class="mjm_clinic_bf_success_msg_icon fa fa-thumbs-up"></i>
             <?php echo __('Thank you.','mjm-clinic')?> <?php echo __('Your booking request has been received.','mjm-clinic')?> <?php echo __('We will contact you shortly to confirm your booking.','mjm-clinic')?>

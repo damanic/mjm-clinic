@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -240,7 +240,11 @@ None
 * fixed issue with condition list container ID duplication
 * fixed issue with condition list showing slug instead of title
 
-
 = 1.1.4 =
 * Location map widget can now show on any page by setting a location slug
 * Set width, height for location map widget
+
+= 1.1.5 =
+* Added widget container class
+* Added widget button class
+* Added booking form anchor for moving to success msg

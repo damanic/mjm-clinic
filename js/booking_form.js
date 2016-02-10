@@ -56,6 +56,7 @@ jQuery(document).ready(function($) {
                     success: function (response) {
                         thatform.nextAll('.mjm_clinic_bf_success_msg_contain:first').show();
                         thatform.hide();
+                        $(document).scrollTop( $("#mjm_clinic_bg_success_top").offset().top );
                     },
                     error: function (xhr, status, error) {
                         alert(error);
