@@ -307,3 +307,15 @@
     font-weight: bold;
     text-decoration: none;
 }
+
+.mjm_clinic_staff_list_container{
+    clear:left;
+    margin-bottom: 10px;
+}
+.mjm_clinic_staff_list_image_contain{
+    float:left;
+    margin-right: 10px;
+}
+.mjm_clinic_staff_list_content_contain{
+    float:left;
+}

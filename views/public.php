@@ -41,8 +41,10 @@ function mjm_clinic_load_default_single_templates($template)
  */
 function load_default_taxonomy_templates($template)
 {
+
     global $wp_query;
     $taxonomy = get_query_var('taxonomy');
+
     if ($taxonomy == 'mjm_clinic_service_category' && !strstr($template,'taxonomy-mjm_clinic_service_category.php')) {
         // type and WP did NOT locate a template, use default.
         $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_service_category.php';
@@ -60,6 +62,12 @@ function load_default_taxonomy_templates($template)
         $template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_indication.php';
         return $template;
     }
+
+	if ($taxonomy == 'mjm_clinic_staff_type ' && !strstr($template,'taxonomy-mjm_clinic_staff_type.php')) {
+		// type and WP did NOT locate a template, use default.
+		$template = dirname(__FILE__) . '/templates/taxonomy-mjm_clinic_staff_type.php';
+		return $template;
+	}
 	return $template;
 }
 

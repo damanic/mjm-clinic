@@ -23,7 +23,7 @@ class MJM_Clinic
      *
      * @var     string
      */
-    protected $version = '1.1.6';
+    protected $version = '1.1.7';
 
     /**
      * Unique identifier for your plugin.
@@ -236,7 +236,7 @@ class MJM_Clinic
     {
         global $post;
 
-        if (!is_admin() && (in_array(get_post_type(), $this->available_post_types) || (is_page() && (has_shortcode($post->post_content, 'mjm-clinic-booking-form') || has_shortcode($post->post_content, 'mjm-clinic-service-box-links') || has_shortcode($post->post_content, 'mjm-clinic-condition-list'))))) {
+        if (!is_admin() && (in_array(get_post_type(), $this->available_post_types) || (is_page() && (has_shortcode($post->post_content, 'mjm-clinic-booking-form') || has_shortcode($post->post_content, 'mjm-clinic-service-box-links') || has_shortcode($post->post_content, 'mjm-clinic-condition-list') || has_shortcode($post->post_content, 'mjm-clinic-staff'))))) {
 
             if (locate_template('/mjm-clinic/public.css') == '') {
                 wp_enqueue_style($this->plugin_slug . '-public', plugins_url('css/public.css', __FILE__), array(), $this->version);
@@ -2039,6 +2039,93 @@ class MJM_Clinic
                 ob_end_clean();
             }
         }
+
+        return $output;
+    }
+
+
+    /**
+     * Staff Member List
+     *
+     * @since    1.1.7
+     * @param array $atts [staff_type,location,service]
+     * @return mixed html output
+     *
+     * optional provide parent category ID/Slug.
+     */
+    public function shortcode_staff_list($atts)
+    {
+        $filters = array();
+        $filters['staff_types'] = isset($atts['staff_types']) ? explode(',',$atts['staff_types']) : null;
+        $filters['locations'] = isset($atts['locations']) ? explode(',',$atts['locations']) : null;
+        $filters['services'] = isset($atts['services']) ? explode(',',$atts['services']) : null;
+
+        foreach($filters as $type => $values){
+            foreach($values as $key => $value){
+                if(empty($value))
+                    unset($filters[$type][$key]);
+
+                if(!is_numeric($value)){
+                    if($type == 'staff_types') {
+                        $term = get_term_by( 'slug', $value, 'mjm_clinic_staff_type' );
+                        if(!$term ){
+                            unset($filters[$type][$key]);
+                            continue;
+                        }
+                        $filters[$type][$key] = $term->term_id;
+                    }
+
+                    if($type == 'locations') {
+                        $term = get_term_by( 'slug', $value, 'mjm_clinic_location' );
+                        if(!$term ){
+                            unset($filters[$type][$key]);
+                            continue;
+                        }
+                        $filters[$type][$key] = $term->term_id;
+                    }
+
+                    if($type == 'services') {
+
+                        $the_slug = 'my_slug';
+                        $args = array(
+                            'name'        => $value,
+                            'post_type'   => 'mjm-clinic-service',
+                            'numberposts' => 1
+                        );
+                        $service_post = get_posts($args);
+                        if(!$service_post ){
+                            unset($filters[$type][$key]);
+                            continue;
+                        }
+                        $filters[$type][$key] = $service_post[0]->ID;
+                    }
+                }
+            }
+        }
+
+
+        $staff = mjm_clinic_get_staff($filters);
+
+        if (!$staff) {
+            return;
+        }
+
+        $output = null;
+        $list_template = (locate_template('/mjm-clinic/shortcode-staff-list.php') == '') ? plugin_dir_path(__FILE__) . 'views/templates/shortcode-staff-list.php' : get_stylesheet_directory(__FILE__) . '/mjm-clinic/shortcode-staff-list.php';
+
+
+            foreach ($staff as $post) {
+                $img_id = get_post_thumbnail_id($post->ID);
+                $image = wp_get_attachment_image_src($img_id, 'mjm-clinic-service-thumb');
+                if ($image) {
+                    $image_url = $image[0];
+                }
+
+                ob_start();
+                include($list_template);
+                $output .= ob_get_contents();
+                ob_end_clean();
+            }
 
         return $output;
     }

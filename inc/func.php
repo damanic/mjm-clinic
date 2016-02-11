@@ -218,6 +218,82 @@ function mjm_clinic_get_staff_assigned_services($staff_post, $limit = -1){
 	return $posts;
 }
 
+function mjm_clinic_get_staff($filters=array()){
+	if(!is_array($filters)){
+		return false;
+	}
+
+	$default_filters = array(
+		'staff_types' => null,
+		'locations' => null,
+		'services' => null,
+	);
+
+	$filters = wp_parse_args( $filters, $default_filters );
+	$tax_query = array();
+
+	if(is_numeric($filters['staff_types']) || is_array($filters['staff_types'])){
+		$tax_query[] = array(
+			'taxonomy' => 'mjm_clinic_staff_type',
+			'field' => 'term_id',
+			'terms' => is_array($filters['staff_types']) ? $filters['staff_types'] : array($filters['staff_types']),
+			'operator' => 'IN',
+			'include_children' => false
+		);
+	}
+
+	if(is_numeric($filters['locations']) || is_array($filters['locations'])){
+		$tax_query[] = array(
+			'taxonomy' => 'mjm_clinic_location',
+			'field' => 'term_id',
+			'terms' => is_array($filters['locations']) ? $filters['locations'] : array($filters['locations']),
+			'operator' => 'IN',
+			'include_children' => false
+		);
+	}
+
+
+	$args = array(
+		'post_type' => 'mjm-clinic-staff',
+		'posts_per_page' => -1,
+		'orderby'          => 'post_title',
+		'order'            => 'ASC',
+		'post_status'      => 'publish',
+	);
+
+	if(!empty($tax_query)){
+		$args['tax_query'] = $tax_query;
+	}
+
+	$result_posts = get_posts($args);
+
+
+	if($result_posts && (is_numeric($filters['services']) || is_array($filters['services']))) {
+
+		if(is_numeric($filters['services'])){
+			$filters['services'] = array($filters['services']);
+		}
+
+		if(!empty($filters['services'])) {
+			$options              = array(
+				'return_all_ids' => true,
+				'post_type'      => 'mjm-clinic-staff'
+			);
+			$service_filtered_ids = mjm_clinic_get_posts_assigned_by_meta_key( $filters['services'], 'mjm_clinic_recommended_service_selected_ids', $options );
+
+			foreach ( $result_posts as $key => $post ) {
+				if ( !in_array( $post->ID, $service_filtered_ids ) ) {
+					unset( $result_posts[$key] );
+				}
+			}
+		}
+
+	}
+
+	return $result_posts;
+
+}
+
 
 function mjm_clinic_get_service_list(){
     $service_list = array();
@@ -282,6 +358,22 @@ function mjm_clinic_get_location($id){
     }
 
     return false;
+}
+
+
+/**
+ * Get staff that have ben manually assigned to a given service
+ * returns posts
+ *
+ * @since 	1.1.7
+ *
+ * @param 	$post 	object 		mjm-clinic-service post types
+ * @param 	$limit 	int		    number of results to limit
+ * @return 	        array	    posts array
+ */
+function mjm_clinic_get_assigned_staff($post, $limit=-1){
+	$staff_posts =  mjm_clinic_get_assigned_('mjm-clinic-staff',$post,$limit);
+	return $staff_posts;
 }
 
 
@@ -388,29 +480,25 @@ function mjm_clinic_get_assigned_($search_for_post_type,$post, $limit=-1){
             $condition_id = $post->mjm_clinic_related_condition_id;
             return array(get_post($condition_id));
         } else if ($this_post_type == 'mjm-clinic-service'){
-            $query = "SELECT $wpdb->postmeta.post_id
-                      FROM $wpdb->postmeta
-                      WHERE $wpdb->postmeta.meta_key = 'mjm_clinic_recommended_service_selected_ids'
-                      AND FIND_IN_SET('$post->ID', wp_postmeta.meta_value)";
 
-
-
-            $posts = $wpdb->get_results($query, ARRAY_A);
-                if($posts) {
-                    $post_ids = array();
-                    foreach($posts as $result){
-                        $post_ids[] = $result['post_id'];
-                    }
-
-                    $args = array('post__in' => $post_ids,
-                        'post_type' => $search_for_post_type,
-                        'posts_per_page' => $limit,
-                        'post_status' => 'publish');
-                    return get_posts($args);
-                }
-
-            return false;
+			$options = array(
+				'post_type' => $search_for_post_type,
+				'posts_per_page' => $limit,
+			);
+			return  mjm_clinic_get_posts_assigned_by_meta_key(array($post->ID), 'mjm_clinic_recommended_service_selected_ids', $options);
         }
+    } else if($search_for_post_type == 'mjm-clinic-staff') {
+
+        if($this_post_type == 'mjm-clinic-service' ) {
+			$options = array(
+				'return_all_ids' => true,
+				'post_type' => 'mjm-clinic-staff',
+				'posts_per_page' => $limit,
+			);
+			return  mjm_clinic_get_posts_assigned_by_meta_key(array($post->ID), $search_for_post_type, $options);
+
+		}
+
     }
 
     if(!$key){
@@ -454,6 +542,7 @@ function mjm_clinic_get_posts_related_to_terms($get_post_type, $taxonomy, $terms
     $query = new WP_Query($related_args);
     return $query->get_posts();
 }
+
 function mjm_clinic_get_post_related_posts($post, $get_post_type, $taxonomy, $limit = -1, $terms=false){
 
     if(!$terms){
@@ -463,4 +552,72 @@ function mjm_clinic_get_post_related_posts($post, $get_post_type, $taxonomy, $li
    return mjm_clinic_get_posts_related_to_terms($get_post_type, $taxonomy, $terms, $limit, array($post->id));
 
 }
+
+
+
+/**
+ * Fetch posts that have been assigned a set of related post ids via meta key
+ * returns posts
+ *
+ * @since 	1.1.7
+ *
+ * @param 	$post_ids 	array 		an array of relation post ids
+ * @param 	$meta_key 	string		the database meta field where the relation ids are stored
+ * @param 	$options 	array		args for output preference and get_posts
+ * @return 	        mixed	    post object array or id array
+ */
+function mjm_clinic_get_posts_assigned_by_meta_key($post_ids=array(), $meta_key, $options=array()) {
+
+	global $wpdb;
+
+	$default_options = array(
+		'return_all_ids' => false,
+		'limit' => -1,
+		'post_type' => null,
+		'post_status' => 'publish',
+
+	);
+
+	$options = wp_parse_args( $options, $default_options );
+
+	$sql = '';
+	foreach ( $post_ids as $post_id ) {
+		$sql .= "FIND_IN_SET('$post_id', CAST(wp_postmeta.meta_value AS CHAR)) > 0 OR ";
+	}
+	$sql = substr( $sql, 0, - 4 );
+
+
+	$query = "SELECT $wpdb->postmeta.post_id
+		  FROM $wpdb->postmeta
+		  WHERE $wpdb->postmeta.meta_key = '$meta_key'
+		  AND ($sql)";
+
+	$posts = $wpdb->get_results( $query, ARRAY_A );
+
+
+	if(!$posts)
+		return false;
+
+	$result_ids = array();
+	foreach ( $posts as $result ) {
+		$result_ids[] = $result['post_id'];
+	}
+
+	if($options['return_all_ids']){
+		return $result_ids;
+	}
+
+	return get_posts(
+		array(
+			'post__in' => $result_ids,
+			'post_status'      => $options['post_status'],
+			'limit' => $options['limit'],
+			'post_type' => $options['post_type'],
+		)
+	);
+
+}
+
+
+
 

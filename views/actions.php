@@ -103,6 +103,7 @@ add_shortcode( 'mjm-clinic-location-map', array( $this, 'shortcode_location_map'
 add_shortcode( 'mjm-clinic-service-box-links', array( $this, 'shortcode_service_box_links' ) );
 add_shortcode( 'mjm-clinic-condition-list', array( $this, 'shortcode_condition_list' ) );
 add_shortcode( 'mjm-clinic-disclaimer', array( $this, 'shortcode_disclaimer' ) );
+add_shortcode( 'mjm-clinic-staff', array( $this, 'shortcode_staff_list' ) );
 
 // do i18n stuff
 add_action( 'plugins_loaded', array( $this, 'setup_i18n' ) );

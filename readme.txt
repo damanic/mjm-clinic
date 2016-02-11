@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -104,6 +104,18 @@ Attribute values:
 Outputs the disclaimer text, editable in the settings admin area. Uses overidable template 'shortcode-disclaimer
 .php'
 
+`[mjm-clinic-staff]`
+Outputs a list of staff (doctors, therapists etc).
+Optional attribute values:
+
+* - staff_types: one or more id/slug for staff type taxonomy. Separated by commas if more than one.
+* - locations: one or more id/slug for clinic location. Separated by commas if more than one.
+* - services: one or more id/slug for service. Separated by commas if more than one.
+
+Example usage [mjm-clinic-staff staff_types="'doctor',241" locations="matts-house,15" services="detox-programme,2745"]
+The above will output all staff of either specified staff_type who work at any of the two specified locations and who provide either of the two services specified.
+Without any attributes, all staff will be output.
+
 = Helper Functions =
 There are a number of helper functions that can be used in your theme, which are found in `inc/func.php`.
 
@@ -137,6 +149,12 @@ TO OVERRIDE THE [mjm-clinic-condition-list] SEARCHABLE CONDITIONS HTML
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
 
 * `shortcode-condition-list.php`
+
+TO OVERRIDE THE [mjm-clinic-staff] HTML
+Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-THEME-DIR}/mjm-clinic/ . Customise away.
+
+* `shortcode-staff-list.php`
+
 
 TO CUSTOMIZE THE CATEGORY PAGES
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
@@ -252,3 +270,6 @@ None
 
 = 1.1.6 =
 * Added more widget container classes
+
+== 1.1.7 ==
+* Added shortcode for staff list (see docs)
