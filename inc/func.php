@@ -460,6 +460,11 @@ function mjm_clinic_get_assigned_($search_for_post_type,$post, $limit=-1){
             return mjm_clinic_get_condition_assigned_services($post, $limit);
         }
 
+		if($this_post_type == 'mjm-clinic-staff' ) {
+			//multi select field so pass out
+			return mjm_clinic_get_staff_assigned_services($post, $limit);
+		}
+
         if($this_post_type == 'mjm-clinic-feedback' || ($this_post_type == 'mjm-clinic-casestudy' )) {
             //get feedback recommended services
             $service_id = $post->mjm_clinic_related_service_id;

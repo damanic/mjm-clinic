@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -271,5 +271,9 @@ None
 = 1.1.6 =
 * Added more widget container classes
 
-== 1.1.7 ==
+= 1.1.7 =
 * Added shortcode for staff list (see docs)
+
+= 1.1.8 =
+* Assigned services widget now works on staff/doctor pages
+* Enabled custom fields on service posts

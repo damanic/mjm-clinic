@@ -549,7 +549,7 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
  */
 class MJM_Clinic_Assigned_Services extends WP_Widget {
 	public function __construct() {
-		$widget_options = array( 'classname' => 'mjm_clinic_assigned_services_widget', 'description' => __( 'Displays a list of services that were specifically assigned to a health condition, patient feedback or case study', 'mjm-clinic' ) );
+		$widget_options = array( 'classname' => 'mjm_clinic_assigned_services_widget', 'description' => __( 'Displays a list of services that were specifically assigned to a health condition, patient feedback, case study, staff member', 'mjm-clinic' ) );
 
 		$control_options = array( 'id_base' => 'mjm_clinic_assigned_services_widget' );
 
@@ -559,7 +559,8 @@ class MJM_Clinic_Assigned_Services extends WP_Widget {
 	public function widget( $args, $instance ) {
 		if ( !is_singular( 'mjm-clinic-condition' ) &&
 			!is_singular( 'mjm-clinic-feedback' ) &&
-			!is_singular( 'mjm-clinic-casestudy' )
+			!is_singular( 'mjm-clinic-casestudy')  &&
+			!is_singular( 'mjm-clinic-staff' )
 		) {
 			return;
 		}
