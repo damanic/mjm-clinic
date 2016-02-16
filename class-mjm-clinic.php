@@ -23,7 +23,7 @@ class MJM_Clinic
      *
      * @var     string
      */
-    protected $version = '1.1.8';
+    protected $version = '1.1.9';
 
     /**
      * Unique identifier for your plugin.
@@ -372,9 +372,9 @@ class MJM_Clinic
         $defaults = mjm_clinic_option_defaults();
         $options = get_option('mjm_clinic_settings', $defaults);
         if (isset($options['comments']) && $options['comments']) {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'custom-fields');
         }
 
         $capabilities = array(
@@ -439,9 +439,9 @@ class MJM_Clinic
         $defaults = mjm_clinic_option_defaults();
         $options = get_option('mjm_clinic_settings', $defaults);
         if (isset($options['comments']) && $options['comments']) {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'custom-fields');
         }
 
         $capabilities = array(
@@ -505,9 +505,9 @@ class MJM_Clinic
         $defaults = mjm_clinic_option_defaults();
         $options = get_option('mjm_clinic_settings', $defaults);
         if (isset($options['comments']) && $options['comments']) {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'custom-fields');
         }
 
         $capabilities = array(
@@ -572,9 +572,9 @@ class MJM_Clinic
         $defaults = mjm_clinic_option_defaults();
         $options = get_option('mjm_clinic_settings', $defaults);
         if (isset($options['comments']) && $options['comments']) {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
-            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions');
+            $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'custom-fields');
         }
 
         $capabilities = array(
