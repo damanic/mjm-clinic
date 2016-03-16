@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.1.9
+Stable tag: 1.1.10
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -49,6 +49,7 @@ Numerous sidebar widgets have been included to help show off your services, heal
 * Assigned Patient Feedback - can be assigned to feature on a specific service or a health condition page
 * Assigned Services - Displays a list of services that were specifically assigned to a health condition, patient feedback or case study
 * Clinic Locations - Displays clinic locations where a service/therapy is available
+    * TO OVERRIDE THE HTML copy {MJM-CLINIC-PLUGIN-DIR}/views/templates/widget-service-locations.php to {YOUR-THEME-DIR}/mjm-clinic/
 * Indication Tags - Displays a list of indication tags for service, condition, feedback and case study single posts
 * Location Map - Displays a map on a location taxonomy page
 * Related Casestudy - Displays casestudy on single tax and post pages that share indications
@@ -59,6 +60,8 @@ Numerous sidebar widgets have been included to help show off your services, heal
 * Service Session Info - Displays a services session info, price
 * Shared Symptoms - Displays other conditions that share symptoms (indication tags)
 * Conditions List/Menu - Displays links to conditions
+
+
 
 = Shortcodes =
 
@@ -280,3 +283,6 @@ None
 
 = 1.1.9 =
 * Enabled custom field support for feedback, casestudy, condition and staff posts
+
+= 1.1.10 =
+* Allowed for service location widget html overide.
