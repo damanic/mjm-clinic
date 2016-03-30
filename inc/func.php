@@ -256,8 +256,7 @@ function mjm_clinic_get_staff($filters=array()){
 	$args = array(
 		'post_type' => 'mjm-clinic-staff',
 		'posts_per_page' => -1,
-		'orderby'          => 'post_title',
-		'order'            => 'ASC',
+		'orderby'          => 'menu_order',
 		'post_status'      => 'publish',
 	);
 

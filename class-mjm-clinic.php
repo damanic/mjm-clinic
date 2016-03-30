@@ -23,7 +23,7 @@ class MJM_Clinic
      *
      * @var     string
      */
-    protected $version = '1.1.10';
+    protected $version = '1.1.11';
 
     /**
      * Unique identifier for your plugin.
@@ -2090,7 +2090,7 @@ class MJM_Clinic
                         $args = array(
                             'name'        => $value,
                             'post_type'   => 'mjm-clinic-service',
-                            'numberposts' => 1
+                            'numberposts' => 1,
                         );
                         $service_post = get_posts($args);
                         if(!$service_post ){

@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.1.10
+Stable tag: 1.1.11
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -286,3 +286,6 @@ None
 
 = 1.1.10 =
 * Allowed for service location widget html overide.
+
+= 1.1.11 =
+* mjm_clinic_get_staff() now uses menu order instead of order by title ASC
