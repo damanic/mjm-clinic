@@ -23,7 +23,7 @@ class MJM_Clinic
      *
      * @var     string
      */
-    protected $version = '1.1.11';
+    protected $version = '1.1.12';
 
     /**
      * Unique identifier for your plugin.
@@ -2056,11 +2056,15 @@ class MJM_Clinic
     public function shortcode_staff_list($atts)
     {
         $filters = array();
-        $filters['staff_types'] = isset($atts['staff_types']) ? explode(',',$atts['staff_types']) : null;
-        $filters['locations'] = isset($atts['locations']) ? explode(',',$atts['locations']) : null;
-        $filters['services'] = isset($atts['services']) ? explode(',',$atts['services']) : null;
+        $filters['staff_types'] = isset($atts['staff_types']) ? explode(',',$atts['staff_types']) : array();
+        $filters['locations'] = isset($atts['locations']) ? explode(',',$atts['locations']) : array();
+        $filters['services'] = isset($atts['services']) ? explode(',',$atts['services']) : array();
 
         foreach($filters as $type => $values){
+            if(!$values || empty($values)){
+                unset($filters[$type]);
+                continue;
+            }
             foreach($values as $key => $value){
                 if(empty($value))
                     unset($filters[$type][$key]);
