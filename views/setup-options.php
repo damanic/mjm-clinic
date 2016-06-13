@@ -123,7 +123,7 @@ function mjm_clinic_price() {
 					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
 				} ?>
 			</select><br />
-			<label class="description" for="mjm_clinic_settings[mjm_clinic_option_price]"><?php _e( 'If you want a seperate field for price - enable this.', 'mjm-clinic' ); ?></label>
+			<label class="description" for="mjm_clinic_settings[mjm_clinic_option_price]"><?php _e( 'If you want a separate field for price - enable this.', 'mjm-clinic' ); ?></label>
 		</td>
 	</tr>
 	<?php
