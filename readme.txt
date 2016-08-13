@@ -4,7 +4,7 @@ Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
 Tested up to: 4.5
-Stable tag: 1.1.12
+Stable tag: 1.1.13
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -292,3 +292,6 @@ None
 
 = 1.1.12 =
 * Removed warning when no attributes given to shortcode [mjm-clinic-staff]
+
+= 1.1.13 =
+* Fixed Walker_CategoryDropdown compatibility warning
