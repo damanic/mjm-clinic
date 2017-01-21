@@ -73,7 +73,7 @@ Example Usage:
 [mjm-clinic-booking-form service='cold-flu' location='my-clinic' no_service_select=1 no_location_select=1]
 The above will generate a form for the given service and location (slugs), and hide/disable the options for the user to select/change the service or location.
 
-Without any attributes the form will show drop downs for location and services, and detects the most relevent
+Without any attributes the form will show drop downs for location and services, and detects the most relevant
 form state for the page.
 
 `[mjm-clinic-location-map]`
