@@ -3,22 +3,15 @@ Contributors: damanic
 Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
-Tested up to: 4.5
-Stable tag: 1.1.13
+Tested up to: 4.9.6
+Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-For health clinic and related websites, this plugin extends the WordPress CMS to allow for the addition of many clinic related features including service pages with booking forms, related health conditions, clinic locations, staff/doctors, client feedback and more.
+A handy plugin to help promote health clinics and services using Wordpress CMS.
 
 == Description ==
-All your sites clinic data is easily updated and control in the Wordpress CMS whilst widgets and shortcodes allow for quick integration into any wordpress theme.
-
-= Front end control of design =
-
-* All shortcode/widget output given a thoughtful set of classes and id's to allow you to fully control and customise the design.
-* CSS/JS/HTML can easily be overridden by creating a folder in your theme: {YOUR-THEME-DIR}/mjm-clinic/.
-
-All contact forms will be protected from spam by the Akismet WordPress plugin.
+For health clinic and related websites, this plugin extends the WordPress CMS to allow for the addition of many clinic related features including service pages with booking forms, related health conditions, clinic locations, staff/doctor pages, client feedback and more.
 
 = The MJM Clinic plugin allows you to =
 
@@ -40,8 +33,16 @@ All contact forms will be protected from spam by the Akismet WordPress plugin.
 * Contraindication Tags
 * Official Parent Theme
 
-= Widgets =
+= Front end control of design =
+* All shortcode/widget output has been given a thoughtful set of classes and id's to allow you to fully control and customise the design.
+* CSS/JS/HTML can easily be overridden by creating a folder in your theme: {YOUR-THEME-DIR}/mjm-clinic/.
 
+
+= Spam protection =
+All contact forms added by this plugin work with the Askismet WordPress plugin to protect from spam.
+
+
+= Widgets =
 Numerous sidebar widgets have been included to help show off your services, health conditions info, clinic locations etc.
 
 * Assigned Case Studies - can be assigned to feature on a specific service or a health condition page
