@@ -3,7 +3,7 @@ Contributors: damanic
 Donate link: http://mjman.net
 Tags: clinic, cms, therapy, services, listings, health, conditions
 Requires at least: 4.0
-Tested up to: 4.9.8
+Tested up to: 5.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -296,3 +296,9 @@ None
 
 = 1.1.13 =
 * Fixed Walker_CategoryDropdown compatibility warning
+
+= 1.1.14 =
+* 4.9.8 compat
+
+= 1.1.15 =
+* v5 compatible
