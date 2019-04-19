@@ -59,9 +59,16 @@ function mjm_clinic_option_defaults() {
         'mjm_clinic_option_related_product' => false,
         'mjm_clinic_option_contraindication' => false,
         'mjm_clinic_disclaimer_text ' => '',
-		'comments' => false
+		'comments' => false,
+		'mjm_clinic_googleapi_key' => null
 	);
 	return $defaults;
+}
+
+function get_mjm_clinic_options(){
+	$defaults = mjm_clinic_option_defaults();
+	$options = get_option('mjm_clinic_settings', array());
+	return array_merge($defaults, $options);
 }
 
 

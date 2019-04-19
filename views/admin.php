@@ -22,7 +22,6 @@
 	<?php if ( false !== $_REQUEST['settings-updated'] ) : ?>
 		<div class="updated fade"><p><strong><?php _e( 'Clinic settings saved', 'mjm-clinic' ); ?></strong></p></div>
 	<?php endif; ?>
-	<?php get_screen_icon(); ?>
 	<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 	<div id="poststuff" class="metabox-holder">
 		<div id="post-body" class="metabox-holder columns-1">

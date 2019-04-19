@@ -21,8 +21,7 @@
  */
 function mjm_clinic_indication() {
 	include_once(CLINIC_SERVICES_FUNC);
-	$defaults = mjm_clinic_option_defaults();
-	$options = get_option( 'mjm_clinic_settings', $defaults );
+	$options = get_mjm_clinic_options();
 	?>
 	<tr valign="top"><th scope="row"><?php _e( 'Indications', 'mjm-clinic' ); ?></th>
 		<td>
@@ -51,8 +50,7 @@ function mjm_clinic_indication() {
 function mjm_clinic_contraindications()
 {
     include_once(CLINIC_SERVICES_FUNC);
-    $defaults = mjm_clinic_option_defaults();
-    $options = get_option('mjm_clinic_settings', $defaults);
+	$options = get_mjm_clinic_options();
     ?>
     <tr valign="top">
         <th scope="row"><?php _e('Contraindications', 'mjm-clinic'); ?></th>
@@ -81,8 +79,7 @@ function mjm_clinic_contraindications()
     */
     function mjm_clinic_related_product() {
     include_once(CLINIC_SERVICES_FUNC);
-    $defaults = mjm_clinic_option_defaults();
-    $options = get_option( 'mjm_clinic_settings', $defaults );
+		$options = get_mjm_clinic_options();
     ?>
     <tr valign="top"><th scope="row"><?php _e( 'Related Products', 'mjm-clinic' ); ?></th>
         <td>
@@ -109,8 +106,7 @@ function mjm_clinic_contraindications()
  */
 function mjm_clinic_price() {
 	include_once(CLINIC_SERVICES_FUNC);
-	$defaults = mjm_clinic_option_defaults();
-	$options = get_option( 'mjm_clinic_settings', $defaults );
+	$options = get_mjm_clinic_options();
 	?>
 	<tr valign="top"><th scope="row"><?php _e( 'Service Price', 'mjm-clinic' ); ?></th>
 		<td>
@@ -138,8 +134,7 @@ function mjm_clinic_price() {
  */
 function mjm_clinic_comments() {
 	include_once(CLINIC_SERVICES_FUNC);
-	$defaults = mjm_clinic_option_defaults();
-	$options = get_option( 'mjm_clinic_settings', $defaults );
+	$options = get_mjm_clinic_options();
 	?>
 	<tr valign="top"><th scope="row"><?php _e( 'Comments on service listings', 'mjm-clinic' ); ?></th>
 		<td>
@@ -166,8 +161,7 @@ function mjm_clinic_comments() {
  */
 function mjm_clinic_disclaimer() {
     include_once(CLINIC_SERVICES_FUNC);
-    $defaults = mjm_clinic_option_defaults();
-    $options = get_option( 'mjm_clinic_settings', $defaults );
+	$options = get_mjm_clinic_options();
     $selected = $options['mjm_clinic_disclaimer_toggle'];
     $style = null;
    // if($selected){$style='style="background-color: #00acee; padding:5px;"';}
@@ -198,6 +192,32 @@ function mjm_clinic_disclaimer() {
 <?php
 }
 
+
+
+/**
+ * Service Disclaimer Options
+ * The HTML for Service Disclaimer
+ *
+ * @since 	1.0.0
+ */
+function mjm_clinic_googleapi() {
+	include_once(CLINIC_SERVICES_FUNC);
+	$options = get_mjm_clinic_options();
+	$style = null;
+	// if($selected){$style='style="background-color: #00acee; padding:5px;"';}
+	?>
+
+		<tr valign="top" <?php echo $style?>><th scope="row"><?php _e( 'Google API Key', 'mjm-clinic' ); ?></th>
+			<td>
+				<input type="text" name="mjm_clinic_settings[mjm_clinic_googleapi_key]" id="mjm_clinic_googleapi_key" value="<?php echo $options['mjm_clinic_googleapi_key'];?>">
+				<br/>
+				<label class="description" for="mjm_clinic_settings[mjm_clinic_googleapi_key]"><?php _e( 'Used for google maps.', 'mjm-clinic' ); ?></label>
+			</td>
+		</tr>
+
+	<?php
+}
+
 /**
  * Case Study Option
  * enables/disables feedback content
@@ -206,8 +226,7 @@ function mjm_clinic_disclaimer() {
  */
 function mjm_clinic_feedback() {
     include_once(CLINIC_SERVICES_FUNC);
-    $defaults = mjm_clinic_option_defaults();
-    $options = get_option( 'mjm_clinic_settings', $defaults );
+	$options = get_mjm_clinic_options();
     ?>
     <tr valign="top"><th scope="row"><?php _e( 'Customer Feedback', 'mjm-clinic' ); ?></th>
         <td>
@@ -235,8 +254,7 @@ function mjm_clinic_feedback() {
  */
 function mjm_clinic_casestudy() {
     include_once(CLINIC_SERVICES_FUNC);
-    $defaults = mjm_clinic_option_defaults();
-    $options = get_option( 'mjm_clinic_settings', $defaults );
+	$options = get_mjm_clinic_options();
     ?>
     <tr valign="top"><th scope="row"><?php _e( 'Case Studies', 'mjm-clinic' ); ?></th>
         <td>
@@ -276,6 +294,7 @@ function mjm_clinic_do_options() {
     mjm_clinic_feedback();
     mjm_clinic_casestudy();
     mjm_clinic_comments();
+	mjm_clinic_googleapi();
 	echo $options_after;
 }
 ?>

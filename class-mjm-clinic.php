@@ -251,7 +251,8 @@ class MJM_Clinic
         $datepicker_css = (locate_template('/mjm-clinic/jquery-ui.min.css') == '') ? plugins_url('css/jquery-ui.min.css', __FILE__) : get_stylesheet_directory_uri() . '/mjm-clinic/jquery-ui.min.css';
         $map_js = (locate_template('/mjm-clinic/map.js') == '') ? plugins_url('js/map.js', __FILE__) : get_stylesheet_directory_uri() . '/mjm-clinic/map.js';
 
-        wp_register_script('mjm-clinic-map-script', 'https://maps.googleapis.com/maps/api/js', array(), $this->version, true);
+		$options = get_mjm_clinic_options();
+		wp_register_script('mjm-clinic-map-script', add_query_arg( array('key' => $options['mjm_clinic_googleapi_key']), 'https://maps.googleapis.com/maps/api/js'), array(), $this->version, true);
         wp_register_script('mjm-clinic-map-init-script', $map_js, array('mjm-clinic-map-script', 'jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-validate_form', plugins_url('js/jquery.validate.min.js', __FILE__), array('jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-booking_form', $booking_js, array('jquery'), $this->version, true);
@@ -301,8 +302,7 @@ class MJM_Clinic
     public function register_post_type_mjm_clinic_service()
     {
         include_once(CLINIC_SERVICES_FUNC);
-        $defaults = mjm_clinic_option_defaults();
-        $options = get_option('mjm_clinic_settings', $defaults);
+		$options = get_mjm_clinic_options();
         if (isset($options['comments']) && $options['comments']) {
             $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments','custom-fields');
         } else {
@@ -369,8 +369,7 @@ class MJM_Clinic
     public function register_post_type_mjm_clinic_condition()
     {
         include_once(CLINIC_SERVICES_FUNC);
-        $defaults = mjm_clinic_option_defaults();
-        $options = get_option('mjm_clinic_settings', $defaults);
+		$options = get_mjm_clinic_options();
         if (isset($options['comments']) && $options['comments']) {
             $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
@@ -436,8 +435,7 @@ class MJM_Clinic
     public function register_post_type_mjm_clinic_patient_feedback()
     {
         include_once(CLINIC_SERVICES_FUNC);
-        $defaults = mjm_clinic_option_defaults();
-        $options = get_option('mjm_clinic_settings', $defaults);
+		$options = get_mjm_clinic_options();
         if (isset($options['comments']) && $options['comments']) {
             $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
@@ -502,8 +500,7 @@ class MJM_Clinic
     public function register_post_type_mjm_clinic_case_study()
     {
         include_once(CLINIC_SERVICES_FUNC);
-        $defaults = mjm_clinic_option_defaults();
-        $options = get_option('mjm_clinic_settings', $defaults);
+		$options = get_mjm_clinic_options();
         if (isset($options['comments']) && $options['comments']) {
             $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
@@ -569,8 +566,7 @@ class MJM_Clinic
     public function register_post_type_mjm_clinic_staff()
     {
         include_once(CLINIC_SERVICES_FUNC);
-        $defaults = mjm_clinic_option_defaults();
-        $options = get_option('mjm_clinic_settings', $defaults);
+		$options = get_mjm_clinic_options();
         if (isset($options['comments']) && $options['comments']) {
             $supports = array('title', 'editor', 'excerpt', 'thumbnail', 'revisions', 'comments', 'custom-fields');
         } else {
@@ -1051,7 +1047,7 @@ class MJM_Clinic
             remove_meta_box('postimagediv', 'mjm-clinic-service', 'side');
             add_meta_box('postimagediv', __('Service Cover', 'mjm-clinic'), 'post_thumbnail_meta_box', 'mjm-clinic-service', 'side', 'high');
 
-            $options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+			$options = get_mjm_clinic_options();
 
 
             if (isset($options['mjm_clinic_option_location']) && ($options['mjm_clinic_option_location'] == true)) {
@@ -1104,7 +1100,7 @@ class MJM_Clinic
 
         include_once(CLINIC_SERVICES_FUNC);
 
-        $options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+		$options = get_mjm_clinic_options();
 
         echo '<input type="hidden" name="noncename" id="noncename" value="' .
             wp_create_nonce(plugin_basename(__FILE__)) . '" />';
@@ -1152,7 +1148,7 @@ class MJM_Clinic
 
         include_once(CLINIC_SERVICES_FUNC);
         $service_posts = mjm_clinic_get_condition_assigned_services($post);
-        $options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+		$options = get_mjm_clinic_options();
 
         echo '<input type="hidden" name="noncename" id="noncename" value="' .
             wp_create_nonce(plugin_basename(__FILE__)) . '" />';
@@ -1175,7 +1171,7 @@ class MJM_Clinic
 
 		include_once(CLINIC_SERVICES_FUNC);
 		$service_posts = mjm_clinic_get_staff_assigned_services($post);
-		$options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+		$options = get_mjm_clinic_options();
 
 		echo '<input type="hidden" name="noncename" id="noncename" value="' .
 			wp_create_nonce(plugin_basename(__FILE__)) . '" />';
@@ -1195,7 +1191,7 @@ class MJM_Clinic
     {
         global $post;
         include_once(CLINIC_SERVICES_FUNC);
-        $options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+		$options = get_mjm_clinic_options();
 
         echo '<input type="hidden" name="noncename" id="noncename" value="' .
             wp_create_nonce(plugin_basename(__FILE__)) . '" />';
@@ -1220,7 +1216,7 @@ class MJM_Clinic
     {
         global $post;
         include_once(CLINIC_SERVICES_FUNC);
-        $options = get_option('mjm_clinic_settings', mjm_clinic_option_defaults());
+		$options = get_mjm_clinic_options();
 
         echo '<input type="hidden" name="noncename" id="noncename" value="' .
             wp_create_nonce(plugin_basename(__FILE__)) . '" />';

@@ -2,7 +2,7 @@
 include_once( CLINIC_SERVICES_FUNC );
 include_once( 'public.php' );
 
-$options = get_option( 'mjm_clinic_settings', mjm_clinic_option_defaults() );
+$options = get_mjm_clinic_options();
 
 // Add the options page and menu item.
 add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );

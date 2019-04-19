@@ -84,8 +84,7 @@ function clinic_service_category_template_check() {;
 	$archive = locate_template( 'taxonomy-mjm_clinic_service_category' );
 	if ( empty($archive) ) {
 		include_once(CLINIC_SERVICES_FUNC);
-		$defaults = mjm_clinic_option_defaults();
-		$options = get_option( 'mjm_clinic_settings', $defaults );
+		$options = get_mjm_clinic_options();
 		// archive template for service listings not found, so do this...
 		if ( isset($options['title-filter']) ) {
 			switch ( $options['title-filter'] ) {
@@ -118,8 +117,7 @@ function clinic_service_single_check() {;
 	$single = locate_template( 'single-mjm-clinic-service.php' );
 	if ( empty($single) ) {
 		include_once(CLINIC_SERVICES_FUNC);
-		$defaults = mjm_clinic_option_defaults();
-		$options = get_option( 'mjm_clinic_settings', $defaults );
+		$options = get_mjm_clinic_options();
 		// single template for service listings not found, so do this...
 		if ( isset($options['title-filter']) ) {
 			switch ( $options['title-filter'] ) {
@@ -152,8 +150,7 @@ function clinic_service_taxonomy_check() {;
 	$taxonomy = locate_template( 'taxonomy.php' );
 	if ( empty($taxonomy) ) {
 		include_once(CLINIC_SERVICES_FUNC);
-		$defaults = mjm_clinic_option_defaults();
-		$options = get_option( 'mjm_clinic_settings', $defaults );
+		$options = get_mjm_clinic_options();
 		// this actually makes it work better for tax archives if a taxonomy.php *doesn't* exist than if it does...maybe...
 		if ( isset($options['title-filter']) ) {
 			switch ( $options['title-filter'] ) {
