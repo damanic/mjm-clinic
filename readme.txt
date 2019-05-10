@@ -302,3 +302,6 @@ None
 
 = 1.1.16 =
 * v5 compatible
+
+= 1.1.17 =
+* Minor updates to booking form processor

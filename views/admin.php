@@ -6,10 +6,10 @@
  * The User Interface to the end user.
  *
  * @package   MJM_Clinic
- * @author    Matt Manning <2015@mjman.net>
+ * @author    Matt Manning <2019@mjman.net>
  * @license   GPL-3.0
  * @link      http://mjman.net
- * @copyright 2014, 2015 Matt Manning
+ * @copyright 2014 - 2019 Matt Manning
  */
 ?>
 <?php
