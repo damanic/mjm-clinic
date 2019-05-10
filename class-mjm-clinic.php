@@ -1637,6 +1637,7 @@ class MJM_Clinic
         $email = $_POST['mjm_clinic_bf_email'];
         $phone = $_POST['mjm_clinic_bf_phone'];
         $date = trim($_POST['mjm_clinic_bf_date_picker']);
+		$dob = trim($_POST['mjm_clinic_bf_dob']);
         $extra_msg = trim($_POST['mjm_clinic_bf_message']);
         $pref_time = trim($_POST['mjm_clinic_bf_preferred_time_select']);
 
@@ -1687,6 +1688,9 @@ class MJM_Clinic
             __("Location", 'mjm-clinic') . ": " . $allowed_locations[$location_id].PHP_EOL.
             __("Booking Date", 'mjm-clinic') . ": " . $date.PHP_EOL.
             __("Booking Time", 'mjm-clinic') . ": " . $pref_time.PHP_EOL.
+			__("Email", 'mjm-clinic') . ": " . $email.PHP_EOL.
+			__("Phone", 'mjm-clinic') . ": " . $phone.PHP_EOL.
+			__("Date of Birth", 'mjm-clinic') . ": " . $dob.PHP_EOL.
             $contact_msg.PHP_EOL.
             $extra_msg;
 
