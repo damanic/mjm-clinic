@@ -59,6 +59,7 @@ Numerous sidebar widgets have been included to help show off your services, heal
 * Related Services - Displays services on single tax and post pages that share indications
 * Service Categories - A list or dropdown menu of clinic service categories.
 * Service Session Info - Displays a services session info, price
+    * TO OVERRIDE THE HTML copy {MJM-CLINIC-PLUGIN-DIR}/views/templates/widget-service-session-info.php to {YOUR-THEME-DIR}/mjm-clinic/
 * Shared Symptoms - Displays other conditions that share symptoms (indication tags)
 * Conditions List/Menu - Displays links to conditions
 
@@ -305,3 +306,6 @@ None
 
 = 1.1.17 =
 * Minor updates to booking form processor
+
+= 1.1.18 =
+* Theme template can now override the service session info widget

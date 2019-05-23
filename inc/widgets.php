@@ -429,36 +429,18 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
 					if ( !empty( $location_meta['contact_link'] ) ) {
 						$link = str_replace( '{service_id}', $this_post->ID, wp_strip_all_tags( $location_meta['contact_link'] ) );
 						$link = str_replace( '{service_name}', urlencode( $this_post->post_title ), $link );
-						?>
-						<!--                        <a href="--><?php //$link
-						?><!--"-->
-						<!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
-						<!--                            BOOK APPOINTMENT-->
-						<!--                        </a>-->
-					<?php } else {
-						if ( !empty( $location_meta['email'] ) ) { ?>
-							<!--                        <a href="mailto:--><?php//antispambot(wp_strip_all_tags($location_meta['email']))?><!--"-->
-							<!--                           class="mjm_clinic_service_session_info_widget_booking-link">-->
-							<!--                            BOOK APPOINTMENT-->
-							<!--                        </a>-->
-						<?php }
 					}
 				}
 			}
 
 			if ( !empty( $this_post->session_info ) ) {
-				?>
-				<div class="mjm_clinic_service_session_info_widget_output_session-info-container">
-					<?php
-					if ( !empty( $title ) ) {
-						echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
-					} ?>
-					<div class="mjm_clinic_service_session_info_widget_output_session-info">
-						<?php echo wpautop( htmlspecialchars_decode( $this_post->session_info ) ) ?>
-					</div>
 
-				</div>
-				<?php
+				if (locate_template('/mjm-clinic/widget-service-session-info.php') == '') {
+					include(plugin_dir_path(__FILE__) . '../views/templates/widget-service-session-info.php');
+				} else {
+					include(get_stylesheet_directory(__FILE__) . '/mjm-clinic/widget-service-session-info.php');
+				}
+
 			}
 
 			?>
@@ -487,7 +469,6 @@ class MJM_Clinic_Service_Session_Info extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance          = $old_instance;
 		$instance['title'] = ( !empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-
 		return $instance;
 	}
 }
