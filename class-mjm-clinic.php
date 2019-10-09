@@ -1630,28 +1630,31 @@ class MJM_Clinic
         $allowed_services = mjm_clinic_get_service_list();
         $allowed_locations = mjm_clinic_get_location_list();
 
-        $service_id = $_POST['mjm_clinic_bf_service_select'];
-        $location_id = $_POST['mjm_clinic_bf_location_select'];
-        $name = $_POST['mjm_clinic_bf_name'];
-        $contact_via = $_POST['mjm_clinic_bf_contact_via_select'];
-        $email = $_POST['mjm_clinic_bf_email'];
-        $phone = $_POST['mjm_clinic_bf_phone'];
-        $date = trim($_POST['mjm_clinic_bf_date_picker']);
-		$dob = trim($_POST['mjm_clinic_bf_dob']);
-        $extra_msg = trim($_POST['mjm_clinic_bf_message']);
-        $pref_time = trim($_POST['mjm_clinic_bf_preferred_time_select']);
+        $service_id = isset($_POST['mjm_clinic_bf_service_select']) ? $_POST['mjm_clinic_bf_service_select'] : null;
+		$location_id =  isset($_POST['mjm_clinic_bf_location_select']) ? $_POST['mjm_clinic_bf_location_select'] : null;
 
+		if (!isset($allowed_services[$service_id])) {
+			self::bf_ajax_header_error_response(__('Please select a valid service', 'mjm-clinic'));
+		}
 
-        if (!isset($allowed_services[$service_id])) {
-            self::bf_ajax_header_error_response(__('Please select a valid service', 'mjm-clinic'));
-        }
+		if (!isset($allowed_locations[$location_id])) {
+			self::bf_ajax_header_error_response(__('Please select a valid location', 'mjm-clinic'));
+		}
 
-        if (!isset($allowed_locations[$location_id])) {
-            self::bf_ajax_header_error_response(__('Please select a valid location', 'mjm-clinic'));
-        }
+		//get the location data
+		$location = mjm_clinic_get_location($location_id);
 
-        //get the location data
-        $location = mjm_clinic_get_location($location_id);
+		//POST data
+		$service_name = $_POST['mjm_clinic_bf_service_select'];
+        $location_name = $_POST['mjm_clinic_bf_location_select'] ;
+        $name = isset($_POST['mjm_clinic_bf_name']) ? $_POST['mjm_clinic_bf_name'] : null;
+        $contact_via = isset($_POST['mjm_clinic_bf_contact_via_select']) ? $_POST['mjm_clinic_bf_contact_via_select'] : null;
+        $email = isset($_POST['mjm_clinic_bf_email']) ? $_POST['mjm_clinic_bf_email'] : null;
+        $phone =  isset($_POST['mjm_clinic_bf_phone']) ? $_POST['mjm_clinic_bf_phone'] : null;
+        $date = isset($_POST['mjm_clinic_bf_date_picker']) ? trim($_POST['mjm_clinic_bf_date_picker']) : null;
+		$dob = isset($_POST['mjm_clinic_bf_dob']) ? trim($_POST['mjm_clinic_bf_dob']) : null;
+        $extra_msg = isset($_POST['mjm_clinic_bf_message']) ? trim($_POST['mjm_clinic_bf_message']): null;
+        $pref_time = isset($_POST['mjm_clinic_bf_preferred_time_select']) ? trim($_POST['mjm_clinic_bf_preferred_time_select']): null;
 
         if (empty($name)) {
             self::bf_ajax_header_error_response(__('Please enter your name', 'mjm-clinic'));
@@ -1684,8 +1687,8 @@ class MJM_Clinic
         $noreply_email = "noreply@" . preg_replace('/^www\./', '', $_SERVER['SERVER_NAME']);
 
         $content =  __("Booking For", 'mjm-clinic').": ".$name.PHP_EOL.
-            __("Service", 'mjm-clinic') . ": " . $allowed_services[$service_id].PHP_EOL.
-            __("Location", 'mjm-clinic') . ": " . $allowed_locations[$location_id].PHP_EOL.
+            __("Service", 'mjm-clinic') . ": " . $service_name.PHP_EOL.
+            __("Location", 'mjm-clinic') . ": " . $location_name.PHP_EOL.
             __("Booking Date", 'mjm-clinic') . ": " . $date.PHP_EOL.
             __("Booking Time", 'mjm-clinic') . ": " . $pref_time.PHP_EOL.
 			__("Email", 'mjm-clinic') . ": " . $email.PHP_EOL.
@@ -1710,6 +1713,7 @@ class MJM_Clinic
             $headers[] = 'From: ' . get_bloginfo('name') . ' <' . $noreply_email . '>';
             $headers[] = 'Reply-To: ' . $message['from_name'] . ' <' . $message['from_email'] . '>';
             wp_mail($location->meta['email'], $message['subject'], $message['contents'], $headers);
+			do_action( 'mjm-clinic_booking_form_sent' );
             return;
         }
 
