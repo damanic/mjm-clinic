@@ -179,6 +179,17 @@ function mjm_clinic_get_all_service_categories(){
 	return $categoryHierarchy;
 }
 
+function mjm_clinic_get_service_category_list(){
+	$list = array();
+	$categories = mjm_clinic_get_all_service_categories();
+	if($categories){
+		foreach($categories as $category){
+			$list[$category->term_id] = $category->name;
+		}
+	}
+	return $list;
+}
+
 function mjm_clinic_get_services_in_category($term_id){
 	$posts = get_posts(array(
 			'post_type' => 'mjm-clinic-service',
