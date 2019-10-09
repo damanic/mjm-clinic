@@ -309,3 +309,6 @@ None
 
 = 1.1.18 =
 * Theme template can now override the service session info widget
+
+= 1.1.19 =
+* Adds new action hook on booking form submit `mjm-clinic_booking_form_sent`
