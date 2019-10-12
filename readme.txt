@@ -312,3 +312,6 @@ None
 
 = 1.1.19 =
 * Adds new action hook on booking form submit `mjm-clinic_booking_form_sent`
+
+= 1.1.20 =
+* Bugfix
