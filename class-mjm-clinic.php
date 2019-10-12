@@ -1643,10 +1643,8 @@ class MJM_Clinic
 
 		//get the location data
 		$location = mjm_clinic_get_location($location_id);
-
-		//POST data
-		$service_name = $_POST['mjm_clinic_bf_service_select'];
-        $location_name = $_POST['mjm_clinic_bf_location_select'] ;
+		$service_name = $allowed_services[$service_id];
+        $location_name = $allowed_locations[$location_id] ;
         $name = isset($_POST['mjm_clinic_bf_name']) ? $_POST['mjm_clinic_bf_name'] : null;
         $contact_via = isset($_POST['mjm_clinic_bf_contact_via_select']) ? $_POST['mjm_clinic_bf_contact_via_select'] : null;
         $email = isset($_POST['mjm_clinic_bf_email']) ? $_POST['mjm_clinic_bf_email'] : null;
