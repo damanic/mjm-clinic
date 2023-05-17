@@ -3,14 +3,14 @@
  * @package   MJM_Clinic
  * @author    Matt Manning <2019@mjman.net>
  * @license   GPLv3
- * @link      http://mjman.net
- * @copyright 2014 - 2019 Matt Manning
+ * @link      https://mjman.net
+ * @copyright 2014 - 2023 Matt Manning
  *
  * @wordpress-plugin
  * Plugin Name: Clinic Services
  * Plugin URI:  http://mjman.net.com/
  * Description: A plugin to promote health clinic services.
- * Version:     1.1.21
+ * Version:     1.1.22
  * Author:      Matt Manning
  * Author URI:  http://mjman.net
  * License:     GPL3
