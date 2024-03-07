@@ -210,7 +210,7 @@ function mjm_clinic_googleapi() {
 
 		<tr valign="top" <?php echo $style?>><th scope="row"><?php _e( 'Google API Key', 'mjm-clinic' ); ?></th>
 			<td>
-				<input type="text" name="mjm_clinic_settings[mjm_clinic_googleapi_key]" id="mjm_clinic_googleapi_key" value="<?php echo $options['mjm_clinic_googleapi_key'];?>">
+				<input type="text" name="mjm_clinic_settings[mjm_clinic_googleapi_key]" id="mjm_clinic_googleapi_key" value="<?php echo esc_html($options['mjm_clinic_googleapi_key']);?>">
 				<br/>
 				<label class="description" for="mjm_clinic_settings[mjm_clinic_googleapi_key]"><?php _e( 'Used for google maps.', 'mjm-clinic' ); ?></label>
 			</td>
