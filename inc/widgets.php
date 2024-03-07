@@ -96,7 +96,7 @@ class MJM_Clinic_Condition_List extends WP_Widget {
 
 			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'show_image' ); ?>" name="<?php echo $this->get_field_name( 'show_image' ); ?>"<?php checked( $show_image ); ?> />
 			<label for="<?php echo $this->get_field_id( 'show_image' ); ?>"><?php _e( 'Show Image' ); ?></label>
-		</p>F
+		</p>
 
 		<?php
 	}
@@ -248,18 +248,18 @@ class MJM_Clinic_Indication_Tags extends WP_Widget {
 				echo $args['before_title'] . esc_html( $title ) . $args['after_title'];
 			}
 			?>
-				<div class="mjm_clinic_indication_tags_widget_output_entry-container">
-					<i class="fa fa-tags"></i>
-					<?php
-					$tags = '';
-					foreach ( $indications as $indication_tag ) {
-						$tags .= '<a class="mjm_clinic_indication_tags_widget_output_link" href="' . get_term_link( $indication_tag ) . '">
-												' . $indication_tag->name . '
-												 </a>';
-					}
-					echo $tags;
-					?>
-				</div>
+            <div class="mjm_clinic_indication_tags_widget_output_entry-container">
+                <i class="fa fa-tags"></i>
+                <?php
+                $tags = '';
+                foreach ( $indications as $indication_tag ) {
+                    $tags .= '<a class="mjm_clinic_indication_tags_widget_output_link" href="' . esc_url(get_term_link($indication_tag)) . '">
+                                ' . esc_html($indication_tag->name) . '
+                              </a>';
+                }
+                echo $tags;
+                ?>
+            </div>
 			</div>
 			<?php echo $args['after_widget'];
 		}
@@ -514,7 +514,7 @@ class MJM_Clinic_Assigned_Services extends WP_Widget {
 				foreach ( $services as $service ) { ?>
 					<div class="mjm_clinic_assigned_services_widget_output_entry-container">
 						<i class="fa fa-plus-square"></i>
-						<a class="mjm_clinic_assigned_services_widget_output_title-link" href="<?php echo get_post_permalink( $service->ID ) ?>"><?php echo $service->post_title ?></a>
+						<a class="mjm_clinic_assigned_services_widget_output_title-link" href="<?php echo esc_url( get_post_permalink( $service->ID ) ); ?>"><?php echo esc_html( $service->post_title ); ?></a>
 					</div>
 				<?php } ?>
 			</div>
@@ -598,19 +598,19 @@ class MJM_Clinic_Assigned_Patient_Feedback extends WP_Widget {
 				foreach ( $feedback as $feedback_entry ) {
 					$permalink = get_post_permalink( $feedback_entry->ID );
 					?>
-					<div class="mjm_clinic_assigned_patient_feedback_widget_output_entry-container">
-						<i class="fa fa-quote-left"></i>
-								<span class="mjm_clinic_assigned_patient_feedback_widget_output_excerpt">
-									<?php echo $feedback_entry->post_excerpt ?>
-								</span>
-						<i class="fa fa-quote-right"></i>
-						<a class="mjm_clinic_assigned_patient_feedback_widget_output_patient-name" href="<?php echo $permalink ?>">
-							- <?php echo $feedback_entry->mjm_clinic_patient_name ?>
-						</a>
-						<a class="mjm_clinic_assigned_patient_feedback_widget_output_more-link" href="<?php echo $permalink ?>">
-							<i class="fa fa-link"></i> read more
-						</a>
-					</div>
+						<div class="mjm_clinic_assigned_patient_feedback_widget_output_entry-container">
+							<i class="fa fa-quote-left"></i>
+							<span class="mjm_clinic_assigned_patient_feedback_widget_output_excerpt">
+								<?php echo esc_html( $feedback_entry->post_excerpt ); ?>
+							</span>
+							<i class="fa fa-quote-right"></i>
+							<a class="mjm_clinic_assigned_patient_feedback_widget_output_patient-name" href="<?php echo esc_url( $permalink ); ?>">
+								- <?php echo esc_html( $feedback_entry->mjm_clinic_patient_name ); ?>
+							</a>
+							<a class="mjm_clinic_assigned_patient_feedback_widget_output_more-link" href="<?php echo esc_url( $permalink ); ?>">
+								<i class="fa fa-link"></i> read more
+							</a>
+						</div>
 					<?php
 				}
 			echo '</div>';
@@ -690,21 +690,21 @@ class MJM_Clinic_Assigned_Case_Studies extends WP_Widget {
 				foreach ( $studies as $study ) {
 					$permalink = get_post_permalink( $study->ID );
 					?>
-					<div class="mjm_clinic_assigned_case_studies_widget_output_entry-container">
+						<div class="mjm_clinic_assigned_case_studies_widget_output_entry-container">
 
-						<a class="mjm_clinic_assigned_case_studies_widget_output_title-link"
-						   href="<?php echo $permalink ?>">
-							<?php echo $study->mjm_clinic_case_name ?>
-						</a>
+							<a class="mjm_clinic_assigned_case_studies_widget_output_title-link"
+							   href="<?php echo esc_url( $permalink ); ?>">
+								<?php echo esc_html( $study->mjm_clinic_case_name ); ?>
+							</a>
 
 							<span class="mjm_clinic_assigned_case_studies_widget_output_excerpt">
-								<?php echo $study->post_excerpt ?>
+								<?php echo esc_html( $study->post_excerpt ); ?>
 							</span>
 
-						<a class="mjm_clinic_assigned_case_studies_widget_output_more-link" href="<?php echo $permalink ?>">
-							<i class="fa fa-link"></i> read more
-						</a>
-					</div>
+							<a class="mjm_clinic_assigned_case_studies_widget_output_more-link" href="<?php echo esc_url( $permalink ); ?>">
+								<i class="fa fa-link"></i> read more
+							</a>
+						</div>
 					<?php
 				}
 			echo '</div>';
@@ -784,21 +784,21 @@ class MJM_Clinic_Assigned_Conditions extends WP_Widget {
 				foreach ( $conditions as $condition ) {
 					$permalink = get_post_permalink( $condition->ID );
 					?>
-					<div class="mjm_clinic_assigned_conditions_widget_output_entry-container">
+						<div class="mjm_clinic_assigned_conditions_widget_output_entry-container">
 
-						<a class="mjm_clinic_assigned_conditions_widget_output_title-link"
-						   href="<?php echo $permalink ?>">
-							<?php echo $condition->post_title ?>
-						</a>
+							<a class="mjm_clinic_assigned_conditions_widget_output_title-link"
+							   href="<?php echo esc_url( $permalink ); ?>">
+								<?php echo esc_html( $condition->post_title ); ?>
+							</a>
 
 							<span class="mjm_clinic_assigned_conditions_widget_output_excerpt">
-								<?php echo $condition->post_excerpt ?>
+								<?php echo esc_html( $condition->post_excerpt ); ?>
 							</span>
 
-						<a class="mjm_clinic_assigned_conditions_widget_output_more-link" href="<?php echo $permalink ?>">
-							<i class="fa fa-link"></i> read more
-						</a>
-					</div>
+							<a class="mjm_clinic_assigned_conditions_widget_output_more-link" href="<?php echo esc_url( $permalink ); ?>">
+								<i class="fa fa-link"></i> read more
+							</a>
+						</div>
 				<?php
 				}
 			echo '</div>';
@@ -882,19 +882,19 @@ class MJM_Clinic_Shared_Symptoms extends WP_Widget {
 					<div class="mjm_clinic_shared_symptoms_widget_output_entry-container">
 
 						<a class="mjm_clinic_shared_symptoms_widget_output_title-link"
-						   href="<?php echo get_post_permalink( $related_condition->ID ) ?>">
-							<?php echo $related_condition->post_title ?>
+						   href="<?php echo esc_url( get_post_permalink( $related_condition->ID ) ); ?>">
+							<?php echo esc_html( $related_condition->post_title ); ?>
 						</a>
 
-							<span class="mjm_clinic_shared_symptoms_widget_output_entry-tag-container">
+						<span class="mjm_clinic_shared_symptoms_widget_output_entry-tag-container">
 						   <?php foreach ( $terms as $term ) {
 							   if ( has_term( $term, $taxonomy, $related_condition ) ) { ?>
-								   <a class="mjm_clinic_shared_symptoms_widget_output_tag-link" href="<?php echo get_term_link( $term, $taxonomy ) ?>">
-									   <i class="fa fa-tag"></i> <?php echo $term->name ?>
+								   <a class="mjm_clinic_shared_symptoms_widget_output_tag-link" href="<?php echo esc_url( get_term_link( $term, $taxonomy ) ); ?>">
+									   <i class="fa fa-tag"></i> <?php echo esc_html( $term->name ); ?>
 								   </a>
 							   <?php }
 						   } ?>
-							</span>
+						</span>
 
 					</div>
 				<?php }
@@ -999,8 +999,8 @@ class MJM_Clinic_Related_Services extends WP_Widget {
 					<div class="mjm_clinic_related_services_widget_output_entry-container">
 						<i class="fa fa-plus-square"></i>
 						<a class="mjm_clinic_related_services_widget_output_title-link"
-						   href="<?php echo get_post_permalink( $related_service->ID ) ?>">
-							<?php echo $related_service->post_title ?>
+						   href="<?php echo esc_url( get_post_permalink( $related_service->ID ) ); ?>">
+							<?php echo esc_html( $related_service->post_title ); ?>
 						</a>
 					</div>
 					<?php
@@ -1102,13 +1102,11 @@ class MJM_Clinic_Related_Conditions extends WP_Widget {
 				}
 				foreach ( $related_conditions as $related_condition ) { ?>
 					<div class="mjm_clinic_related_conditions_widget_output_entry-container">
-
 						<i class="fa fa-plus-square"></i>
 						<a class="mjm_clinic_related_conditions_widget_output_title-link"
-						   href="<?php echo get_post_permalink( $related_condition->ID ); ?>">
-							<?php echo $related_condition->post_title; ?>
+						   href="<?php echo esc_url( get_post_permalink( $related_condition->ID ) ); ?>">
+							<?php echo esc_html( $related_condition->post_title ); ?>
 						</a>
-
 					</div>
 					<?php
 				}
@@ -1211,13 +1209,11 @@ class MJM_Clinic_Related_Feedback extends WP_Widget {
 				}
 				foreach ( $related_feedback as $related_feedback ) { ?>
 					<div class="mjm_clinic_related_feedback_widget_output_entry-container">
-
 						<i class="fa fa-plus-square"></i>
 						<a class="mjm_clinic_related_feedback_widget_output_title-link"
-						   href="<?php echo get_post_permalink( $related_feedback->ID ) ?>">
-							<?php echo $related_feedback->post_title ?>
+						   href="<?php echo esc_url( get_post_permalink( $related_feedback->ID ) ); ?>">
+							<?php echo esc_html( $related_feedback->post_title ); ?>
 						</a>
-
 					</div>
 					<?php
 				}
@@ -1335,14 +1331,12 @@ class MJM_Clinic_Related_Casestudy extends WP_Widget {
 				}
 				foreach ( $related_casestudy as $related_casestudy ) {
 					?>
-					<div class="mjm_clinic_related_casestudy_widget_output_entry-container ">
-
+					<div class="mjm_clinic_related_casestudy_widget_output_entry-container">
 						<i class="fa fa-plus-square"></i>
 						<a class="mjm_clinic_related_casestudy_widget_output_title-link"
-						   href="<?php echo get_post_permalink( $related_casestudy->ID ) ?>">
-							<?php echo $related_casestudy->post_title ?>
+						   href="<?php echo esc_url( get_post_permalink( $related_casestudy->ID ) ); ?>">
+							<?php echo esc_html( $related_casestudy->post_title ); ?>
 						</a>
-
 					</div>
 					<?php
 				}

@@ -252,8 +252,11 @@ class MJM_Clinic
         $map_js = (locate_template('/mjm-clinic/map.js') == '') ? plugins_url('js/map.js', __FILE__) : get_stylesheet_directory_uri() . '/mjm-clinic/map.js';
 
 		$options = get_mjm_clinic_options();
-		wp_register_script('mjm-clinic-map-script', add_query_arg( array('key' => $options['mjm_clinic_googleapi_key']), 'https://maps.googleapis.com/maps/api/js'), array(), $this->version, true);
-        wp_register_script('mjm-clinic-map-init-script', $map_js, array('mjm-clinic-map-script', 'jquery'), $this->version, true);
+
+	    $safe_api_key = esc_attr($options['mjm_clinic_googleapi_key']);
+	    $map_url = add_query_arg( array('key' => $safe_api_key), 'https://maps.googleapis.com/maps/api/js');
+	    wp_register_script('mjm-clinic-map-script', $map_url, array(), $this->version, true);
+	    wp_register_script('mjm-clinic-map-init-script', $map_js, array('mjm-clinic-map-script', 'jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-validate_form', plugins_url('js/jquery.validate.min.js', __FILE__), array('jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-booking_form', $booking_js, array('jquery'), $this->version, true);
         wp_register_script('mjm-clinic-script-list', plugins_url('js/list.min.js', __FILE__), array('jquery'), $this->version, true);

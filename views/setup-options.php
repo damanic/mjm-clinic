@@ -31,7 +31,8 @@ function mjm_clinic_indication() {
 				foreach ( mjm_clinic_true_false() as $option ) {
 					$label = $option['label'];
 					$value = $option['value'];
-					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+					echo '<option value="' . esc_attr($value) . '" ' . selected($selected, $value, false) . '>' . esc_html($label) . '</option>';
+
 				} ?>
 			</select><br />
 			<label class="description" for="mjm_clinic_settings[mjm_clinic_option_indication]"><?php _e( 'Enable this to link content with health symptom/indication tags.', 'mjm-clinic' ); ?></label>
@@ -61,7 +62,7 @@ function mjm_clinic_contraindications()
                 foreach (mjm_clinic_true_false() as $option) {
                     $label = $option['label'];
                     $value = $option['value'];
-                    echo '<option value="' . $value . '" ' . selected($selected, $value) . '>' . $label . '</option>';
+	                echo '<option value="' . esc_attr($value) . '" ' . selected($selected, $value, false) . '>' . esc_html($label) . '</option>';
                 } ?>
             </select><br/>
             <label class="description"
@@ -89,7 +90,7 @@ function mjm_clinic_contraindications()
                 foreach ( mjm_clinic_true_false() as $option ) {
                     $label = $option['label'];
                     $value = $option['value'];
-                    echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+	                echo '<option value="' . esc_attr($value) . '" ' . selected($selected, $value, false) . '>' . esc_html($label) . '</option>';
                 } ?>
             </select><br />
             <label class="description" for="mjm_clinic_settings[mjm_clinic_option_related_product]"><?php _e( 'Enables you to create links to products.', 'mjm-clinic' ); ?></label>
@@ -116,7 +117,7 @@ function mjm_clinic_price() {
 				foreach ( mjm_clinic_true_false() as $option ) {
 					$label = $option['label'];
 					$value = $option['value'];
-					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+					echo '<option value="' . esc_attr($value) . '" ' . selected($selected, $value, false) . '>' . esc_html($label) . '</option>';
 				} ?>
 			</select><br />
 			<label class="description" for="mjm_clinic_settings[mjm_clinic_option_price]"><?php _e( 'If you want a seperate field for price - enable this.', 'mjm-clinic' ); ?></label>
@@ -144,7 +145,7 @@ function mjm_clinic_comments() {
 				foreach ( mjm_clinic_true_false() as $option ) {
 					$label = $option['label'];
 					$value = $option['value'];
-					echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+					echo '<option value="' . esc_attr($value) . '" ' . selected($selected, $value, false) . '>' . esc_html($label) . '</option>';
 				} ?>
 			</select><br />
 			<label class="description" for="mjm_clinic_settings[comments]"><?php _e( 'If enabled, allows visitors to comment on service listings.', 'mjm-clinic' ); ?></label>
@@ -174,7 +175,7 @@ function mjm_clinic_disclaimer() {
                 foreach ( mjm_clinic_true_false() as $option ) {
                     $label = $option['label'];
                     $value = $option['value'];
-                    echo '<option value="' . $value . '" ' . selected( $selected, $value ) . '>' . $label . '</option>';
+	                echo '<option value="' . esc_attr($value) . '" ' . selected($selected, $value, false) . '>' . esc_html($label) . '</option>';
                 } ?>
             </select><br />
             <label class="description" for="mjm_clinic_settings[mjm_clinic_disclaimer_toggle]"><?php _e( 'Enable this to show a disclaimer on service and health advice pages.', 'mjm-clinic' ); ?></label>
@@ -184,7 +185,7 @@ function mjm_clinic_disclaimer() {
     <?php if($selected){?>
     <tr valign="top" <?php echo $style?>><th scope="row"><?php _e( 'Disclaimer Text', 'mjm-clinic' ); ?></th>
         <td>
-            <textarea cols="40" rows="6" name="mjm_clinic_settings[mjm_clinic_disclaimer_text]" id="mjm_clinic_disclaimer_text"><?php echo $options['mjm_clinic_disclaimer_text'];?></textarea>
+            <textarea cols="40" rows="6" name="mjm_clinic_settings[mjm_clinic_disclaimer_text]" id="mjm_clinic_disclaimer_text"><?php echo esc_html($options['mjm_clinic_disclaimer_text']);?></textarea>
         </td>
     </tr>
 

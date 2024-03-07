@@ -1,19 +1,18 @@
 <div class="mjm_clinic_service_locations_widget_output_entry-container">
 
-                        <span class="mjm_clinic_service_locations_widget_output_location-name">
-                            <i class="fa fa-hospital-o"></i> <a href="<?php echo get_term_link( $location ) ?>"> <?php echo wp_strip_all_tags( $location->name ) ?> </a>
-                        </span>
+    <span class="mjm_clinic_service_locations_widget_output_location-name">
+        <i class="fa fa-hospital-o"></i> <a href="<?php echo esc_url(get_term_link($location)) ?>"> <?php echo esc_html(wp_strip_all_tags($location->name)) ?> </a>
+    </span>
 
-                        <span class="mjm_clinic_service_locations_widget_output_location-description">
-                            <?php echo wpautop( $location->description ) ?>
-                        </span>
+    <span class="mjm_clinic_service_locations_widget_output_location-description">
+        <?php echo wp_kses_post(wpautop($location->description)) ?>
+    </span>
 
-
-	<?php if ( !empty( $location_meta['open_hours'] ) ) { ?>
-		<span class="mjm_clinic_service_locations_widget_output_open-hours">
-                            <?php echo wpautop( $location_meta['open_hours'] ) ?>
-                        </span>
-	<?php } ?>
+    <?php if (!empty($location_meta['open_hours'])) { ?>
+        <span class="mjm_clinic_service_locations_widget_output_open-hours">
+            <?php echo wp_kses_post(wpautop($location_meta['open_hours'])) ?>
+        </span>
+    <?php } ?>
 
 
 	<?php if ( !empty( $location_meta['tel'] ) ) { ?>

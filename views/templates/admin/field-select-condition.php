@@ -14,7 +14,7 @@
                 if($condition_id == $post->mjm_clinic_related_condition_id) {
                     $selected = 'selected="selected"';
                 }
-                    echo '<option value="' . $condition_id . '" '.$selected.'>' . $condition_title . '</option>';
+	            	echo '<option value="' . esc_attr($condition_id) . '" '.$selected.'>' . esc_html($condition_title) . '</option>';
             }
         ?>
     </select>

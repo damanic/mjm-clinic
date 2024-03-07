@@ -102,8 +102,6 @@ function clinic_service_category_template_check() {;
 
 		}
 
-//			add_filter( 'the_content', 'filter_clinic_service_single', 20 );
-//		add_filter( 'get_the_excerpt', 'filter_clinic_service_excerpt', 20 );
 	}
 }
 /**
@@ -167,9 +165,6 @@ function clinic_service_taxonomy_check() {;
 			}
 
 		}
-
-//			add_filter( 'the_content', 'filter_clinic_service_single', 20 );
-//		add_filter( 'get_the_excerpt', 'filter_clinic_service_excerpt', 20 );
 	}
 }
 
@@ -242,59 +237,6 @@ function filter_clinic_service_single( $content ) {
 //	endif;
 }
 
-/**
- * Excerpt service listing filter
- * filters the_excerpt and adds the service listing meta data and taxonomies
- *
- * @since 	1.0.0
- */
-function filter_clinic_service_excerpt( $content ) {
-//	global $post, $is_clinic_service_shortcode;
-//
-//	$meta = null;
-//	$postmeta = null;
-//	include_once(CLINIC_SERVICES_FUNC);
-//	$options = get_option( 'mjm_clinic_settings', mjm_clinic_option_defaults() );
-//
-//	$meta = '<div class="post-meta">';
-//
-//
-//	if ( has_term('', 'mjm_clinic_related_product' ) ) {
-//		$meta .= '<span class="mjm_clinic_related_product">';
-//		$meta .= sprintf( __('Related Product: %s', 'mjm-clinic'), get_related_product() );
-//		$meta .= '<span><br />';
-//	}
-//	if ( !empty($options['price']) ) {
-//        $price = get_post_meta( $post->ID, 'price', true );
-//			$meta .= '<span class="price">';
-//			$meta .=__( 'Price: <strong>'.$price.'</strong>', 'mjm-clinic' );
-//			$meta .= '</span>';
-//
-//	}
-//	$meta .= '</div>';
-//
-//	$postmeta = '<hr />';
-//	$postmeta .= '<div class="post-data">';
-//
-//	if ( has_term('','mjm_clinic_service_category') ) {
-//		$postmeta .= '<span class="mjm_clinic_service_category">' . sprintf( __( '<strong>Category:</strong> %s', 'mjm-clinic' ), get_service_categories()) . '</span><br />';
-//	}
-//	if ( has_term('','mjm_clinic_location') ) {
-//		$postmeta .= '<span class="clinic_location">' . sprintf(__( '<strong>Location:</strong> %s | ', 'mjm-clinic' ), get_clinic_location()) . '</span>';
-//	}
-//	if ( has_term('','mjm_clinic_indication') ) {
-//		$postmeta .= '<span class="indications">' . sprintf( __('<strong>Indications:</strong> %s', 'mjm-clinic'), get_indications() ) . '</span><br />';
-//	}
-//
-//	$postmeta .= '</div>';
-//
-//	if ( ( 'mjm-clinic-service' == get_post_type() ) && in_the_loop() && !$is_clinic_service_shortcode && !is_search() ) : // only do this if we're in the loop
-//		return $content . $meta . $postmeta;
-//	else : // otherwise, don't do anything
-//		return $content;
-//	endif;
-	return $content;
-}
 
 /**
  * Service listing title filter

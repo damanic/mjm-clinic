@@ -14,7 +14,7 @@
                 if($service_id == $post->mjm_clinic_related_service_id) {
                     $selected = 'selected="selected"';
                 }
-                    echo '<option value="' . $service_id . '" '.$selected.'>' . $service_title . '</option>';
+                    echo '<option value="' . esc_attr($service_id) . '" '.$selected.'>' . esc_html($service_title) . '</option>';
             }
         ?>
     </select>

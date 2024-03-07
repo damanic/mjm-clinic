@@ -27,12 +27,6 @@ For health clinic and related websites, this plugin extends the WordPress CMS to
 * Enable/Disable combinations of the above features.
 * Enable/Disable comments on your service listings.
 
-= In the pipeline =
-* More shortcodes, functions and widgets to facilitate data access.
-* Related products that can be displayed on various pages through tags or direct relation. Products can be set up to link to an online shop.
-* Contraindication Tags
-* Official Parent Theme
-
 = Front end control of design =
 * All shortcode/widget output has been given a thoughtful set of classes and id's to allow you to fully control and customise the design.
 * CSS/JS/HTML can easily be overridden by creating a folder in your theme: {YOUR-THEME-DIR}/mjm-clinic/.
@@ -161,7 +155,7 @@ Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ to {YOUR-
 * `shortcode-staff-list.php`
 
 
-TO CUSTOMIZE THE CATEGORY PAGES
+TO CUSTOMISE THE CATEGORY PAGES
 Copy the following files from {MJM-CLINIC-PLUGIN-DIR}/views/templates/ and place them in the root of your theme folder. Customise away.
 
 * `taxonomy-mjm_clinic_service_category.php`

@@ -1,44 +1,44 @@
 <form method="post" class="mjm_clinic_booking_form">
     <input type="hidden" name="mjm-clinic-bf" value="1"/>
-    <?php
-    $services = mjm_clinic_get_service_list();
-    if($selected_service_id && $block_service_select) { ?>
-        <input type="hidden" name="mjm_clinic_bf_service_select" value="<?php echo $selected_service_id?>"/>
-        <h4 class="mjm_clinic_bf_service_title"><?php echo __( 'Booking for:', 'mjm-clinic' ) ?> <?php echo $services[$selected_service_id]?></h4>
-    <?php } else { ?>
-    <label for="mjm_clinic_bf_service_select"><?php echo __( 'Service', 'mjm-clinic' ) ?></label>
-    <select  class="mjm_clinic_bf_service_select mjm_clinic_input_select"
-             name="mjm_clinic_bf_service_select"
-             required/>
-        <option value=""><?php echo __( 'Select Service', 'mjm-clinic' ) ?>...</option>
-        <?php
-        foreach($services as $service_id => $service_title){
-            $selected = ($selected_service_id == $service_id) ? 'selected="selected"' : null;
-            echo '<option value="' . $service_id . '" '.$selected.'>' . $service_title . '</option>';
-        }
-        ?>
-    </select>
-    <?php } ?>
+	<?php
+	$services = mjm_clinic_get_service_list();
+	if($selected_service_id && $block_service_select) { ?>
+		<input type="hidden" name="mjm_clinic_bf_service_select" value="<?php echo esc_attr($selected_service_id) ?>"/>
+		<h4 class="mjm_clinic_bf_service_title"><?php echo esc_html__( 'Booking for:', 'mjm-clinic' ) ?> <?php echo esc_html($services[$selected_service_id]) ?></h4>
+	<?php } else { ?>
+		<label for="mjm_clinic_bf_service_select"><?php echo esc_html__( 'Service', 'mjm-clinic' ) ?></label>
+		<select class="mjm_clinic_bf_service_select mjm_clinic_input_select"
+				name="mjm_clinic_bf_service_select"
+				required>
+			<option value=""><?php echo esc_html__( 'Select Service', 'mjm-clinic' ) ?>...</option>
+			<?php
+			foreach($services as $service_id => $service_title){
+				$selected = ($selected_service_id == $service_id) ? 'selected="selected"' : null;
+				echo '<option value="' . esc_attr($service_id) . '" '.$selected.'>' . esc_html($service_title) . '</option>';
+			}
+			?>
+		</select>
+	<?php } ?>
 
-    <?php
-    $locations = mjm_clinic_get_location_list();
-    if($selected_location_id && $block_location_select) { ?>
-        <h4 class="mjm_clinic_bf_location_title"><?php echo __( '@', 'mjm-clinic' ) ?> <?php echo $locations[$selected_location_id]?></h4>
-        <input type="hidden" name="mjm_clinic_bf_location_select" value="<?php echo $selected_location_id?>"/>
-    <?php } else { ?>
-        <label for="mjm_clinic_bf_location_select"><?php echo __( 'Location', 'mjm-clinic' ) ?></label>
-        <select  class="mjm_clinic_bf_location_select mjm_clinic_input_select"
-                 name="mjm_clinic_bf_location_select"
-                 required/>
-        <option value=""><?php echo __( 'Select Location', 'mjm-clinic' ) ?>...</option>
-        <?php
-        foreach($locations as $location_id => $location_title){
-            $selected = ($selected_location_id == $location_id) ? 'selected="selected"' : null;
-            echo '<option value="' . $location_id . '" '.$selected.'>' . $location_title . '</option>';
-        }
-        ?>
-        </select>
-    <?php } ?>
+	<?php
+	$locations = mjm_clinic_get_location_list();
+	if($selected_location_id && $block_location_select) { ?>
+		<h4 class="mjm_clinic_bf_location_title"><?php echo esc_html__( '@', 'mjm-clinic' ) ?> <?php echo esc_html($locations[$selected_location_id]) ?></h4>
+		<input type="hidden" name="mjm_clinic_bf_location_select" value="<?php echo esc_attr($selected_location_id) ?>"/>
+	<?php } else { ?>
+		<label for="mjm_clinic_bf_location_select"><?php echo esc_html__( 'Location', 'mjm-clinic' ) ?></label>
+		<select class="mjm_clinic_bf_location_select mjm_clinic_input_select"
+				name="mjm_clinic_bf_location_select"
+				required>
+			<option value=""><?php echo esc_html__( 'Select Location', 'mjm-clinic' ) ?>...</option>
+			<?php
+			foreach($locations as $location_id => $location_title){
+				$selected = ($selected_location_id == $location_id) ? 'selected="selected"' : null;
+				echo '<option value="' . esc_attr($location_id) . '" '.$selected.'>' . esc_html($location_title) . '</option>';
+			}
+			?>
+		</select>
+	<?php } ?>
 
     <label for="mjm_clinic_bf_name"><?php echo __( 'Your Name', 'mjm-clinic' ) ?></label>
     <input class="mjm_clinic_bf_name mjm_clinic_input_text"
